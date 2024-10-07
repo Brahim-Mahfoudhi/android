@@ -64,17 +64,26 @@ public class RegisterViewModel: ViewModel (){
         return password.matches(Regex(passwordRegex))
     }
 
-    fun isUserAtLeast18(selectedDate: String): Boolean {
-        val formatter = SimpleDateFormat("dd/MM/yyyy", Locale.getDefault())
-        val date = formatter.parse(selectedDate)
+    private fun isUserAtLeast18(dobString: String): Boolean {
+        if (dobString.isBlank()) return false
 
+        // Parse the selected date
+        val dobFormat = SimpleDateFormat("dd/MM/yyyy", Locale.US)
+        val dob = dobFormat.parse(dobString)
+
+        // Get current date and calculate the age
         val calendar = Calendar.getInstance()
-        calendar.time = date!!
+        val today = calendar.time
 
-        val current = Calendar.getInstance()
-        current.add(Calendar.YEAR, -18) // Subtract 18 years from the current date
+        val dobCalendar = Calendar.getInstance()
+        dobCalendar.time = dob
 
-        return calendar.before(current) // Return true if the date is before 18 years ago
+        val age = calendar.get(Calendar.YEAR) - dobCalendar.get(Calendar.YEAR)
+        if (calendar.get(Calendar.DAY_OF_YEAR) < dobCalendar.get(Calendar.DAY_OF_YEAR)) {
+            return age - 1 >= 18
+        }
+
+        return age >= 18
     }
 
     fun isTelephoneValid(telephone: String): Boolean {
