@@ -64,7 +64,7 @@ public class RegisterViewModel: ViewModel (){
         return password.matches(Regex(passwordRegex))
     }
 
-    private fun isUserAtLeast18(dobString: String): Boolean {
+    fun isUserAtLeast18(dobString: String): Boolean {
         if (dobString.isBlank()) return false
 
         // Parse the selected date
