@@ -12,7 +12,7 @@ import java.util.Calendar
 import java.util.Locale
 
 
-class RegisterViewModel: ViewModel (){
+public class RegisterViewModel: ViewModel (){
 
     private val _uiState = mutableStateOf(RegisterScreenState())
     val uistate: State<RegisterScreenState> get() = _uiState
@@ -77,7 +77,7 @@ class RegisterViewModel: ViewModel (){
         return calendar.before(current) // Return true if the date is before 18 years ago
     }
 
-    private fun isTelephoneValid(telephone: String): Boolean {
+    fun isTelephoneValid(telephone: String): Boolean {
         //A Belgian telephone number is either 10 digits (GSM) or 9 (land-line)
         return (telephone.length == 10 || telephone.length == 9 ) && telephone.all { it.isDigit() }
     }
