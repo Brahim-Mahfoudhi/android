@@ -16,6 +16,7 @@ import rise.tiao1.buut.user.presentation.login.LoginScreen
 import rise.tiao1.buut.user.presentation.login.LoginViewModel
 import rise.tiao1.buut.user.presentation.profile.ProfileScreen
 import rise.tiao1.buut.user.presentation.profile.ProfileViewModel
+import rise.tiao1.buut.user.presentation.register.RegisterScreen
 
 
 @RequiresExtension(extension = Build.VERSION_CODES.S, version = 7)
@@ -43,8 +44,13 @@ fun Navigation(mainActivity: MainActivity, isAppWakeUp: Boolean) {
                 loginViewModel.state.value,
                 login = {loginViewModel.login()},
                 navigateToProfile = {navController.navigate(NavigationKeys.Route.PROFILE)},
-                navigateToLogin = {navController.navigate(NavigationKeys.Route.AUTH)}
+                navigateToLogin = {navController.navigate(NavigationKeys.Route.AUTH)},
+                navController
             )
+        }
+
+        composable(route= NavigationKeys.Route.REGISTER) {
+            RegisterScreen(navController = navController)
         }
 
 

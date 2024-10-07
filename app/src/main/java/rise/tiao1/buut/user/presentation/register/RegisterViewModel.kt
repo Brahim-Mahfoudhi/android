@@ -2,16 +2,16 @@ package rise.tiao1.buut.user.presentation.register
 
 import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
+import androidx.core.text.isDigitsOnly
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
+import rise.tiao1.buut.user.domain.StreetType
 import java.text.SimpleDateFormat
 import java.util.Calendar
 import java.util.Locale
 
 
-@HiltViewModel
 class RegisterViewModel: ViewModel (){
 
     private val _uiState = mutableStateOf(RegisterScreenState())
@@ -24,10 +24,12 @@ class RegisterViewModel: ViewModel (){
         val emailError = if (_uiState.value.email.isBlank() || !android.util.Patterns.EMAIL_ADDRESS.matcher(_uiState.value.email).matches()) "Invalid email address" else null
         val passwordError = if (!isPasswordValid(_uiState.value.password)) "Password must have at least 8 characters, one uppercase letter, one number, and one special character" else null
         val confirmPasswordError = if (_uiState.value.password != _uiState.value.confirmPassword) "Passwords do not match" else null
-        val telephoneError = if (_uiState.value.telephone.isBlank()) "Telephone number cannot be empty" else null
+        val telephoneError = if (!isTelephoneValid(_uiState.value.telephone)) "Telephone number is invalid" else null
         val dateOfBirthError = if (!isUserAtLeast18(_uiState.value.dateOfBirth)) "You must be at least 18 years old" else null
-        val numberError = if (_uiState.value.number.toInt() <= 0 ) "House Number must be higher than 0" else null
-        val agreementError = if (_uiState.value.hasAgreedWithTermsOfUsage != true || _uiState.value.hasAgreedWithPrivacyConditions != true) "You must agree to the Terms of Usage and Privacy Policy to continue." else null
+        val streetError = if (_uiState.value.street == null) "You must select a street" else null
+        val houseNumberError = if (_uiState.value.houseNumber.isBlank() || !_uiState.value.houseNumber.isDigitsOnly() || _uiState.value.houseNumber.toInt() <= 0) "House number must be greater than zero" else null
+        val termsAgreementError = if (!_uiState.value.hasAgreedWithTermsOfUsage) "You must agree to the Terms of Usage to continue." else null
+        val privacyAgreementError = if (!_uiState.value.hasAgreedWithPrivacyConditions) "You must agree to the Privacy Policy to continue." else null
 
         val isFormValid = firstNameError == null
                 && lastNameError == null
@@ -36,8 +38,10 @@ class RegisterViewModel: ViewModel (){
                 && confirmPasswordError == null
                 && telephoneError == null
                 && dateOfBirthError == null
-                && numberError == null
-                && agreementError == null
+                && streetError == null
+                && houseNumberError == null
+                && termsAgreementError == null
+                && privacyAgreementError == null
 
         _uiState.value = _uiState.value.copy(
             firstNameError = firstNameError,
@@ -47,8 +51,10 @@ class RegisterViewModel: ViewModel (){
             confirmPasswordError = confirmPasswordError,
             telephoneError = telephoneError,
             dateOfBirthError = dateOfBirthError,
-            numberError = numberError,
-            agreementError = agreementError,
+            streetError = streetError,
+            houseNumberError = houseNumberError,
+            termsAgreementError = termsAgreementError,
+            privacyAgreementError = privacyAgreementError,
             isFormValid = isFormValid
         )
     }
@@ -58,27 +64,86 @@ class RegisterViewModel: ViewModel (){
         return password.matches(Regex(passwordRegex))
     }
 
-    fun isUserAtLeast18(dobString: String): Boolean {
-        if (dobString.isBlank()) return false
+    fun isUserAtLeast18(selectedDate: String): Boolean {
+        val formatter = SimpleDateFormat("dd/MM/yyyy", Locale.getDefault())
+        val date = formatter.parse(selectedDate)
 
-        // Parse the selected date
-        val dobFormat = SimpleDateFormat("dd/MM/yyyy", Locale.FRANCE)
-        val dob = dobFormat.parse(dobString)
-
-        // Get current date and calculate the age
         val calendar = Calendar.getInstance()
-        val today = calendar.time
+        calendar.time = date!!
 
-        val dobCalendar = Calendar.getInstance()
-        dobCalendar.time = dob
+        val current = Calendar.getInstance()
+        current.add(Calendar.YEAR, -18) // Subtract 18 years from the current date
 
-        val age = calendar.get(Calendar.YEAR) - dobCalendar.get(Calendar.YEAR)
-        if (calendar.get(Calendar.DAY_OF_YEAR) < dobCalendar.get(Calendar.DAY_OF_YEAR)) {
-            return age - 1 >= 18
-        }
-
-        return age >= 18
+        return calendar.before(current) // Return true if the date is before 18 years ago
     }
+
+    private fun isTelephoneValid(telephone: String): Boolean {
+        //A Belgian telephone number is either 10 digits (GSM) or 9 (land-line)
+        return (telephone.length == 10 || telephone.length == 9 ) && telephone.all { it.isDigit() }
+    }
+
+    fun onFirstNameChanged(firstName: String) {
+        _uiState.value = _uiState.value.copy(firstName = firstName)
+        validateForm()
+    }
+
+    fun onLastNameChanged(lastName: String) {
+        _uiState.value = _uiState.value.copy(lastName = lastName)
+        validateForm()
+    }
+
+    fun onPasswordChanged(Password: String) {
+        _uiState.value = _uiState.value.copy(password = Password)
+        validateForm()
+    }
+
+    fun onConfirmPasswordChanged(confirmPassword: String) {
+        _uiState.value = _uiState.value.copy(confirmPassword = confirmPassword)
+        validateForm()
+    }
+
+    fun onEmailChanged(email: String) {
+        _uiState.value = _uiState.value.copy(email = email)
+        validateForm()
+    }
+
+    fun onTelephoneChanged(telephone: String) {
+        _uiState.value = _uiState.value.copy(telephone = telephone)
+        validateForm()
+    }
+
+    fun onStreetSelected(street: StreetType) {
+        _uiState.value = _uiState.value.copy(street = street)
+        validateForm()
+    }
+
+
+    fun onHouseNumberChanged(houseNumber: String) {
+        _uiState.value = _uiState.value.copy(houseNumber = houseNumber)
+        validateForm()
+    }
+
+    fun onAddressAdditionChanged(addressAddition: String) {
+        _uiState.value = _uiState.value.copy(addressAddition = addressAddition)
+        validateForm()
+    }
+
+    fun onDateOfBirthSelected(dateOfBirth: String) {
+        _uiState.value = _uiState.value.copy(dateOfBirth = dateOfBirth)
+        validateForm()
+    }
+
+    fun onAcceptTermsChanged(isChecked: Boolean) {
+        _uiState.value = _uiState.value.copy(hasAgreedWithTermsOfUsage = isChecked)
+        validateForm()
+    }
+
+    fun onAcceptPrivacyChanged(isChecked: Boolean) {
+        _uiState.value = _uiState.value.copy(hasAgreedWithPrivacyConditions = isChecked)
+        validateForm()
+    }
+
+
 
     fun onRegisterClick() {
         viewModelScope.launch {

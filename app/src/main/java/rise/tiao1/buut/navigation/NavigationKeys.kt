@@ -24,5 +24,11 @@ object NavigationKeys {
          */
         const val PROFILE = "profile"
 
+        /**
+         * Route for the registration screen.
+         */
+        const val REGISTER = "register"
+
+
     }
 }

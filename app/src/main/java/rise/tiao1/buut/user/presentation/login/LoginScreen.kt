@@ -17,11 +17,13 @@ import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavHostController
 
 import rise.tiao1.buut.R
+import rise.tiao1.buut.navigation.NavigationKeys
 
 @Composable
-fun LoginScreen(state: LoginScreenState, login: () -> Unit, navigateToProfile: () -> Unit = {}, navigateToLogin: () -> Unit = {}){
+fun LoginScreen(state: LoginScreenState, login: () -> Unit, navigateToProfile: () -> Unit = {}, navigateToLogin: () -> Unit = {}, navController: NavHostController){
     Column(
         modifier = Modifier.padding(20.dp),
         horizontalAlignment = Alignment.CenterHorizontally,
@@ -40,6 +42,11 @@ fun LoginScreen(state: LoginScreenState, login: () -> Unit, navigateToProfile: (
         LogButton(
             text = stringResource(R.string.log_in_button),
             onClick = { login()},
+        )
+
+        LogButton(
+            text = stringResource(R.string.register_button),
+            onClick = { navController.navigate(route= NavigationKeys.Route.REGISTER)},
         )
     }
 }

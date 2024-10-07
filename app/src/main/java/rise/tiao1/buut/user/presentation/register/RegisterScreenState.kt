@@ -1,6 +1,4 @@
 package rise.tiao1.buut.user.presentation.register
-
-
 import rise.tiao1.buut.user.domain.StreetType
 
 
@@ -14,8 +12,8 @@ import rise.tiao1.buut.user.domain.StreetType
  * @property lastName The [String] object representing the last name of the User.
  * @property telephone The [String] object representing the telephone of the User.
  * @property street The [StreetType] object representing the street of the User.
- * @property number The [String] object representing the house number of the User.
- * @property addition The [String] object representing addition to the address of the User.
+ * @property houseNumber The [String] object representing the house number of the User.
+ * @property addressAddition The [String] object representing addition to the address of the User.
  * @property email The [String] object representing the email of the User.
  * @property password The [String] object representing the password of the User.
  * @property confirmPassword The [String] object representing the confirmed password of the User.
@@ -30,16 +28,20 @@ import rise.tiao1.buut.user.domain.StreetType
  * @property passwordError The [String] object representing the errors in the validator of [password].
  * @property confirmPassword The [String] object representing the errors in the password confirmation.
  * @property dateOfBirthError The [String] object representing the errors in the validator of [dateOfBirth].
- * @property agreementError The [String] object representing the errors in the agreement to the Terms of Usage or Privacy Policy.
+ * @property streetError The [String] object representing the errors in the validator of [StreetType].
+ * @property houseNumberError The [String] object representing the errors in the validator of [Number].
+ * @property dateOfBirthError The [String] object representing the errors in the validator of [dateOfBirth].
+ * @property termsAgreementError The [String] object representing the errors in the agreement to the Terms of Usage.
+ * @property privacyAgreementError The [String] object representing the errors in the agreement to the Privacy Policy.
  * @constructor Creates an instance of [RegisterScreenState] with the provided parameters.
  */
 
 data class RegisterScreenState(
     val firstName: String = "",
     val lastName: String = "",
-    val street: StreetType = StreetType.AFRIKALAAN,
-    val number: String = "",
-    val addition: String = "",
+    val street: StreetType? = null,
+    val houseNumber: String = "",
+    val addressAddition: String = "",
     val telephone: String = "",
     val email: String = "",
     val password: String = "",
@@ -55,6 +57,8 @@ data class RegisterScreenState(
     val passwordError: String? = null,
     val confirmPasswordError: String? = null,
     val dateOfBirthError: String? = null,
-    val numberError: String? = null,
-    val agreementError: String? = null
+    val streetError: String? = null,
+    val houseNumberError: String? = null,
+    val termsAgreementError: String? = null,
+    val privacyAgreementError: String? = null
 )
