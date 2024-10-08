@@ -17,54 +17,126 @@ import java.time.format.DateTimeParseException
 
 public class RegisterViewModel: ViewModel (){
 
+    //State variables
     private val _uiState = mutableStateOf(RegisterScreenState())
     val uistate: State<RegisterScreenState> get() = _uiState
+
+    //state variables for date validation from picker
     var selectedDay by mutableStateOf("")
     var selectedMonth by mutableStateOf("")
     var selectedYear by mutableStateOf("")
 
+    //field interaction state variables
+    var firstNameTouched by mutableStateOf(false)
+    var lastNameTouched by mutableStateOf(false)
+    var emailTouched by mutableStateOf(false)
+    var phoneNumberTouched by mutableStateOf(false)
+    var streetTouched by mutableStateOf(false)
+    var houseNumberTouched by mutableStateOf(false)
+    var passwordTouched by mutableStateOf(false)
+    var passwordConfirmTouched by mutableStateOf(false)
+    var dateOfBirthTouched by mutableStateOf(false)
+    var termsTouched by mutableStateOf(false)
+    var privacyTouched by mutableStateOf(false)
 
-    private fun validateForm() {
+    // Validation rules for each field
+    fun validateFirstName() {
+        if (!firstNameTouched) return
         val firstNameError = if (_uiState.value.firstName.isBlank()) "First Name cannot be empty" else null
-        val lastNameError = if (_uiState.value.lastName.isBlank()) "Last Name cannot be empty" else null
-        val emailError = if (_uiState.value.email.isBlank() || !android.util.Patterns.EMAIL_ADDRESS.matcher(_uiState.value.email).matches()) "Invalid email address" else null
-        val passwordError = if (!isPasswordValid(_uiState.value.password)) "Password must have at least 8 characters, one uppercase letter, one number, and one special character" else null
-        val confirmPasswordError = if (_uiState.value.password != _uiState.value.confirmPassword) "Passwords do not match" else null
-        val telephoneError = if (!isTelephoneValid(_uiState.value.telephone)) "Telephone number is invalid" else null
-        val dateOfBirthError = validateDateOfBirth() //returns error string if date invalid or use < 18 years old. Else null.
-        val streetError = if (_uiState.value.street == null) "You must select a street" else null
-        val houseNumberError = if (_uiState.value.houseNumber.isBlank() || !_uiState.value.houseNumber.isDigitsOnly() || _uiState.value.houseNumber.toInt() <= 0) "House number must be greater than zero" else null
-        val termsAgreementError = if (!_uiState.value.hasAgreedWithTermsOfUsage) "You must agree to the Terms of Usage to continue." else null
-        val privacyAgreementError = if (!_uiState.value.hasAgreedWithPrivacyConditions) "You must agree to the Privacy Policy to continue." else null
-
-        val isFormValid = firstNameError == null
-                && lastNameError == null
-                && emailError == null
-                && passwordError == null
-                && confirmPasswordError == null
-                && telephoneError == null
-                && dateOfBirthError == null
-                && streetError == null
-                && houseNumberError == null
-                && termsAgreementError == null
-                && privacyAgreementError == null
-
-        _uiState.value = _uiState.value.copy(
-            firstNameError = firstNameError,
-            lastNameError = lastNameError,
-            emailError = emailError,
-            passwordError = passwordError,
-            confirmPasswordError = confirmPasswordError,
-            telephoneError = telephoneError,
-            dateOfBirthError = dateOfBirthError.toString(),
-            streetError = streetError,
-            houseNumberError = houseNumberError,
-            termsAgreementError = termsAgreementError,
-            privacyAgreementError = privacyAgreementError,
-            isFormValid = isFormValid
-        )
+        _uiState.value = _uiState.value.copy(firstNameError = firstNameError)
     }
 
+    fun validateLastName() {
+        if (!lastNameTouched) return
+        val lastNameError = if (_uiState.value.lastName.isBlank()) "Last Name cannot be empty" else null
+        _uiState.value = _uiState.value.copy(lastNameError = lastNameError)
+    }
+
+    fun validateEmail(){
+        if (!emailTouched) return
+        val emailError = if (_uiState.value.email.isBlank() || !android.util.Patterns.EMAIL_ADDRESS.matcher(_uiState.value.email).matches()) "Invalid email address" else null
+        _uiState.value = _uiState.value.copy(emailError = emailError)
+    }
+
+    fun validatePassword(){
+        if (!passwordTouched) return
+        val passwordError = if (!isPasswordValid(_uiState.value.password)) "Password must have at least 8 characters, one uppercase letter, one number, and one special character" else null
+        _uiState.value = _uiState.value.copy(passwordError = passwordError)
+    }
+
+    fun validateConfirmPassword(){
+        if (!passwordConfirmTouched) return
+        val confirmPasswordError = if (_uiState.value.password != _uiState.value.confirmPassword) "Passwords do not match" else null
+        _uiState.value = _uiState.value.copy(confirmPasswordError = confirmPasswordError)
+    }
+
+    fun validateTelephone(){
+        if (!phoneNumberTouched) return
+        val telephoneError = if (!isTelephoneValid(_uiState.value.telephone)) "Telephone number is invalid" else null
+        _uiState.value = _uiState.value.copy(telephoneError = telephoneError)
+    }
+
+    fun validateDateOfBirthDropDown(){
+        if (!dateOfBirthTouched) return
+        val dateOfBirthError = validateDateOfBirth() //returns error string if date invalid or use < 18 years old. Else null.
+        _uiState.value = _uiState.value.copy(dateOfBirth = dateOfBirthError.toString())
+    }
+
+    fun validateStreet(){
+        if (!streetTouched) return
+        val streetError = if (_uiState.value.street == null) "You must select a street" else null
+        _uiState.value = _uiState.value.copy(streetError = streetError)
+    }
+
+    fun validateHouseNumber(){
+        if (!houseNumberTouched) return
+        val houseNumberError = if (_uiState.value.houseNumber.isBlank() || !_uiState.value.houseNumber.isDigitsOnly() || _uiState.value.houseNumber.toInt() <= 0) "House number must be greater than zero" else null
+        _uiState.value = _uiState.value.copy(houseNumberError = houseNumberError)
+    }
+
+    fun validateTerms(){
+        if (!termsTouched) return
+        val termsAgreementError = if (!_uiState.value.hasAgreedWithTermsOfUsage) "You must agree to the Terms of Usage to continue." else null
+        _uiState.value = _uiState.value.copy(termsAgreementError = termsAgreementError)
+    }
+
+    fun validatePrivacy(){
+        if (!privacyTouched) return
+        val privacyAgreementError = if (!_uiState.value.hasAgreedWithPrivacyConditions) "You must agree to the Privacy Policy to continue." else null
+        _uiState.value = _uiState.value.copy(privacyAgreementError = privacyAgreementError)
+    }
+
+    //checks if all fields have been touched and errors exist based on previous validators and sets overal form valid to true for POST
+    private fun validateForm() {
+        val AllFieldsTouched = firstNameTouched
+                && lastNameTouched
+                && emailTouched
+                && phoneNumberTouched
+                && streetTouched
+                && houseNumberTouched
+                && passwordTouched
+                && passwordConfirmTouched
+                && dateOfBirthTouched
+                && termsTouched
+                && privacyTouched
+
+        val NoErrors = _uiState.value.firstNameError == null
+                && _uiState.value.lastNameError == null
+                && _uiState.value.emailError == null
+                && _uiState.value.passwordError == null
+                && _uiState.value.confirmPasswordError == null
+                && _uiState.value.telephoneError == null
+                && _uiState.value.dateOfBirthError == null
+                && _uiState.value.streetError == null
+                && _uiState.value.houseNumberError == null
+                && _uiState.value.termsAgreementError == null
+                && _uiState.value.privacyAgreementError == null
+
+        _uiState.value = _uiState.value.copy(isFormValid = AllFieldsTouched && NoErrors)
+    }
+
+
+    //Helper functions for validation
     fun isPasswordValid(password: String): Boolean {
         val passwordRegex = "^(?=.*[A-Z])(?=.*[0-9])(?=.*[@#\$%^&+=!]).{8,}$"
         return password.matches(Regex(passwordRegex))
@@ -145,62 +217,71 @@ public class RegisterViewModel: ViewModel (){
         return (telephone.length == 10 || telephone.length == 9 ) && telephone.all { it.isDigit() }
     }
 
+    //handlers for fields in form
     fun onFirstNameChanged(firstName: String) {
         _uiState.value = _uiState.value.copy(firstName = firstName)
+        validateFirstName()
         validateForm()
     }
 
     fun onLastNameChanged(lastName: String) {
         _uiState.value = _uiState.value.copy(lastName = lastName)
+        validateLastName()
         validateForm()
     }
 
     fun onPasswordChanged(Password: String) {
         _uiState.value = _uiState.value.copy(password = Password)
+        validatePassword()
         validateForm()
     }
 
     fun onConfirmPasswordChanged(confirmPassword: String) {
         _uiState.value = _uiState.value.copy(confirmPassword = confirmPassword)
+        validateConfirmPassword()
         validateForm()
     }
 
     fun onEmailChanged(email: String) {
         _uiState.value = _uiState.value.copy(email = email)
+        validateEmail()
         validateForm()
     }
 
     fun onTelephoneChanged(telephone: String) {
         _uiState.value = _uiState.value.copy(telephone = telephone)
+        validateTelephone()
         validateForm()
     }
 
     fun onStreetSelected(street: StreetType) {
         _uiState.value = _uiState.value.copy(street = street)
+        validateStreet()
         validateForm()
     }
 
     fun onHouseNumberChanged(houseNumber: String) {
         _uiState.value = _uiState.value.copy(houseNumber = houseNumber)
+        validateHouseNumber()
         validateForm()
     }
 
     fun onAddressAdditionChanged(addressAddition: String) {
         _uiState.value = _uiState.value.copy(addressAddition = addressAddition)
-        validateForm()
+        //does not trigger validation since addition is a free form.
     }
 
     fun onAcceptTermsChanged(isChecked: Boolean) {
         _uiState.value = _uiState.value.copy(hasAgreedWithTermsOfUsage = isChecked)
+        validateTerms()
         validateForm()
     }
 
     fun onAcceptPrivacyChanged(isChecked: Boolean) {
         _uiState.value = _uiState.value.copy(hasAgreedWithPrivacyConditions = isChecked)
+        validatePrivacy()
         validateForm()
     }
-
-
 
     fun onRegisterClick() {
         viewModelScope.launch {

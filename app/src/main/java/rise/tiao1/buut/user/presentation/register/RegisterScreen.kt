@@ -1,8 +1,6 @@
 package rise.tiao1.buut.user.presentation.register
 
 import android.annotation.SuppressLint
-import android.app.DatePickerDialog
-import android.widget.DatePicker
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -26,7 +24,6 @@ import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -45,7 +42,6 @@ import rise.tiao1.buut.navigation.NavigationKeys
 import rise.tiao1.buut.user.domain.StreetType
 import rise.tiao1.buut.user.presentation.login.Title
 import java.time.LocalDate
-import java.util.Calendar
 
 
 @SuppressLint("DefaultLocale")
@@ -90,7 +86,8 @@ fun RegisterScreen(viewModel: RegisterViewModel = viewModel(), navController: Na
             selectedYear = viewModel.selectedYear,
             onDaySelected = { viewModel.selectedDay = it },
             onMonthSelected = { viewModel.selectedMonth = it },
-            onYearSelected = { viewModel.selectedYear = it }
+            onYearSelected = { viewModel.selectedYear = it },
+            viewModel = viewModel
         )
 
         Spacer(modifier = Modifier.height(16.dp))
@@ -119,7 +116,9 @@ private fun NameInputRow(
     ) {
         TextField(
             value = uiState.firstName,
-            onValueChange = { viewModel.onFirstNameChanged(it) },
+            onValueChange = {
+                viewModel.firstNameTouched = true
+                viewModel.onFirstNameChanged(it) },
             label = { Text("First Name") },
             modifier = Modifier
                 .fillMaxWidth()
@@ -130,7 +129,9 @@ private fun NameInputRow(
 
         TextField(
             value = uiState.lastName,
-            onValueChange = { viewModel.onLastNameChanged(it) },
+            onValueChange = {
+                viewModel.lastNameTouched = true
+                viewModel.onLastNameChanged(it) },
             label = { Text("Last Name") },
             modifier = Modifier
                 .fillMaxWidth()
@@ -169,7 +170,9 @@ private fun EmailAndPhoneNumberRow(
 
         TextField(
             value = uiState.email,
-            onValueChange = { viewModel.onEmailChanged(it) },
+            onValueChange = {
+                viewModel.emailTouched = true
+                viewModel.onEmailChanged(it) },
             label = { Text("Email") },
             modifier = Modifier
                 .fillMaxWidth()
@@ -180,7 +183,9 @@ private fun EmailAndPhoneNumberRow(
 
         TextField(
             value = uiState.telephone,
-            onValueChange = { viewModel.onTelephoneChanged(it) },
+            onValueChange = {
+                viewModel.phoneNumberTouched = true
+                viewModel.onTelephoneChanged(it) },
             label = { Text("Phone Number") },
             modifier = Modifier
                 .fillMaxWidth()
@@ -226,6 +231,7 @@ fun StreetSelectorDropdown(
             StreetType.entries.forEach { street ->
                 DropdownMenuItem(
                     onClick = {
+                        viewModel.streetTouched = true
                         viewModel.onStreetSelected(street)
                         expanded = false
                     },
@@ -245,7 +251,9 @@ private fun HouseNumberAndAddressAdditionRow(
 
         TextField(
             value = uiState.houseNumber,
-            onValueChange = { viewModel.onHouseNumberChanged(it) },
+            onValueChange = {
+                viewModel.houseNumberTouched = true
+                viewModel.onHouseNumberChanged(it) },
             label = { Text("House Number") },
             modifier = Modifier
                 .weight(1f)
@@ -269,7 +277,7 @@ private fun HouseNumberAndAddressAdditionRow(
         if (uiState.houseNumberError != null) {
             Row {
                 Text(
-                    text = uiState.houseNumberError,
+                    text = uiState.houseNumberError!!,
                     color = Color.Red,
                     modifier = Modifier.weight(1f),
                     style = MaterialTheme.typography.bodyMedium
@@ -286,14 +294,16 @@ private fun PasswordFields(
 ) {
     TextField(
         value = uiState.password,
-        onValueChange = { viewModel.onPasswordChanged(it) },
+        onValueChange = {
+            viewModel.passwordTouched = true
+            viewModel.onPasswordChanged(it) },
         label = { Text("Password") },
         isError = uiState.passwordError != null,
         visualTransformation = PasswordVisualTransformation()
     )
     if (uiState.passwordError != null) {
         Text(
-            text = uiState.passwordError,
+            text = uiState.passwordError!!,
             color = Color.Red,
             style = MaterialTheme.typography.bodyMedium
         )
@@ -303,14 +313,16 @@ private fun PasswordFields(
 
     TextField(
         value = uiState.confirmPassword,
-        onValueChange = { viewModel.onConfirmPasswordChanged(it) },
+        onValueChange = {
+            viewModel.passwordConfirmTouched = true
+            viewModel.onConfirmPasswordChanged(it) },
         label = { Text("Confirm Password") },
         isError = uiState.confirmPasswordError != null,
         visualTransformation = PasswordVisualTransformation()
     )
     if (uiState.confirmPasswordError != null) {
         Text(
-            text = uiState.confirmPasswordError,
+            text = uiState.confirmPasswordError!!,
             color = Color.Red,
             style = MaterialTheme.typography.bodyMedium
         )
@@ -325,7 +337,8 @@ fun DateOfBirthDropdown(
     onDaySelected: (String) -> Unit,
     onMonthSelected: (String) -> Unit,
     onYearSelected: (String) -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    viewModel: RegisterViewModel
 ) {
     val days = (1..31).map { it.toString().padStart(2, '0') }
     val months = listOf(
@@ -341,7 +354,8 @@ fun DateOfBirthDropdown(
             options = days,
             selectedOption = selectedDay,
             onOptionSelected = onDaySelected,
-            modifier = Modifier.weight(1f)
+            modifier = Modifier.weight(1f),
+            viewModel = viewModel
         )
 
         // Month Dropdown
@@ -350,7 +364,8 @@ fun DateOfBirthDropdown(
             options = months,
             selectedOption = selectedMonth,
             onOptionSelected = onMonthSelected,
-            modifier = Modifier.weight(2f)
+            modifier = Modifier.weight(2f),
+            viewModel = viewModel
         )
 
         // Year Dropdown
@@ -359,7 +374,8 @@ fun DateOfBirthDropdown(
             options = years,
             selectedOption = selectedYear,
             onOptionSelected = onYearSelected,
-            modifier = Modifier.weight(1f)
+            modifier = Modifier.weight(1f),
+            viewModel = viewModel
         )
     }
 }
@@ -370,7 +386,8 @@ fun DropdownMenuField(
     options: List<String>,
     selectedOption: String,
     onOptionSelected: (String) -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    viewModel: RegisterViewModel
 ) {
     var expanded by remember { mutableStateOf(false) }
     val labelText = if (selectedOption.isEmpty()) label else selectedOption
@@ -391,6 +408,7 @@ fun DropdownMenuField(
             options.forEach { option ->
                 DropdownMenuItem(
                     onClick = {
+                        viewModel.dateOfBirthTouched = true
                         onOptionSelected(option)
                         expanded = false
                     },
@@ -412,14 +430,16 @@ private fun TermsAndPrivacyCheckboxes(
     ) {
         Checkbox(
             checked = uiState.hasAgreedWithTermsOfUsage,
-            onCheckedChange = { viewModel.onAcceptTermsChanged(it) }
+            onCheckedChange = {
+                viewModel.termsTouched = true
+                viewModel.onAcceptTermsChanged(it) }
         )
         Text(text = "I accept the Terms of Usage.")
     }
 
     if (uiState.termsAgreementError != null) {
         Text(
-            text = uiState.termsAgreementError,
+            text = uiState.termsAgreementError!!,
             color = Color.Red,
             style = MaterialTheme.typography.bodyMedium
         )
@@ -434,14 +454,16 @@ private fun TermsAndPrivacyCheckboxes(
     ) {
         Checkbox(
             checked = uiState.hasAgreedWithPrivacyConditions,
-            onCheckedChange = { viewModel.onAcceptPrivacyChanged(it) }
+            onCheckedChange = {
+                viewModel.privacyTouched = true
+                viewModel.onAcceptPrivacyChanged(it) }
         )
         Text(text = "I accept the Privacy Policy.")
     }
 
     if (uiState.privacyAgreementError != null) {
         Text(
-            text = uiState.privacyAgreementError,
+            text = uiState.privacyAgreementError!!,
             color = Color.Red,
             style = MaterialTheme.typography.bodyMedium
         )
