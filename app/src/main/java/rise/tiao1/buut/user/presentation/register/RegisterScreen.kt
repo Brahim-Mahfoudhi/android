@@ -95,6 +95,8 @@ fun RegisterScreen(viewModel: RegisterViewModel = viewModel(), navController: Na
         TermsAndPrivacyCheckboxes(uiState, viewModel)
 
         NavigationButtons(navController, viewModel, uiState)
+
+        RegistrationConfirmTekstDatWeGaanWegSmijten(viewModel)
     }
 }
 
@@ -494,5 +496,15 @@ private fun NavigationButtons(
         ) {
             Text(text = "Register")
         }
+    }
+}
+
+@Composable
+private fun RegistrationConfirmTekstDatWeGaanWegSmijten(viewModel: RegisterViewModel) {
+    val dto = viewModel.registrationResult.value
+    if (dto != null) {
+        Text(
+            text = "${dto.firstName} ${dto.lastName} ${dto.email} ${dto.telephone} ${dto.address.street} ${dto.address.houseNumber} ${dto.address.addressAddition} "
+        )
     }
 }

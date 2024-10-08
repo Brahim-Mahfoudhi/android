@@ -1,5 +1,6 @@
 package rise.tiao1.buut.user.presentation.register
 
+import android.util.Patterns
 import androidx.compose.runtime.State
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -9,13 +10,19 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.launch
 import rise.tiao1.buut.user.domain.StreetType
+import rise.tiao1.buut.user.domain.dto.RegistrationDTO
+import rise.tiao1.buut.user.domain.dto.UserOutPutDTO
 import java.time.LocalDate
 import java.time.Period
 import java.time.format.DateTimeFormatter
 import java.time.format.DateTimeParseException
 
 
-class RegisterViewModel: ViewModel (){
+class RegisterViewModel : ViewModel() {
+
+    //Tijdelijke variables opdat we de REST API response kunnen testen zonder volledige applicatie
+    private val _registrationResult = mutableStateOf<UserOutPutDTO?>(null)
+    val registrationResult: State<UserOutPutDTO?> get() = _registrationResult
 
     //State variables
     private val _uiState = mutableStateOf(RegisterScreenState())
@@ -54,7 +61,10 @@ class RegisterViewModel: ViewModel (){
 
     fun validateEmail(){
         if (!emailTouched) return
-        val emailError = if (_uiState.value.email.isBlank() || !android.util.Patterns.EMAIL_ADDRESS.matcher(_uiState.value.email).matches()) "Invalid email address" else null
+        val emailError =
+            if (_uiState.value.email.isBlank() || !Patterns.EMAIL_ADDRESS.matcher(_uiState.value.email)
+                    .matches()
+            ) "Invalid email address" else null
         _uiState.value = _uiState.value.copy(emailError = emailError)
     }
 
@@ -302,9 +312,23 @@ class RegisterViewModel: ViewModel (){
     }
 
     fun onRegisterClick() {
-        viewModelScope.launch {
-            if (_uiState.value.isFormValid) {
-                //todo: call naar BE.
+        if (_uiState.value.isFormValid) {
+            //todo: call naar BE.
+            viewModelScope.launch {
+                val registerDto = RegistrationDTO(
+                    firstName = _uiState.value.firstName,
+                    lastName = _uiState.value.lastName,
+                    email = _uiState.value.email,
+                    password = _uiState.value.password,
+                    telephone = _uiState.value.telephone,
+                    dateOfBirth = _uiState.value.dateOfBirth,
+                    street = _uiState.value.street,
+                    houseNumber = _uiState.value.houseNumber,
+                    addressAddition = _uiState.value.addressAddition,
+                )
+                //Ik krijg dit niet geinjecteerd
+//                     val user = userRepository.registerUser(registerDto)
+//                     _registrationResult.value = user
             }
         }
     }

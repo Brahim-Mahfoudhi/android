@@ -2,8 +2,11 @@ package rise.tiao1.buut.user.data
 
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
+import rise.tiao1.buut.api.UserApiService
 import rise.tiao1.buut.data.BuutDao
 import rise.tiao1.buut.user.domain.User
+import rise.tiao1.buut.user.domain.dto.RegistrationDTO
+import rise.tiao1.buut.user.domain.dto.UserOutPutDTO
 import rise.tiao1.buut.utils.toLocalUser
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -14,7 +17,10 @@ import javax.inject.Singleton
  * @property buutDao Data Access Object for interacting with user data in the database.
  */
 @Singleton
-class UserRepository @Inject constructor(private val buutDao: BuutDao) {
+class UserRepository @Inject constructor(
+    private val buutDao: BuutDao,
+    private val apiService: UserApiService
+) {
 
     /**
      * Retrieves a user by their unique identifier.
@@ -58,6 +64,15 @@ class UserRepository @Inject constructor(private val buutDao: BuutDao) {
     suspend fun getAllUsers(): List<User> {
         return withContext(Dispatchers.IO) {
             return@withContext buutDao.getAllUsers().map { User(it.token) }
+        }
+    }
+
+    suspend fun registerUser(registerDto: RegistrationDTO): UserOutPutDTO? {
+        val response = apiService.registerUser(registerDto)
+        if (response.isSuccessful) {
+            return response.body()
+        } else {
+            return null
         }
     }
 }

@@ -7,12 +7,15 @@ import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
-
+import retrofit2.Retrofit
+import retrofit2.converter.gson.GsonConverterFactory
+import rise.tiao1.buut.api.UserApiService
 import rise.tiao1.buut.data.BuutDao
 import rise.tiao1.buut.data.BuutDb
 import rise.tiao1.buut.user.domain.GetAllUsersUseCase
 import rise.tiao1.buut.user.domain.GetUserUseCase
 import javax.inject.Singleton
+
 
 /**
  * Dagger/Hilt Module providing dependencies related to the Irrigation Zone feature.
@@ -20,7 +23,9 @@ import javax.inject.Singleton
  */
 @Module
 @InstallIn(SingletonComponent::class)
-internal object BuutModule {
+object BuutModule {
+
+    private var baseUrl: String = "http://localhost:8080/"
 
     /**
      * Provides the [BuutDao] for Room database operations.
@@ -51,6 +56,30 @@ internal object BuutModule {
     @Singleton
     fun provideGetUserUseCase(getAllUsersUseCase: GetAllUsersUseCase): GetUserUseCase {
         return GetUserUseCase(getAllUsersUseCase)
+    }
+
+    /**
+     * Provides the [Retrofit] for API calls.
+     */
+
+    @Provides
+    @Singleton
+    fun provideRetrofit(): Retrofit {
+        return Retrofit.Builder()
+            .baseUrl(baseUrl)
+            .addConverterFactory(GsonConverterFactory.create())
+            .build()
+
+    }
+
+    /**
+     * Provides the [UserApiService] for REST calls in the user domain.
+     */
+
+    @Provides
+    @Singleton
+    fun provideUserApiService(retrofit: Retrofit): UserApiService {
+        return retrofit.create(UserApiService::class.java)
     }
 
 }
