@@ -44,6 +44,7 @@ import androidx.navigation.NavHostController
 import rise.tiao1.buut.navigation.NavigationKeys
 import rise.tiao1.buut.user.domain.StreetType
 import rise.tiao1.buut.user.presentation.login.Title
+import java.time.LocalDate
 import java.util.Calendar
 
 
@@ -65,234 +66,38 @@ fun RegisterScreen(viewModel: RegisterViewModel = viewModel(), navController: Na
 
         Spacer(modifier = Modifier.height(16.dp))
 
-        Row(modifier = Modifier
-            .fillMaxWidth()
-            .padding(vertical = 8.dp)) { TextField(
-            value = uiState.firstName,
-            onValueChange = { viewModel.onFirstNameChanged(it) },
-            label = { Text("First Name") },
-            modifier = Modifier.fillMaxWidth().weight(1f).padding(end = 8.dp),
-            isError = uiState.firstNameError != null
-        )
+        NameInputRow(uiState, viewModel)
 
-            TextField(
-                value = uiState.lastName,
-                onValueChange = { viewModel.onLastNameChanged(it) },
-                label = { Text("Last Name") },
-                modifier = Modifier.fillMaxWidth().weight(1f),
-                isError = uiState.lastNameError != null
-            )
-
-        }
-
-        Box(modifier = Modifier.height(16.dp)) {
-            if (uiState.firstNameError != null || uiState.lastNameError != null) {
-                Row {
-                    Text(
-                        text = uiState.firstNameError ?: "",
-                        color = Color.Red,
-                        modifier = Modifier.weight(1f),
-                        style = MaterialTheme.typography.bodyMedium
-                    )
-                    Text(
-                        text = uiState.lastNameError ?: "",
-                        color = Color.Red,
-                        modifier = Modifier.weight(1f),
-                        style = MaterialTheme.typography.bodyMedium
-                    )
-                }
-            }
-        }
-
-        Row {
-
-            TextField(
-                value = uiState.email,
-                onValueChange = { viewModel.onEmailChanged(it) },
-                label = { Text("Email") },
-                modifier = Modifier.fillMaxWidth().weight(1f).padding(end = 8.dp),
-                isError = uiState.emailError != null
-            )
-
-            TextField(
-                value = uiState.telephone,
-                onValueChange = { viewModel.onTelephoneChanged(it) },
-                label = { Text("Phone Number") },
-                modifier = Modifier.fillMaxWidth().weight(1f),
-                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number)
-            )
-        }
-
-        Box(modifier = Modifier.height(16.dp)) {
-            if (uiState.emailError != null || uiState.telephoneError != null) {
-                Row {
-                    Text(
-                        text = uiState.emailError ?: "",
-                        color = Color.Red,
-                        modifier = Modifier.weight(1f),
-                        style = MaterialTheme.typography.bodyMedium
-                    )
-                    Text(
-                        text = uiState.telephoneError ?: "",
-                        color = Color.Red,
-                        modifier = Modifier.weight(1f),
-                        style = MaterialTheme.typography.bodyMedium
-                    )
-                }
-            }
-        }
+        EmailAndPhoneNumberRow(uiState, viewModel)
 
         Spacer(modifier = Modifier.height(16.dp))
 
-        // Dropdown to select a street
-        var expanded by remember { mutableStateOf(false) }
-        Box(modifier = Modifier.fillMaxWidth()) {
-            Button(onClick = { expanded = true }, modifier = Modifier.fillMaxWidth()) {
-                Text(text = uiState.street?.streetName ?: "Select a street")
-            }
-            DropdownMenu(
-                expanded = expanded,
-                onDismissRequest = { expanded = false }
-            ) {
-                StreetType.entries.forEach { street ->
-                    DropdownMenuItem(
-                        onClick = {
-                            viewModel.onStreetSelected(street)
-                            expanded = false
-                        },
-                        text = { Text(text = street.streetName) },
-                    )
-                }
-            }
-        }
+        StreetSelectorDropdown(uiState, viewModel)
 
         Spacer(modifier = Modifier.height(16.dp))
 
-        Row {
-
-            TextField(
-            value = uiState.houseNumber,
-            onValueChange = { viewModel.onHouseNumberChanged(it) },
-            label = { Text("House Number") },
-                modifier = Modifier
-                    .weight(1f)
-                    .padding(end = 8.dp),
-            isError = uiState.houseNumberError != null,
-                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number)
-
-        )
-
-            TextField(
-                value = uiState.addressAddition,
-                onValueChange = { viewModel.onAddressAdditionChanged(it) },
-                label = { Text("Addition (Optional)") },
-                modifier = Modifier
-                    .weight(1f)
-
-            )
-        }
-
-        Box(modifier = Modifier.height(16.dp)) {
-            if (uiState.houseNumberError != null) {
-                Row {
-                    Text(
-                        text = uiState.houseNumberError ?: "",
-                        color = Color.Red,
-                        modifier = Modifier.weight(1f),
-                        style = MaterialTheme.typography.bodyMedium
-                    )
-                }
-            }
-        }
-
+        HouseNumberAndAddressAdditionRow(uiState, viewModel)
 
         Spacer(modifier = Modifier.height(16.dp))
 
-        TextField(
-            value = uiState.password,
-            onValueChange = { viewModel.onPasswordChanged(it) },
-            label = { Text("Password") },
-            isError = uiState.passwordError != null,
-            visualTransformation = PasswordVisualTransformation()
-        )
-        if (uiState.passwordError != null) {
-            Text(text = uiState.passwordError!!, color = Color.Red, style = MaterialTheme.typography.bodyMedium)
-        }
+        PasswordFields(uiState, viewModel)
 
         Spacer(modifier = Modifier.height(16.dp))
 
-        TextField(
-            value = uiState.confirmPassword,
-            onValueChange = { viewModel.onConfirmPasswordChanged(it) },
-            label = { Text("Confirm Password") },
-            isError = uiState.confirmPasswordError != null,
-            visualTransformation = PasswordVisualTransformation()
-        )
-        if (uiState.confirmPasswordError != null) {
-            Text(text = uiState.confirmPasswordError!!, color = Color.Red, style = MaterialTheme.typography.bodyMedium)
-        }
-
-        Spacer(modifier = Modifier.height(16.dp))
-
-        DateOfBirthField(
-            dateOfBirth = uiState.dateOfBirth,
-            onDateOfBirthSelected = { selectedDate ->
-                viewModel.onDateOfBirthSelected(selectedDate)
-            }
+        DateOfBirthDropdown(
+            selectedDay = viewModel.selectedDay,
+            selectedMonth = viewModel.selectedMonth,
+            selectedYear = viewModel.selectedYear,
+            onDaySelected = { viewModel.selectedDay = it },
+            onMonthSelected = { viewModel.selectedMonth = it },
+            onYearSelected = { viewModel.selectedYear = it }
         )
 
         Spacer(modifier = Modifier.height(16.dp))
 
-        Row(
-            modifier = Modifier.fillMaxWidth(),
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            Checkbox(
-                checked = uiState.hasAgreedWithTermsOfUsage,
-                onCheckedChange = { viewModel.onAcceptTermsChanged(it) }
-            )
-            Text(text = "I accept the Terms of Usage.")
-        }
+        TermsAndPrivacyCheckboxes(uiState, viewModel)
 
-        if (uiState.termsAgreementError != null) {
-            Text(text = uiState.termsAgreementError!!, color = Color.Red, style = MaterialTheme.typography.bodyMedium)
-        }
-
-
-        Spacer(modifier = Modifier.height(16.dp))
-
-        Row(
-            modifier = Modifier.fillMaxWidth(),
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            Checkbox(
-                checked = uiState.hasAgreedWithPrivacyConditions,
-                onCheckedChange = { viewModel.onAcceptPrivacyChanged(it) }
-            )
-            Text(text = "I accept the Privacy Policy.")
-        }
-
-        if (uiState.privacyAgreementError != null) {
-            Text(text = uiState.privacyAgreementError!!, color = Color.Red, style = MaterialTheme.typography.bodyMedium)
-        }
-
-        Spacer(modifier = Modifier.height(16.dp))
-
-        Row {
-
-            Button(
-                onClick = { navController.navigate(route= NavigationKeys.Route.AUTH)},
-            ) {
-                Text(text = "Back")
-            }
-            Spacer(modifier = Modifier.width(16.dp))
-            Button(
-        onClick = { viewModel.onRegisterClick() },
-        enabled = uiState.isFormValid
-            ) {
-                Text(text = "Register")
-            }
-        }
+        NavigationButtons(navController, viewModel, uiState)
     }
 }
 
@@ -303,48 +108,367 @@ fun RegisterScreenPreview() {
 }
 
 @Composable
-fun DateOfBirthField(
-    dateOfBirth: String,
-    onDateOfBirthSelected: (String) -> Unit
+private fun NameInputRow(
+    uiState: RegisterScreenState,
+    viewModel: RegisterViewModel
 ) {
-    var isDatePickerShown by remember { mutableStateOf(false) }
-    val context = LocalContext.current
-
-    // DatePickerDialog state
-    val calendar = Calendar.getInstance()
-
-    // DatePickerDialog listener
-    val datePickerDialog = DatePickerDialog(
-        context,
-        { _: DatePicker, year: Int, month: Int, dayOfMonth: Int ->
-            val selectedDate = "$dayOfMonth/${month + 1}/$year"
-            onDateOfBirthSelected(selectedDate)
-        },
-        calendar.get(Calendar.YEAR),
-        calendar.get(Calendar.MONTH),
-        calendar.get(Calendar.DAY_OF_MONTH)
-    )
-
-    Column {
-        // Date of Birth TextField
-        OutlinedTextField(
-            value = dateOfBirth,
-            onValueChange = { /* Do nothing, handled by date picker */ },
-            label = { Text("Date of Birth") },
+    Row(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(vertical = 8.dp)
+    ) {
+        TextField(
+            value = uiState.firstName,
+            onValueChange = { viewModel.onFirstNameChanged(it) },
+            label = { Text("First Name") },
             modifier = Modifier
                 .fillMaxWidth()
-                .clickable {
-                    isDatePickerShown = true  // Show DatePicker when clicked
-                },
-            readOnly = true // Make the field read-only since we're using DatePicker
+                .weight(1f)
+                .padding(end = 8.dp),
+            isError = uiState.firstNameError != null
         )
 
-        // Show the DatePicker dialog when `isDatePickerShown` is true
-        if (isDatePickerShown) {
-            LaunchedEffect(Unit) {
-                datePickerDialog.show()
-                isDatePickerShown = false  // Reset to prevent multiple popups
+        TextField(
+            value = uiState.lastName,
+            onValueChange = { viewModel.onLastNameChanged(it) },
+            label = { Text("Last Name") },
+            modifier = Modifier
+                .fillMaxWidth()
+                .weight(1f),
+            isError = uiState.lastNameError != null
+        )
+
+    }
+
+    Box(modifier = Modifier.height(16.dp)) {
+        if (uiState.firstNameError != null || uiState.lastNameError != null) {
+            Row {
+                Text(
+                    text = uiState.firstNameError ?: "",
+                    color = Color.Red,
+                    modifier = Modifier.weight(1f),
+                    style = MaterialTheme.typography.bodyMedium
+                )
+                Text(
+                    text = uiState.lastNameError ?: "",
+                    color = Color.Red,
+                    modifier = Modifier.weight(1f),
+                    style = MaterialTheme.typography.bodyMedium
+                )
             }
+        }
+    }
+}
+
+@Composable
+private fun EmailAndPhoneNumberRow(
+    uiState: RegisterScreenState,
+    viewModel: RegisterViewModel
+) {
+    Row {
+
+        TextField(
+            value = uiState.email,
+            onValueChange = { viewModel.onEmailChanged(it) },
+            label = { Text("Email") },
+            modifier = Modifier
+                .fillMaxWidth()
+                .weight(1f)
+                .padding(end = 8.dp),
+            isError = uiState.emailError != null
+        )
+
+        TextField(
+            value = uiState.telephone,
+            onValueChange = { viewModel.onTelephoneChanged(it) },
+            label = { Text("Phone Number") },
+            modifier = Modifier
+                .fillMaxWidth()
+                .weight(1f),
+            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number)
+        )
+    }
+
+    Box(modifier = Modifier.height(16.dp)) {
+        if (uiState.emailError != null || uiState.telephoneError != null) {
+            Row {
+                Text(
+                    text = uiState.emailError ?: "",
+                    color = Color.Red,
+                    modifier = Modifier.weight(1f),
+                    style = MaterialTheme.typography.bodyMedium
+                )
+                Text(
+                    text = uiState.telephoneError ?: "",
+                    color = Color.Red,
+                    modifier = Modifier.weight(1f),
+                    style = MaterialTheme.typography.bodyMedium
+                )
+            }
+        }
+    }
+}
+
+@Composable
+fun StreetSelectorDropdown(
+    uiState: RegisterScreenState,
+    viewModel: RegisterViewModel
+) {
+    var expanded by remember { mutableStateOf(false) }
+    Box(modifier = Modifier.fillMaxWidth()) {
+        Button(onClick = { expanded = true }, modifier = Modifier.fillMaxWidth()) {
+            Text(text = uiState.street?.streetName ?: "Select a street")
+        }
+        DropdownMenu(
+            expanded = expanded,
+            onDismissRequest = { expanded = false }
+        ) {
+            StreetType.entries.forEach { street ->
+                DropdownMenuItem(
+                    onClick = {
+                        viewModel.onStreetSelected(street)
+                        expanded = false
+                    },
+                    text = { Text(text = street.streetName) },
+                )
+            }
+        }
+    }
+}
+
+@Composable
+private fun HouseNumberAndAddressAdditionRow(
+    uiState: RegisterScreenState,
+    viewModel: RegisterViewModel
+) {
+    Row {
+
+        TextField(
+            value = uiState.houseNumber,
+            onValueChange = { viewModel.onHouseNumberChanged(it) },
+            label = { Text("House Number") },
+            modifier = Modifier
+                .weight(1f)
+                .padding(end = 8.dp),
+            isError = uiState.houseNumberError != null,
+            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number)
+
+        )
+
+        TextField(
+            value = uiState.addressAddition,
+            onValueChange = { viewModel.onAddressAdditionChanged(it) },
+            label = { Text("Addition (Optional)") },
+            modifier = Modifier
+                .weight(1f)
+
+        )
+    }
+
+    Box(modifier = Modifier.height(16.dp)) {
+        if (uiState.houseNumberError != null) {
+            Row {
+                Text(
+                    text = uiState.houseNumberError,
+                    color = Color.Red,
+                    modifier = Modifier.weight(1f),
+                    style = MaterialTheme.typography.bodyMedium
+                )
+            }
+        }
+    }
+}
+
+@Composable
+private fun PasswordFields(
+    uiState: RegisterScreenState,
+    viewModel: RegisterViewModel
+) {
+    TextField(
+        value = uiState.password,
+        onValueChange = { viewModel.onPasswordChanged(it) },
+        label = { Text("Password") },
+        isError = uiState.passwordError != null,
+        visualTransformation = PasswordVisualTransformation()
+    )
+    if (uiState.passwordError != null) {
+        Text(
+            text = uiState.passwordError,
+            color = Color.Red,
+            style = MaterialTheme.typography.bodyMedium
+        )
+    }
+
+    Spacer(modifier = Modifier.height(16.dp))
+
+    TextField(
+        value = uiState.confirmPassword,
+        onValueChange = { viewModel.onConfirmPasswordChanged(it) },
+        label = { Text("Confirm Password") },
+        isError = uiState.confirmPasswordError != null,
+        visualTransformation = PasswordVisualTransformation()
+    )
+    if (uiState.confirmPasswordError != null) {
+        Text(
+            text = uiState.confirmPasswordError,
+            color = Color.Red,
+            style = MaterialTheme.typography.bodyMedium
+        )
+    }
+}
+
+@Composable
+fun DateOfBirthDropdown(
+    selectedDay: String,
+    selectedMonth: String,
+    selectedYear: String,
+    onDaySelected: (String) -> Unit,
+    onMonthSelected: (String) -> Unit,
+    onYearSelected: (String) -> Unit,
+    modifier: Modifier = Modifier
+) {
+    val days = (1..31).map { it.toString().padStart(2, '0') }
+    val months = listOf(
+        "January", "February", "March", "April", "May", "June",
+        "July", "August", "September", "October", "November", "December"
+    )
+    val years = (1900..LocalDate.now().year).map { it.toString() }.reversed()
+
+    Row(modifier = modifier, horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+        // Day Dropdown
+        DropdownMenuField(
+            label = "Day",
+            options = days,
+            selectedOption = selectedDay,
+            onOptionSelected = onDaySelected,
+            modifier = Modifier.weight(1f)
+        )
+
+        // Month Dropdown
+        DropdownMenuField(
+            label = "Month",
+            options = months,
+            selectedOption = selectedMonth,
+            onOptionSelected = onMonthSelected,
+            modifier = Modifier.weight(2f)
+        )
+
+        // Year Dropdown
+        DropdownMenuField(
+            label = "Year",
+            options = years,
+            selectedOption = selectedYear,
+            onOptionSelected = onYearSelected,
+            modifier = Modifier.weight(1f)
+        )
+    }
+}
+
+@Composable
+fun DropdownMenuField(
+    label: String,
+    options: List<String>,
+    selectedOption: String,
+    onOptionSelected: (String) -> Unit,
+    modifier: Modifier = Modifier
+) {
+    var expanded by remember { mutableStateOf(false) }
+    val labelText = if (selectedOption.isEmpty()) label else selectedOption
+
+    Box(modifier = modifier) {
+        OutlinedTextField(
+            value = labelText,
+            onValueChange = {},
+            label = { Text(label) },
+            modifier = Modifier.fillMaxWidth().clickable { expanded = !expanded },
+            readOnly = true
+        )
+        DropdownMenu(
+            expanded = expanded,
+            onDismissRequest = { expanded = false },
+            modifier = Modifier.fillMaxWidth()
+        ) {
+            options.forEach { option ->
+                DropdownMenuItem(
+                    onClick = {
+                        onOptionSelected(option)
+                        expanded = false
+                    },
+                    text = { Text(option) }
+                )
+            }
+        }
+    }
+}
+
+@Composable
+private fun TermsAndPrivacyCheckboxes(
+    uiState: RegisterScreenState,
+    viewModel: RegisterViewModel
+) {
+    Row(
+        modifier = Modifier.fillMaxWidth(),
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        Checkbox(
+            checked = uiState.hasAgreedWithTermsOfUsage,
+            onCheckedChange = { viewModel.onAcceptTermsChanged(it) }
+        )
+        Text(text = "I accept the Terms of Usage.")
+    }
+
+    if (uiState.termsAgreementError != null) {
+        Text(
+            text = uiState.termsAgreementError,
+            color = Color.Red,
+            style = MaterialTheme.typography.bodyMedium
+        )
+    }
+
+
+    Spacer(modifier = Modifier.height(16.dp))
+
+    Row(
+        modifier = Modifier.fillMaxWidth(),
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        Checkbox(
+            checked = uiState.hasAgreedWithPrivacyConditions,
+            onCheckedChange = { viewModel.onAcceptPrivacyChanged(it) }
+        )
+        Text(text = "I accept the Privacy Policy.")
+    }
+
+    if (uiState.privacyAgreementError != null) {
+        Text(
+            text = uiState.privacyAgreementError,
+            color = Color.Red,
+            style = MaterialTheme.typography.bodyMedium
+        )
+    }
+
+    Spacer(modifier = Modifier.height(16.dp))
+}
+
+@Composable
+private fun NavigationButtons(
+    navController: NavHostController,
+    viewModel: RegisterViewModel,
+    uiState: RegisterScreenState
+) {
+    Row {
+
+        Button(
+            onClick = { navController.navigate(route = NavigationKeys.Route.AUTH) },
+        ) {
+            Text(text = "Back")
+        }
+        Spacer(modifier = Modifier.width(16.dp))
+        Button(
+            onClick = { viewModel.onRegisterClick() },
+            enabled = uiState.isFormValid
+        ) {
+            Text(text = "Register")
         }
     }
 }

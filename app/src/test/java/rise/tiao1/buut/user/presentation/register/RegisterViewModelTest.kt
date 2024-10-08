@@ -4,8 +4,8 @@ import org.junit.Test
 
 import org.junit.Assert.*
 import org.junit.Before
-import java.text.SimpleDateFormat
-import java.util.Calendar
+import java.time.LocalDate
+
 
 
 class RegisterViewModelTest {
@@ -48,30 +48,93 @@ class RegisterViewModelTest {
     }
 
     @Test
-    fun `age is valid when user is exactly 18`() {
-        val calendar = Calendar.getInstance()
-        calendar.add(Calendar.YEAR, -18)
-        val date = SimpleDateFormat("dd/MM/yyyy").format(calendar.time)
+    fun `date is invalid when day is 0`() {
+        toTest.selectedDay = "0"
+        toTest.selectedMonth = LocalDate.now().month.value.toString()
+        toTest.selectedYear = LocalDate.now().minusYears(19L).year.toString();
 
-        assertTrue(toTest.isUserAtLeast18(date))
+        assertNotNull(toTest.validateDateOfBirth())
+    }
+
+    @Test
+    fun `date is invalid when day is under 0`() {
+        toTest.selectedDay = "-1"
+        toTest.selectedMonth = LocalDate.now().month.value.toString()
+        toTest.selectedYear = LocalDate.now().minusYears(19L).year.toString();
+
+        assertNotNull(toTest.validateDateOfBirth())
+    }
+
+    @Test
+    fun `date is invalid when day is over 31`() {
+        toTest.selectedDay = "32"
+        toTest.selectedMonth = LocalDate.now().month.value.toString()
+        toTest.selectedYear = LocalDate.now().minusYears(19L).year.toString();
+
+        assertNotNull(toTest.validateDateOfBirth())
+    }
+
+    @Test
+    fun `date is invalid when month does not exist`() {
+        toTest.selectedDay = LocalDate.now().dayOfMonth.toString()
+        toTest.selectedMonth = "A fake month"
+        toTest.selectedYear = LocalDate.now().minusYears(19L).year.toString();
+
+        assertNotNull(toTest.validateDateOfBirth())
+    }
+
+    @Test
+    fun `date is invalid when year is under current year -100`() {
+        toTest.selectedDay = LocalDate.now().dayOfMonth.toString()
+        toTest.selectedMonth = LocalDate.now().month.value.toString()
+        toTest.selectedYear = LocalDate.now().minusYears(100L).year.toString();
+
+        assertNotNull(toTest.validateDateOfBirth())
+    }
+
+    @Test
+    fun `date is invalid when year is higher than current year`() {
+        toTest.selectedDay = LocalDate.now().dayOfMonth.toString()
+        toTest.selectedMonth = LocalDate.now().month.value.toString()
+        toTest.selectedYear = LocalDate.now().plusYears(1L).year.toString();
+
+        assertNotNull(toTest.validateDateOfBirth())
+    }
+
+    @Test
+    fun `date is invalid when date is impossible`() {
+        toTest.selectedDay = "30"
+        toTest.selectedMonth = "February"
+        toTest.selectedYear = LocalDate.now().minusYears(19L).year.toString();
+
+        assertNotNull(toTest.validateDateOfBirth())
+    }
+
+    @Test
+    fun `age is valid when user is exactly 18`() {
+        toTest.selectedDay = LocalDate.now().dayOfMonth.toString()
+        toTest.selectedMonth = LocalDate.now().month.value.toString()
+        toTest.selectedYear = LocalDate.now().minusYears(18L).year.toString();
+
+        assertNull(toTest.validateDateOfBirth())
     }
 
     @Test
     fun `age is invalid when user is under 18`() {
-        val calendar = Calendar.getInstance()
-        calendar.add(Calendar.YEAR, -17) // User is 17 years old
-        val date = SimpleDateFormat("dd/MM/yyyy").format(calendar.time)
+        toTest.selectedDay = LocalDate.now().dayOfMonth.toString()
+        toTest.selectedMonth = LocalDate.now().month.value.toString()
+        toTest.selectedYear = LocalDate.now().minusYears(16L).year.toString();
 
-        assertFalse(toTest.isUserAtLeast18(date))
+        assertNotNull(toTest.validateDateOfBirth())
     }
 
     @Test
     fun `age is valid when user is over 18`() {
-        val calendar = Calendar.getInstance()
-        calendar.add(Calendar.YEAR, -20) // User is 20 years old
-        val date = SimpleDateFormat("dd/MM/yyyy").format(calendar.time)
+        toTest.selectedDay = LocalDate.now().dayOfMonth.toString()
+        toTest.selectedMonth = LocalDate.now().month.value.toString()
+        toTest.selectedYear = LocalDate.now().minusYears(19L).year.toString();
 
-        assertTrue(toTest.isUserAtLeast18(date))
+        assertNull(toTest.validateDateOfBirth())
     }
     
     @Test

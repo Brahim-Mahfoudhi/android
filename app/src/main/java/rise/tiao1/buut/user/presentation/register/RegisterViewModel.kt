@@ -1,21 +1,27 @@
 package rise.tiao1.buut.user.presentation.register
 
 import androidx.compose.runtime.State
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.setValue
 import androidx.core.text.isDigitsOnly
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.launch
 import rise.tiao1.buut.user.domain.StreetType
-import java.text.SimpleDateFormat
-import java.util.Calendar
-import java.util.Locale
+import java.time.LocalDate
+import java.time.Period
+import java.time.format.DateTimeFormatter
+import java.time.format.DateTimeParseException
 
 
 public class RegisterViewModel: ViewModel (){
 
     private val _uiState = mutableStateOf(RegisterScreenState())
     val uistate: State<RegisterScreenState> get() = _uiState
+    var selectedDay by mutableStateOf("")
+    var selectedMonth by mutableStateOf("")
+    var selectedYear by mutableStateOf("")
 
 
     private fun validateForm() {
@@ -25,7 +31,7 @@ public class RegisterViewModel: ViewModel (){
         val passwordError = if (!isPasswordValid(_uiState.value.password)) "Password must have at least 8 characters, one uppercase letter, one number, and one special character" else null
         val confirmPasswordError = if (_uiState.value.password != _uiState.value.confirmPassword) "Passwords do not match" else null
         val telephoneError = if (!isTelephoneValid(_uiState.value.telephone)) "Telephone number is invalid" else null
-        val dateOfBirthError = if (!isUserAtLeast18(_uiState.value.dateOfBirth)) "You must be at least 18 years old" else null
+        val dateOfBirthError = validateDateOfBirth() //returns error string if date invalid or use < 18 years old. Else null.
         val streetError = if (_uiState.value.street == null) "You must select a street" else null
         val houseNumberError = if (_uiState.value.houseNumber.isBlank() || !_uiState.value.houseNumber.isDigitsOnly() || _uiState.value.houseNumber.toInt() <= 0) "House number must be greater than zero" else null
         val termsAgreementError = if (!_uiState.value.hasAgreedWithTermsOfUsage) "You must agree to the Terms of Usage to continue." else null
@@ -50,7 +56,7 @@ public class RegisterViewModel: ViewModel (){
             passwordError = passwordError,
             confirmPasswordError = confirmPasswordError,
             telephoneError = telephoneError,
-            dateOfBirthError = dateOfBirthError,
+            dateOfBirthError = dateOfBirthError.toString(),
             streetError = streetError,
             houseNumberError = houseNumberError,
             termsAgreementError = termsAgreementError,
@@ -64,27 +70,75 @@ public class RegisterViewModel: ViewModel (){
         return password.matches(Regex(passwordRegex))
     }
 
-    fun isUserAtLeast18(dobString: String): Boolean {
-        if (dobString.isBlank()) return false
+    // Validates if the user is at least 18 and if the date is possible
+    fun validateDateOfBirth(): Any? {
 
-        // Parse the selected date
-        val dobFormat = SimpleDateFormat("dd/MM/yyyy", Locale.US)
-        val dob = dobFormat.parse(dobString)
-
-        // Get current date and calculate the age
-        val calendar = Calendar.getInstance()
-        val today = calendar.time
-
-        val dobCalendar = Calendar.getInstance()
-        dobCalendar.time = dob
-
-        val age = calendar.get(Calendar.YEAR) - dobCalendar.get(Calendar.YEAR)
-        if (calendar.get(Calendar.DAY_OF_YEAR) < dobCalendar.get(Calendar.DAY_OF_YEAR)) {
-            return age - 1 >= 18
+        //If date is empty, error message
+        if (selectedDay.isEmpty() || selectedMonth.isEmpty() || selectedYear.isEmpty()) {
+            return "Please select day, month, and year"
         }
 
+        //parse dropdown string to int for parsing in later function
+        val monthNumber = when (selectedMonth) {
+            "January" -> 1
+            "February" -> 2
+            "March" -> 3
+            "April" -> 4
+            "May" -> 5
+            "June" -> 6
+            "July" -> 7
+            "August" -> 8
+            "September" -> 9
+            "October" -> 10
+            "November" -> 11
+            "December" -> 12
+            else -> null
+        }
+
+        //Shouldn't be possible, but in case the when clause goes into the else from weird UI injection.
+        if (monthNumber == null) {
+            return "Invalid month"
+        }
+
+        //Shouldn't be possible, but in case weird UI injection happens.
+        if (selectedDay.toInt() <= 0 || selectedDay.toInt() > 31 ) {
+            return "Invalid day"
+        }
+
+        //Shouldn't be possible, but in case weird UI injection happens.
+        if (selectedYear.toInt() <= LocalDate.now().minusYears(100L).year || selectedYear.toInt() > LocalDate.now().year ) {
+            return "Invalid year"
+        }
+
+        try {
+            //Turn year month and day field into string for parsing. yyyy-MM-dd used for convenience in documentation
+            val dateStr = "$selectedYear-${monthNumber.toString().padStart(2, '0')}-${selectedDay.padStart(2, '0')}"
+            //Try to parse the date. If date is impossible (like 31st of february) it will throw exception
+            LocalDate.parse(dateStr, DateTimeFormatter.ofPattern("yyyy-MM-dd"))
+            //if this line is reached, the date must be valid and can be used to check age of the user.
+            if (isUserAtLeast18()) {
+                //null is returned to denote the lack of error. Empty string would not work.
+                return null
+            } else {
+                return "You must be at least 18 years old"
+            }
+            //catch exception in case of impossible date.
+        } catch (e: DateTimeParseException) {
+            return "Invalid date"
+        }
+    }
+
+    private fun isUserAtLeast18(): Boolean {
+        if (selectedDay.isEmpty() || selectedMonth.isEmpty() || selectedYear.isEmpty()) {
+            return false
+        }
+        val formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy")
+        val birthDate = LocalDate.parse("$selectedDay/$selectedMonth/$selectedYear", formatter)
+        val currentDate = LocalDate.now()
+        val age = Period.between(birthDate, currentDate).years
         return age >= 18
     }
+
 
     fun isTelephoneValid(telephone: String): Boolean {
         //A Belgian telephone number is either 10 digits (GSM) or 9 (land-line)
@@ -126,7 +180,6 @@ public class RegisterViewModel: ViewModel (){
         validateForm()
     }
 
-
     fun onHouseNumberChanged(houseNumber: String) {
         _uiState.value = _uiState.value.copy(houseNumber = houseNumber)
         validateForm()
@@ -134,11 +187,6 @@ public class RegisterViewModel: ViewModel (){
 
     fun onAddressAdditionChanged(addressAddition: String) {
         _uiState.value = _uiState.value.copy(addressAddition = addressAddition)
-        validateForm()
-    }
-
-    fun onDateOfBirthSelected(dateOfBirth: String) {
-        _uiState.value = _uiState.value.copy(dateOfBirth = dateOfBirth)
         validateForm()
     }
 
