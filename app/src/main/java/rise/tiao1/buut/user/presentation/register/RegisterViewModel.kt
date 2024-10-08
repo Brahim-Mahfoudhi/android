@@ -15,7 +15,7 @@ import java.time.format.DateTimeFormatter
 import java.time.format.DateTimeParseException
 
 
-public class RegisterViewModel: ViewModel (){
+class RegisterViewModel: ViewModel (){
 
     //State variables
     private val _uiState = mutableStateOf(RegisterScreenState())
@@ -269,6 +269,24 @@ public class RegisterViewModel: ViewModel (){
     fun onAddressAdditionChanged(addressAddition: String) {
         _uiState.value = _uiState.value.copy(addressAddition = addressAddition)
         //does not trigger validation since addition is a free form.
+    }
+
+    fun OnDaySelected(day: String) {
+        selectedDay = day
+        validateDateOfBirthDropDown()
+        validateForm()
+    }
+
+    fun onMonthSelected(month: String) {
+        selectedMonth = month
+        validateDateOfBirthDropDown()
+        validateForm()
+    }
+
+    fun onYearSelected(year: String) {
+        selectedYear = year
+        validateDateOfBirthDropDown()
+        validateForm()
     }
 
     fun onAcceptTermsChanged(isChecked: Boolean) {

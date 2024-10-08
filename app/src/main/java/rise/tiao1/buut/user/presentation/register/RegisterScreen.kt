@@ -84,9 +84,9 @@ fun RegisterScreen(viewModel: RegisterViewModel = viewModel(), navController: Na
             selectedDay = viewModel.selectedDay,
             selectedMonth = viewModel.selectedMonth,
             selectedYear = viewModel.selectedYear,
-            onDaySelected = { viewModel.selectedDay = it },
-            onMonthSelected = { viewModel.selectedMonth = it },
-            onYearSelected = { viewModel.selectedYear = it },
+            onDaySelected = { viewModel.OnDaySelected(it) },
+            onMonthSelected = { viewModel.onMonthSelected(it) },
+            onYearSelected = { viewModel.onYearSelected(it) },
             viewModel = viewModel
         )
 
@@ -277,7 +277,7 @@ private fun HouseNumberAndAddressAdditionRow(
         if (uiState.houseNumberError != null) {
             Row {
                 Text(
-                    text = uiState.houseNumberError!!,
+                    text = uiState.houseNumberError,
                     color = Color.Red,
                     modifier = Modifier.weight(1f),
                     style = MaterialTheme.typography.bodyMedium
@@ -303,7 +303,7 @@ private fun PasswordFields(
     )
     if (uiState.passwordError != null) {
         Text(
-            text = uiState.passwordError!!,
+            text = uiState.passwordError,
             color = Color.Red,
             style = MaterialTheme.typography.bodyMedium
         )
@@ -322,7 +322,7 @@ private fun PasswordFields(
     )
     if (uiState.confirmPasswordError != null) {
         Text(
-            text = uiState.confirmPasswordError!!,
+            text = uiState.confirmPasswordError,
             color = Color.Red,
             style = MaterialTheme.typography.bodyMedium
         )
@@ -397,7 +397,9 @@ fun DropdownMenuField(
             value = labelText,
             onValueChange = {},
             label = { Text(label) },
-            modifier = Modifier.fillMaxWidth().clickable { expanded = !expanded },
+            modifier = Modifier
+                .fillMaxWidth()
+                .clickable { expanded = !expanded },
             readOnly = true
         )
         DropdownMenu(
@@ -439,7 +441,7 @@ private fun TermsAndPrivacyCheckboxes(
 
     if (uiState.termsAgreementError != null) {
         Text(
-            text = uiState.termsAgreementError!!,
+            text = uiState.termsAgreementError,
             color = Color.Red,
             style = MaterialTheme.typography.bodyMedium
         )
@@ -463,7 +465,7 @@ private fun TermsAndPrivacyCheckboxes(
 
     if (uiState.privacyAgreementError != null) {
         Text(
-            text = uiState.privacyAgreementError!!,
+            text = uiState.privacyAgreementError,
             color = Color.Red,
             style = MaterialTheme.typography.bodyMedium
         )
