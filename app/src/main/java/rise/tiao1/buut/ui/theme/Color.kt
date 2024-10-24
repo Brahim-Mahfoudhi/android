@@ -74,3 +74,6 @@ val dark_Bronze = Color(0xFFFFB779)
 val dark_onBronze = Color(0xFF4C2700)
 val dark_BronzeContainer = Color(0xFF6C3A00)
 val dark_onBronzeContainer = Color(0xFFFFDCC1)
+
+val Primary = Color(0xFF92A3FD)
+val Secondary = Color(0xFF9DCEFF)
