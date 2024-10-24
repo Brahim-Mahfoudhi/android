@@ -15,6 +15,4 @@ data class LocalUser(
     val lastName: String,
     @ColumnInfo
     val email: String,
-    @ColumnInfo
-    val isAuthenticated: Boolean
 )

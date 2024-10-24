@@ -1,7 +1,9 @@
 package rise.tiao1.buut.data.di
 
+import UnsafeOkHttpClient
 import android.content.Context
-import androidx.compose.ui.platform.LocalContext
+import android.content.SharedPreferences
+import android.util.Log
 import androidx.room.Room
 import com.auth0.android.Auth0
 import com.auth0.android.authentication.AuthenticationAPIClient
@@ -12,13 +14,16 @@ import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
+import okhttp3.Interceptor
 import okhttp3.OkHttpClient
+import okhttp3.Response
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
-import rise.tiao1.buut.data.remote.user.UserApiService
 import rise.tiao1.buut.data.local.BuutDb
 import rise.tiao1.buut.data.local.user.UserDao
+import rise.tiao1.buut.data.remote.user.UserApiService
+import rise.tiao1.buut.utils.SharedPreferencesKeys
 import javax.inject.Singleton
 
 
@@ -29,7 +34,7 @@ import javax.inject.Singleton
 @Module
 @InstallIn(SingletonComponent::class)
 object BuutModule {
-    private var baseUrl: String = "http://10.0.2.2:5000"
+    private var baseUrl: String = "https://10.0.2.2:5001/"
 
     /**
      * Provides the [BuutDao] for Room database operations.
@@ -59,17 +64,20 @@ object BuutModule {
      */
     @Provides
     @Singleton
-    fun provideRetrofit(): Retrofit {
+    fun provideRetrofit(sharedPreferences: SharedPreferences): Retrofit {
+        val accessToken = sharedPreferences.getString(SharedPreferencesKeys.ACCESSTOKEN, null)
 
-        // Maak een instance van HttpLoggingInterceptor
+
+        // Logger aanmaken
         val loggingInterceptor = HttpLoggingInterceptor().apply {
-            // Stel het logging-niveau in
-            setLevel(HttpLoggingInterceptor.Level.BODY) // Log alle details van de aanvragen en antwoorden
+            setLevel(HttpLoggingInterceptor.Level.BODY)
         }
 
-        // Maak een OkHttpClient met de interceptor
-        val httpClient = OkHttpClient.Builder()
-            .addInterceptor(loggingInterceptor) // Voeg de interceptor toe aan de client
+        // voor productie aanpassen van unsafe naar gewoon OkHttp
+        // unsafe wordt gebruikt voor interactie emulator - lokale db
+        val httpClient = UnsafeOkHttpClient().getUnsafeOkHttpClient().newBuilder()
+            .addInterceptor(loggingInterceptor)
+            .addInterceptor(AuthInterceptor(accessToken))
             .build()
 
         return Retrofit.Builder()
@@ -92,13 +100,14 @@ object BuutModule {
     @Singleton
     @Provides
     fun provideAuthenticationAPIClient(@ApplicationContext appContext: Context): AuthenticationAPIClient {
-        val auth0: Auth0 = Auth0(appContext)
+        val auth0 = Auth0(appContext)
         return AuthenticationAPIClient(auth0)
     }
 
     @Singleton
     @Provides
     fun provideSharedPreferencesStorage(@ApplicationContext appContext: Context): SharedPreferencesStorage {
+
         return SharedPreferencesStorage(appContext)
     }
 
@@ -108,5 +117,25 @@ object BuutModule {
         return CredentialsManager(authentication, storage)
     }
 
+    @Provides
+    fun provideSharedPreferences(@ApplicationContext appContext: Context): SharedPreferences {
+        return appContext.getSharedPreferences(SharedPreferencesKeys.PREFERENCES_NAME, Context.MODE_PRIVATE)
+    }
+}
 
+
+class AuthInterceptor(private val accessToken: String?) : Interceptor {
+
+    override fun intercept(chain: Interceptor.Chain): Response {
+        val request= chain.request()
+        Log.d("okht", "Sending request to ${request.url} with headers ${request.headers}")
+        val requestWithHeader = request.newBuilder()
+            .addHeader("Accept", "application/json")
+            .addHeader("Authorization", "Bearer $accessToken")
+            .build()
+        Log.d("okhtt", "wat is dit ${requestWithHeader}")
+        val response =  chain.proceed(requestWithHeader)
+        Log.d("okhtt", "response $response")
+        return response
+    }
 }

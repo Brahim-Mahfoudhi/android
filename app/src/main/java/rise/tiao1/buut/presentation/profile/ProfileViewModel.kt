@@ -40,28 +40,20 @@ class ProfileViewModel @Inject constructor(
     val state : State<ProfileScreenState> get() = _state
 
     init{
-        Log.d("AUTHTEST", "in de profileviewmodel")
-        credentialsManager.getCredentials(object :
-            Callback<Credentials, CredentialsManagerException> {
-            override fun onFailure(error: CredentialsManagerException) {
-                Log.d("AUTHTEST", "profile model on failure")
-            }
-
-            override fun onSuccess(result: Credentials) {
-                Log.d("AUTHTEST", "profile model on succes")
-                viewModelScope.launch {
-                    val user = getUserUseCase.invoke(result.idToken)
-                    _state.value = state.value.copy(user = user)
-                }
-
-            }
-        })
+        getUser()
     }
-
 
     fun logout(navigateToLogin: () -> Unit) {
        credentialsManager.clearCredentials()
         navigateToLogin()
+    }
+
+    private fun getUser() {
+        viewModelScope.launch {
+            val user = getUserUseCase.invoke()
+            Log.d("user" ,"user in profilescreen = $user")
+            _state.value = state.value.copy(user = user)
+        }
     }
 
 }

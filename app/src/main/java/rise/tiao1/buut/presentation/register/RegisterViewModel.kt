@@ -22,7 +22,7 @@ import rise.tiao1.buut.domain.user.validation.ValidatePrivacy
 import rise.tiao1.buut.domain.user.validation.ValidateRepeatedPassword
 import rise.tiao1.buut.domain.user.validation.ValidateStreet
 import rise.tiao1.buut.domain.user.validation.ValidateTerms
-import rise.tiao1.buut.utils.RegistrationFieldKey
+import rise.tiao1.buut.utils.FieldKeys
 import rise.tiao1.buut.utils.toApiDateString
 import javax.inject.Inject
 
@@ -46,44 +46,44 @@ class RegisterViewModel @Inject constructor(
     val state: State<RegistrationScreenState>
         get() = _state
 
-    fun update(inputValue: String, field: RegistrationFieldKey) {
+    fun update(inputValue: String, field: FieldKeys) {
         when(field) {
-            RegistrationFieldKey.FIRST_NAME -> {_state.value = _state.value.copy(firstName = inputValue)}
-            RegistrationFieldKey.LAST_NAME -> {_state.value = _state.value.copy(lastName = inputValue)}
-            RegistrationFieldKey.EMAIL -> {_state.value = _state.value.copy(email = inputValue)}
-            RegistrationFieldKey.PHONE -> {_state.value = _state.value.copy(phone = inputValue)}
-            RegistrationFieldKey.STREET -> {_state.value = _state.value.copy(street = StreetType.fromString(inputValue))}
-            RegistrationFieldKey.HOUSE_NUMBER -> {_state.value = _state.value.copy(houseNumber = inputValue)}
-            RegistrationFieldKey.BOX -> {_state.value = _state.value.copy(box = inputValue)}
-            RegistrationFieldKey.DATE_OF_BIRTH -> {_state.value = _state.value.copy(dateOfBirth = inputValue)}
-            RegistrationFieldKey.PASSWORD -> {_state.value = _state.value.copy(password = inputValue)}
-            RegistrationFieldKey.REPEATED_PASSWORD -> {_state.value = _state.value.copy(repeatedPassword = inputValue)}
+            FieldKeys.FIRST_NAME -> {_state.value = _state.value.copy(firstName = inputValue)}
+            FieldKeys.LAST_NAME -> {_state.value = _state.value.copy(lastName = inputValue)}
+            FieldKeys.EMAIL -> {_state.value = _state.value.copy(email = inputValue)}
+            FieldKeys.PHONE -> {_state.value = _state.value.copy(phone = inputValue)}
+            FieldKeys.STREET -> {_state.value = _state.value.copy(street = StreetType.fromString(inputValue))}
+            FieldKeys.HOUSE_NUMBER -> {_state.value = _state.value.copy(houseNumber = inputValue)}
+            FieldKeys.BOX -> {_state.value = _state.value.copy(box = inputValue)}
+            FieldKeys.DATE_OF_BIRTH -> {_state.value = _state.value.copy(dateOfBirth = inputValue)}
+            FieldKeys.PASSWORD -> {_state.value = _state.value.copy(password = inputValue)}
+            FieldKeys.REPEATED_PASSWORD -> {_state.value = _state.value.copy(repeatedPassword = inputValue)}
             else -> {}
         }
     }
 
-    fun updateAcceptedAgreements(inputValue: Boolean, field: RegistrationFieldKey) {
+    fun updateAcceptedAgreements(inputValue: Boolean, field: FieldKeys) {
         when (field) {
-            RegistrationFieldKey.TERMS -> {_state.value = _state.value.copy(acceptedTermsOfUsage = inputValue)}
-            RegistrationFieldKey.PRIVACY -> {_state.value = _state.value.copy(acceptedPrivacyConditions = inputValue)}
+            FieldKeys.TERMS -> {_state.value = _state.value.copy(acceptedTermsOfUsage = inputValue)}
+            FieldKeys.PRIVACY -> {_state.value = _state.value.copy(acceptedPrivacyConditions = inputValue)}
             else -> {}
         }
     }
 
-    fun validateField(field: RegistrationFieldKey) {
+    fun validateField(field: FieldKeys) {
         when(field) {
-            RegistrationFieldKey.FIRST_NAME -> {_state.value = _state.value.copy(firstNameError = validateFirstName.execute(_state.value.firstName).errorMessage)}
-            RegistrationFieldKey.LAST_NAME -> {_state.value = _state.value.copy(lastNameError = validateLastName.execute(_state.value.lastName).errorMessage)}
-            RegistrationFieldKey.EMAIL -> {_state.value = _state.value.copy(emailError = validateEmail.execute(_state.value.email).errorMessage)}
-            RegistrationFieldKey.PHONE -> {_state.value = _state.value.copy(phoneError = validatePhone.execute(_state.value.phone).errorMessage)}
-            RegistrationFieldKey.STREET -> {_state.value = _state.value.copy(streetError = validateStreet.execute(_state.value.street.toString()).errorMessage)}
-            RegistrationFieldKey.HOUSE_NUMBER -> {_state.value = _state.value.copy(houseNumberError = validateHouseNumber.execute(_state.value.houseNumber).errorMessage)}
+            FieldKeys.FIRST_NAME -> {_state.value = _state.value.copy(firstNameError = validateFirstName.execute(_state.value.firstName).errorMessage)}
+            FieldKeys.LAST_NAME -> {_state.value = _state.value.copy(lastNameError = validateLastName.execute(_state.value.lastName).errorMessage)}
+            FieldKeys.EMAIL -> {_state.value = _state.value.copy(emailError = validateEmail.execute(_state.value.email).errorMessage)}
+            FieldKeys.PHONE -> {_state.value = _state.value.copy(phoneError = validatePhone.execute(_state.value.phone).errorMessage)}
+            FieldKeys.STREET -> {_state.value = _state.value.copy(streetError = validateStreet.execute(_state.value.street.toString()).errorMessage)}
+            FieldKeys.HOUSE_NUMBER -> {_state.value = _state.value.copy(houseNumberError = validateHouseNumber.execute(_state.value.houseNumber).errorMessage)}
             //Registration.BOX -> {_state.value = _state.value.copy(boxError = validateFirstName.execute(_state.value.firstName).errorMessage)}
-            RegistrationFieldKey.DATE_OF_BIRTH -> {_state.value = _state.value.copy(dateOfBirthError = validateDateOfBirth.execute(_state.value.dateOfBirth).errorMessage)}
-            RegistrationFieldKey.PASSWORD -> {_state.value = _state.value.copy(passwordError = validatePassword.execute(_state.value.password).errorMessage)}
-            RegistrationFieldKey.REPEATED_PASSWORD -> {_state.value = _state.value.copy(repeatedPasswordError = validateRepeatedPassword.execute(_state.value.password, _state.value.repeatedPassword).errorMessage)}
-            RegistrationFieldKey.TERMS -> {_state.value = _state.value.copy(termsError = validateTerms.execute(_state.value.acceptedTermsOfUsage).errorMessage)}
-            RegistrationFieldKey.PRIVACY -> {_state.value = _state.value.copy(privacyError = validatePrivacy.execute(_state.value.acceptedPrivacyConditions).errorMessage)}
+            FieldKeys.DATE_OF_BIRTH -> {_state.value = _state.value.copy(dateOfBirthError = validateDateOfBirth.execute(_state.value.dateOfBirth).errorMessage)}
+            FieldKeys.PASSWORD -> {_state.value = _state.value.copy(passwordError = validatePassword.execute(_state.value.password).errorMessage)}
+            FieldKeys.REPEATED_PASSWORD -> {_state.value = _state.value.copy(repeatedPasswordError = validateRepeatedPassword.execute(_state.value.password, _state.value.repeatedPassword).errorMessage)}
+            FieldKeys.TERMS -> {_state.value = _state.value.copy(termsError = validateTerms.execute(_state.value.acceptedTermsOfUsage).errorMessage)}
+            FieldKeys.PRIVACY -> {_state.value = _state.value.copy(privacyError = validatePrivacy.execute(_state.value.acceptedPrivacyConditions).errorMessage)}
             else -> {}
         }
     }
@@ -91,7 +91,7 @@ class RegisterViewModel @Inject constructor(
 
     fun onRegisterClick() {
 
-        RegistrationFieldKey.entries.forEach {
+        FieldKeys.entries.forEach {
             validateField(it)
         }
 

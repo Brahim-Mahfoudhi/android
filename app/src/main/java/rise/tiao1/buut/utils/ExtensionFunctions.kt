@@ -1,6 +1,7 @@
 package rise.tiao1.buut.utils
 
 import rise.tiao1.buut.data.local.user.LocalUser
+import rise.tiao1.buut.data.remote.user.RemoteUser
 import rise.tiao1.buut.domain.user.User
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
@@ -11,19 +12,25 @@ fun User.toLocalUser(): LocalUser {
         id = this.id,
         firstName = this.firstName,
         lastName = this.lastName,
-        email = this.email,
-        isAuthenticated = this.isAuthenticated
+        email = this.email
+    )
+}
+
+fun RemoteUser.toLocalUser(): LocalUser {
+    return LocalUser(
+        id = this.id,
+        firstName = this.firstName,
+        lastName = this.lastName,
+        email = this.email
     )
 }
 
 fun LocalUser.toUser(): User {
     return User(
         id = this.id,
-        //token = this.token ?: "",
         firstName = this.firstName,
         lastName = this.lastName,
-        email = this.email,
-        isAuthenticated = this.isAuthenticated
+        email = this.email
     )
 }
 
