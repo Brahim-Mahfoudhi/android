@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="com_auth0_scheme">app</string>
-    <string name="com_auth0_client_id">koI6zm39wJq9EYsDr5ci5sHhqbzR5AOx</string>
-    <string name="com_auth0_domain">dev-07f7qwv7lvg1s3sk.eu.auth0.com</string>
+    <string name="com_auth0_client_id">eN979VK5GqmtxZdc6id9O8eJU4pJ3nAW</string>
+    <string name="com_auth0_domain">dev-6yunsksn11owe71c.us.auth0.com</string>
+    <string name="com_auth0_audience">https://api.rise.buut.com</string>
 </resources>

@@ -1,25 +1,37 @@
 package rise.tiao1.buut.utils
 
-import rise.tiao1.buut.user.data.local.LocalUser
-import rise.tiao1.buut.user.domain.User
+import rise.tiao1.buut.data.local.user.LocalUser
+import rise.tiao1.buut.data.remote.user.RemoteUser
+import rise.tiao1.buut.domain.user.User
+import java.time.LocalDate
+import java.time.format.DateTimeFormatter
 
-/**
- * Extension function to convert a [User] object to a [LocalUser] object.
- *
- * This function creates a [LocalUser] object from the properties of the provided [User] object.
- * It is used for storing user data locally in the database.
- *
- * @receiver The [User] object to be converted.
- * @return The corresponding [LocalUser] object.
- */
-fun User.toLocalUser(): LocalUser {
+
+
+fun RemoteUser.toLocalUser(): LocalUser {
     return LocalUser(
         id = this.id,
-        token = this.idToken ?: "",
-        name = this.name,
-        email = this.email,
-        emailVerified = this.emailVerified,
-        picture = this.picture,
-        updatedAt = this.updatedAt
+        firstName = this.firstName,
+        lastName = this.lastName,
+        email = this.email
     )
+}
+
+fun LocalUser.toUser(): User {
+    return User(
+        id = this.id,
+        firstName = this.firstName,
+        lastName = this.lastName,
+        email = this.email
+    )
+}
+
+fun String.toDate(): LocalDate {
+    val formatter = DateTimeFormatter.ofPattern("d/M/yyyy")
+    return LocalDate.parse(this, formatter)
+}
+
+fun String .toApiDateString(): String {
+    val formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd")
+    return this.toDate().format(formatter)
 }
