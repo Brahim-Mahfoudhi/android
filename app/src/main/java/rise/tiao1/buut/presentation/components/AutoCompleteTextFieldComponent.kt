@@ -26,6 +26,7 @@ fun AutoCompleteTextFieldComponent(
     errorMessage: String? = null,
     optionList: List<String> = emptyList(),
     @StringRes label: Int,
+    modifier: Modifier = Modifier
 ) {
     val expanded = remember { mutableStateOf(false) }
     val typedValue = remember { mutableStateOf(value) }
@@ -53,7 +54,7 @@ fun AutoCompleteTextFieldComponent(
             },
             onFocusLost = onFocusLost,
             label = label,
-            modifier = Modifier.menuAnchor(),
+            modifier = modifier.menuAnchor(),
             isError = isError,
             trailingIcon = {
                 ExposedDropdownMenuDefaults.TrailingIcon(expanded = expanded.value)

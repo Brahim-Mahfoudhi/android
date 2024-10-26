@@ -17,6 +17,8 @@ import rise.tiao1.buut.presentation.profile.ProfileScreen
 import rise.tiao1.buut.presentation.profile.ProfileViewModel
 import rise.tiao1.buut.presentation.register.RegistrationViewModel
 import rise.tiao1.buut.presentation.register.RegistrationScreen
+import rise.tiao1.buut.presentation.reservation.ReservationScreen
+import rise.tiao1.buut.presentation.reservation.ReservationViewModel
 import rise.tiao1.buut.ui.theme.AppTheme
 import rise.tiao1.buut.utils.InputKeys
 import rise.tiao1.buut.utils.NavigationKeys.Route
@@ -44,7 +46,7 @@ class MainActivity : ComponentActivity() {
 
             NavHost(
                 navController,
-                startDestination =  setStartingPage()
+                startDestination =  Route.RESERVATION
             ) {
                 composable(route = Route.HOME) {
                     val loginViewModel: LoginViewModel = hiltViewModel()
@@ -91,6 +93,15 @@ class MainActivity : ComponentActivity() {
                             registrationViewModel.validate(field)
                         },
                         onSubmitClick = { registrationViewModel.onRegisterClick() }
+                    )
+                }
+                composable(route = Route.RESERVATION) {
+                    val reservationViewModel: ReservationViewModel = hiltViewModel()
+                    ReservationScreen(
+                        state = reservationViewModel.state.value,
+                        onValueChanged = { input: Long? ->
+                            reservationViewModel.update(input)
+                        }
                     )
                 }
             }

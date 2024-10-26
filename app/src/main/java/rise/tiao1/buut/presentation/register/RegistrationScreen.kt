@@ -1,6 +1,7 @@
 package rise.tiao1.buut.presentation.register
 
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -18,15 +19,20 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.layout.onGloballyPositioned
+import androidx.compose.ui.layout.positionInRoot
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import kotlinx.coroutines.coroutineScope
+import kotlinx.coroutines.launch
 import rise.tiao1.buut.R
 import rise.tiao1.buut.utils.StreetType
 import rise.tiao1.buut.presentation.components.AutoCompleteTextFieldComponent
@@ -51,11 +57,14 @@ fun RegistrationScreen(
     val imeState = rememberImeState()
     val scrollState = rememberScrollState()
 
+    /*
     LaunchedEffect(key1 = imeState.value) {
         if (imeState.value) {
             scrollState.animateScrollTo(scrollState.maxValue)
         }
     }
+    */
+
 
     Box (modifier = Modifier.fillMaxSize()) {
         Image(
@@ -90,7 +99,7 @@ fun RegistrationScreen(
                 onFocusLost = { onValidate(InputKeys.LAST_NAME) },
                 isError = state.lastNameError != null,
                 errorMessage = state.lastNameError?.asString(),
-                label = R.string.last_name
+                label = R.string.last_name,
             )
 
             Spacer(modifier = Modifier.heightIn(5.dp))
@@ -102,7 +111,7 @@ fun RegistrationScreen(
                 isError = state.streetError != null,
                 errorMessage = state.streetError?.asString(),
                 label = R.string.street,
-                optionList = StreetType.entries.map { it.streetName }
+                optionList = StreetType.entries.map { it.streetName },
             )
 
             Spacer(modifier = Modifier.heightIn(5.dp))
@@ -124,7 +133,7 @@ fun RegistrationScreen(
                         keyboardOptions = KeyboardOptions(
                             keyboardType = KeyboardType.Number,
                             imeAction = ImeAction.Next
-                        )
+                        ),
                     )
                 }
 
@@ -150,7 +159,7 @@ fun RegistrationScreen(
                 onFocusLost = { onValidate(InputKeys.DATE_OF_BIRTH) },
                 isError = state.dateOfBirthError != null,
                 errorMessage = state.dateOfBirthError?.asString(),
-                label = R.string.date_of_birth
+                label = R.string.date_of_birth,
             )
 
             Spacer(modifier = Modifier.heightIn(5.dp))
@@ -165,7 +174,7 @@ fun RegistrationScreen(
                 keyboardOptions = KeyboardOptions(
                     keyboardType = KeyboardType.Email,
                     imeAction = ImeAction.Next
-                )
+                ),
             )
 
             Spacer(modifier = Modifier.heightIn(5.dp))
@@ -180,7 +189,7 @@ fun RegistrationScreen(
                 keyboardOptions = KeyboardOptions(
                     keyboardType = KeyboardType.Phone,
                     imeAction = ImeAction.Next
-                )
+                ),
             )
 
             Spacer(modifier = Modifier.heightIn(5.dp))
