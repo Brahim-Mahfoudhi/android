@@ -55,7 +55,6 @@ fun AutoCompleteTextFieldComponent(
             label = label,
             modifier = Modifier.menuAnchor(),
             isError = isError,
-            errorMessage = errorMessage,
             trailingIcon = {
                 ExposedDropdownMenuDefaults.TrailingIcon(expanded = expanded.value)
             },
@@ -80,5 +79,8 @@ fun AutoCompleteTextFieldComponent(
                 )
             }
         }
+
     }
+    if (!errorMessage.isNullOrEmpty())
+        ErrorMessageContainer(errorMessage)
 }

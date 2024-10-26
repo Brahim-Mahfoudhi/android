@@ -7,14 +7,6 @@ import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 
 
-fun User.toLocalUser(): LocalUser {
-    return LocalUser(
-        id = this.id,
-        firstName = this.firstName,
-        lastName = this.lastName,
-        email = this.email
-    )
-}
 
 fun RemoteUser.toLocalUser(): LocalUser {
     return LocalUser(

@@ -23,7 +23,7 @@ class UnsafeOkHttpClient {
             // Maak de OkHttpClient met de custom SSLContext
             OkHttpClient.Builder()
                 .sslSocketFactory(sslContext.socketFactory, trustAllCerts[0] as X509TrustManager)
-                .hostnameVerifier { hostname, session -> true } // Accepteer alle hostnames
+                .hostnameVerifier { _, _ -> true } // Accepteer alle hostnames
                 .build()
         } catch (e: Exception) {
             throw RuntimeException(e)

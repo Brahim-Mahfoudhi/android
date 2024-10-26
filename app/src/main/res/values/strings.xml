@@ -8,8 +8,7 @@
     <string name="log_in_button">Log In</string>
     <string name="log_out_button">Log Out</string>
     <string name="name_label">Name</string>
-    <string name="email_label">Email</string>
-    <string name="user_icon_url">https://images.ctfassets.net/23aumh6u8s0i/5hHkO5DxWMPxDjc2QZLXYf/403128092dedc8eb3395314b1d3545ad/icon-user.png</string>
+    <string name="email_label">Email*</string>
     <string name="register_button">Register</string>
     <string name="email_is_blank_error">The email can\'t be blank</string>
     <string name="email_not_valid_error">This is not a valid email</string>
@@ -26,11 +25,11 @@
     <string name="street_is_blank_error">You must select a street</string>
     <string name="invalid_house_number_error">House number must be greater than %d"</string>
     <string name="minimum_age_error">You must be more than %d years old</string>
-    <string name="firstName">First Name</string>
+    <string name="firstName">First Name*</string>
     <string name="last_name">Last Name*</string>
     <string name="street">Street*</string>
     <string name="house_number">Number*</string>
-    <string name="box">Bus</string>
+    <string name="box">Box*</string>
     <string name="date_of_birth">Date of Birth*</string>
     <string name="show_password">Show password</string>
     <string name="hide_password">Hide password</string>
@@ -42,4 +41,6 @@
     <string name="privacy_policy">Privacy Policy</string>
     <string name="no_account_yet">"No account yet? "</string>
     <string name="register_here">Sign up here</string>
+    <string name="invalid_box">Box number is invalid</string>
+    <string name="invalid_street">You must select a valid street</string>
 </resources>

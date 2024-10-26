@@ -6,7 +6,6 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.heightIn
@@ -17,9 +16,12 @@ import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
@@ -31,18 +33,19 @@ import rise.tiao1.buut.presentation.components.AutoCompleteTextFieldComponent
 import rise.tiao1.buut.presentation.components.ButtonComponent
 import rise.tiao1.buut.presentation.components.CheckboxComponent
 import rise.tiao1.buut.presentation.components.DatePickerComponent
+import rise.tiao1.buut.presentation.components.ErrorMessageContainer
 import rise.tiao1.buut.presentation.components.OutlinedTextFieldComponent
 import rise.tiao1.buut.presentation.components.PasswordTextFieldComponent
 import rise.tiao1.buut.presentation.components.rememberImeState
 import rise.tiao1.buut.ui.theme.AppTheme
-import rise.tiao1.buut.utils.FieldKeys
+import rise.tiao1.buut.utils.InputKeys
 
 @Composable
 fun RegistrationScreen(
     state: RegistrationScreenState,
-    onValueChanged: (oldValue: String, field: FieldKeys) -> Unit,
-    onCheckedChanged: (oldValue: Boolean, field: FieldKeys) -> Unit,
-    onFocusLost : (field: FieldKeys) -> Unit = {},
+    onValueChanged: (input: String, field: String) -> Unit,
+    onCheckedChanged: (input: Boolean, field: String) -> Unit,
+    onValidate : (field: String) -> Unit,
     onSubmitClick: () -> Unit = {}
 ) {
     val imeState = rememberImeState()
@@ -72,8 +75,8 @@ fun RegistrationScreen(
 
             OutlinedTextFieldComponent(
                 value = state.firstName,
-                onValueChanged = { onValueChanged(it, FieldKeys.FIRST_NAME) },
-                onFocusLost = { onFocusLost(FieldKeys.FIRST_NAME) },
+                onValueChanged = { onValueChanged(it, InputKeys.FIRST_NAME) },
+                onFocusLost = { onValidate(InputKeys.FIRST_NAME) },
                 isError = state.firstNameError != null,
                 errorMessage = state.firstNameError?.asString(),
                 label = R.string.firstName,
@@ -83,8 +86,8 @@ fun RegistrationScreen(
 
             OutlinedTextFieldComponent(
                 value = state.lastName,
-                onValueChanged = { onValueChanged(it, FieldKeys.LAST_NAME) },
-                onFocusLost = { onFocusLost(FieldKeys.LAST_NAME) },
+                onValueChanged = { onValueChanged(it, InputKeys.LAST_NAME) },
+                onFocusLost = { onValidate(InputKeys.LAST_NAME) },
                 isError = state.lastNameError != null,
                 errorMessage = state.lastNameError?.asString(),
                 label = R.string.last_name
@@ -93,9 +96,9 @@ fun RegistrationScreen(
             Spacer(modifier = Modifier.heightIn(5.dp))
 
             AutoCompleteTextFieldComponent(
-                value = state.street?.streetName ?: "",
-                onValueChanged = { onValueChanged(it, FieldKeys.STREET) },
-                onFocusLost = { onFocusLost(FieldKeys.STREET) },
+                value = state.street,
+                onValueChanged = { onValueChanged(it, InputKeys.STREET) },
+                onFocusLost = { onValidate(InputKeys.STREET) },
                 isError = state.streetError != null,
                 errorMessage = state.streetError?.asString(),
                 label = R.string.street,
@@ -113,8 +116,8 @@ fun RegistrationScreen(
                     OutlinedTextFieldComponent(
 
                         value = state.houseNumber,
-                        onValueChanged = { onValueChanged(it, FieldKeys.HOUSE_NUMBER)},
-                        onFocusLost = { onFocusLost(FieldKeys.HOUSE_NUMBER) },
+                        onValueChanged = { onValueChanged(it, InputKeys.HOUSE_NUMBER)},
+                        onFocusLost = { onValidate(InputKeys.HOUSE_NUMBER) },
                         isError = state.houseNumberError != null,
                         errorMessage = state.houseNumberError?.asString(),
                         label = R.string.house_number,
@@ -132,8 +135,8 @@ fun RegistrationScreen(
                 ) {
                     OutlinedTextFieldComponent(
                         value = state.box,
-                        onValueChanged = { onValueChanged(it, FieldKeys.BOX) },
-                        onFocusLost = { onFocusLost(FieldKeys.BOX) },
+                        onValueChanged = { onValueChanged(it, InputKeys.BOX) },
+                        onFocusLost = { onValidate(InputKeys.BOX) },
                         label = R.string.box,
                     )
                 }
@@ -143,8 +146,8 @@ fun RegistrationScreen(
 
             DatePickerComponent(
                 value = state.dateOfBirth,
-                onDatePicked = { onValueChanged(it, FieldKeys.DATE_OF_BIRTH) },
-                onFocusLost = { onFocusLost(FieldKeys.DATE_OF_BIRTH) },
+                onDatePicked = { onValueChanged(it, InputKeys.DATE_OF_BIRTH) },
+                onFocusLost = { onValidate(InputKeys.DATE_OF_BIRTH) },
                 isError = state.dateOfBirthError != null,
                 errorMessage = state.dateOfBirthError?.asString(),
                 label = R.string.date_of_birth
@@ -154,8 +157,8 @@ fun RegistrationScreen(
 
             OutlinedTextFieldComponent(
                 value = state.email,
-                onValueChanged = { onValueChanged(it, FieldKeys.EMAIL) },
-                onFocusLost = { onFocusLost(FieldKeys.EMAIL) },
+                onValueChanged = { onValueChanged(it, InputKeys.EMAIL) },
+                onFocusLost = { onValidate(InputKeys.EMAIL) },
                 isError = state.emailError != null,
                 errorMessage = state.emailError?.asString(),
                 label = R.string.email_label,
@@ -169,8 +172,8 @@ fun RegistrationScreen(
 
             OutlinedTextFieldComponent(
                 value = state.phone,
-                onValueChanged = { onValueChanged(it, FieldKeys.PHONE) },
-                onFocusLost = { onFocusLost(FieldKeys.PHONE) },
+                onValueChanged = { onValueChanged(it, InputKeys.PHONE) },
+                onFocusLost = { onValidate(InputKeys.PHONE) },
                 isError = state.phoneError != null,
                 errorMessage = state.phoneError?.asString(),
                 label = R.string.phone,
@@ -184,8 +187,8 @@ fun RegistrationScreen(
 
             PasswordTextFieldComponent(
                 value = state.password,
-                onValueChanged = { onValueChanged(it, FieldKeys.PASSWORD) },
-                onFocusLost = { onFocusLost(FieldKeys.PASSWORD) },
+                onValueChanged = { onValueChanged(it, InputKeys.PASSWORD) },
+                onFocusLost = { onValidate(InputKeys.PASSWORD) },
                 isError = state.passwordError != null,
                 errorMessage = state.passwordError?.asString(),
                 label = R.string.password,
@@ -195,8 +198,8 @@ fun RegistrationScreen(
 
             PasswordTextFieldComponent(
                 value = state.repeatedPassword,
-                onValueChanged = { onValueChanged(it, FieldKeys.REPEATED_PASSWORD) },
-                onFocusLost = { onFocusLost(FieldKeys.REPEATED_PASSWORD) },
+                onValueChanged = { onValueChanged(it, InputKeys.REPEATED_PASSWORD) },
+                onFocusLost = { onValidate(InputKeys.REPEATED_PASSWORD) },
                 isError = state.repeatedPasswordError != null,
                 errorMessage = state.repeatedPasswordError?.asString(),
                 label = R.string.repeated_password,
@@ -210,7 +213,7 @@ fun RegistrationScreen(
 
                 CheckboxComponent(
                     value = state.acceptedTermsOfUsage,
-                    onChecked = { onCheckedChanged(it, FieldKeys.TERMS) },
+                    onChecked = { onCheckedChanged(it, InputKeys.TERMS) },
                     errorMessage = state.termsError?.asString(),
                     leadingText = R.string.accept,
                     label = R.string.terms_of_usage
@@ -218,14 +221,18 @@ fun RegistrationScreen(
 
                 CheckboxComponent(
                     value = state.acceptedPrivacyConditions,
-                    onChecked = { onCheckedChanged(it, FieldKeys.PRIVACY) },
+                    onChecked = { onCheckedChanged(it, InputKeys.PRIVACY) },
                     errorMessage = state.privacyError?.asString(),
                     leadingText = R.string.accept,
                     label = R.string.privacy_policy
                 )
 
-                Spacer(modifier = Modifier.heightIn(30.dp))
+                Spacer(modifier = Modifier.heightIn(15.dp))
+                ErrorMessageContainer(errorMessage = state.apiError)
+                Spacer(modifier = Modifier.heightIn(15.dp))
+
                 ButtonComponent(
+                    isLoading = state.isLoading,
                     label = R.string.register_button,
                     onClick = onSubmitClick
                 )
@@ -239,6 +246,6 @@ fun RegistrationScreen(
 @Composable
 fun DefaultPreview() {
     AppTheme {
-        RegistrationScreen(RegistrationScreenState(), {_, _ -> {}}, {_, _ -> {}})
+        RegistrationScreen(RegistrationScreenState(), {_, _ -> {}}, {_, _ -> {}}, {_ -> {}})
     }
 }

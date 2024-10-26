@@ -5,14 +5,11 @@ import rise.tiao1.buut.utils.UiText
 import javax.inject.Inject
 
 class ValidateLastName @Inject constructor(){
-    fun execute(lastName: String) : ValidationResult {
-        if (lastName.isBlank()) {
-            return ValidationResult(
-                succesful = false,
-                errorMessage = UiText.StringResource(resId = R.string.last_name_is_blank_error)
-            )
-        }
+    fun execute(lastName: String) : UiText? {
 
-        return ValidationResult(succesful = true)
+        if (lastName.isBlank())
+            return UiText.StringResource(resId = R.string.last_name_is_blank_error)
+
+        return null
     }
 }

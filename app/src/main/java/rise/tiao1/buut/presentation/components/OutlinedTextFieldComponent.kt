@@ -39,6 +39,7 @@ fun OutlinedTextFieldComponent(
 ) {
     val touched = remember { mutableStateOf(false) }
     val isFocused = remember { mutableStateOf(false) }
+    val unfocusedColor = if (value.isEmpty()) Color.Black else Color.White
 
     OutlinedTextField(
         value = value,
@@ -51,7 +52,8 @@ fun OutlinedTextFieldComponent(
             focusedContainerColor = Color.White,
             focusedBorderColor = Color.Blue,
             errorContainerColor = Color.White,
-            focusedLabelColor = Color.White
+            focusedLabelColor = Color.White,
+            unfocusedLabelColor = unfocusedColor
 
         ),
         modifier = modifier

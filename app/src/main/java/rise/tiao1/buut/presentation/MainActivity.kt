@@ -15,10 +15,10 @@ import rise.tiao1.buut.presentation.login.LoginScreen
 import rise.tiao1.buut.presentation.login.LoginViewModel
 import rise.tiao1.buut.presentation.profile.ProfileScreen
 import rise.tiao1.buut.presentation.profile.ProfileViewModel
-import rise.tiao1.buut.presentation.register.RegisterViewModel
+import rise.tiao1.buut.presentation.register.RegistrationViewModel
 import rise.tiao1.buut.presentation.register.RegistrationScreen
 import rise.tiao1.buut.ui.theme.AppTheme
-import rise.tiao1.buut.utils.FieldKeys
+import rise.tiao1.buut.utils.InputKeys
 import rise.tiao1.buut.utils.NavigationKeys.Route
 import javax.inject.Inject
 
@@ -50,7 +50,7 @@ class MainActivity : ComponentActivity() {
                     val loginViewModel: LoginViewModel = hiltViewModel()
                     LoginScreen(
                         state = loginViewModel.state.value,
-                        onValueUpdate = {input, field: FieldKeys ->
+                        onValueUpdate = {input, field: String ->
                             loginViewModel.update(input, field)
                         },
                         login = {
@@ -61,6 +61,9 @@ class MainActivity : ComponentActivity() {
                         onRegisterClick = {
                             navController.navigate(Route.REGISTER)
                         },
+                        onValidate = {input, field: String ->
+                            loginViewModel.validate(input, field)
+                        }
                     )
                 }
                 composable(route = Route.PROFILE) {
@@ -75,19 +78,19 @@ class MainActivity : ComponentActivity() {
                     )
                 }
                 composable(route = Route.REGISTER) {
-                    val registerViewModel: RegisterViewModel = hiltViewModel()
+                    val registrationViewModel: RegistrationViewModel = hiltViewModel()
                     RegistrationScreen(
-                        state = registerViewModel.state.value,
-                        onValueChanged = { oldValue, field :FieldKeys->
-                            registerViewModel.update(oldValue, field)
+                        state = registrationViewModel.state.value,
+                        onValueChanged = { input: String, field :String->
+                            registrationViewModel.update(input, field)
                         },
-                        onCheckedChanged = { oldValue, field :FieldKeys ->
-                            registerViewModel.updateAcceptedAgreements(oldValue, field)
+                        onCheckedChanged = { input: Boolean, field: String ->
+                            registrationViewModel.update(input, field)
                         },
-                        onFocusLost = { field : FieldKeys->
-                            registerViewModel.validateField(field)
+                        onValidate = { field : String ->
+                            registrationViewModel.validate(field)
                         },
-                        onSubmitClick = { registerViewModel.onRegisterClick() }
+                        onSubmitClick = { registrationViewModel.onRegisterClick() }
                     )
                 }
             }

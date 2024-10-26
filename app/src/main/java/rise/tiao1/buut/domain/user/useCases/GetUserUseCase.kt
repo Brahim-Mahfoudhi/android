@@ -14,16 +14,19 @@ class GetUserUseCase @Inject constructor(
     private val sharedPreferences: SharedPreferences
 ) {
 
-    suspend operator fun invoke(): User {
+    suspend operator fun invoke(
+        onSuccess: (User) -> Unit,
+        onError: (String) -> Unit
+    ) {
         try {
             val idToken = (sharedPreferences.getString(SharedPreferencesKeys.IDTOKEN, ""))
             var id = ""
             if (!idToken.isNullOrEmpty())
                 id = JWT(idToken).subject ?: ""
-            Log.d("user", "id in de usecase $id")
-            return userRepository.getUser(id)
+            val user = userRepository.getUser(id)
+            onSuccess(user)
         } catch (e: Exception) {
-            throw Exception("Error fetching user: ${e.message}", e)
+           onError("Error fetching user: ${e.message}")
         }
     }
 }

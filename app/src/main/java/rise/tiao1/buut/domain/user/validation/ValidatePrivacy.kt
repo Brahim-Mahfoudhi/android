@@ -5,14 +5,11 @@ import rise.tiao1.buut.utils.UiText
 import javax.inject.Inject
 
 class ValidatePrivacy @Inject constructor(){
-    fun execute(acceptedPrivacy: Boolean) : ValidationResult {
-        if (!acceptedPrivacy) {
-            return ValidationResult(
-                succesful = false,
-                errorMessage = UiText.StringResource(resId = R.string.privacy_not_accepted_error)
-            )
-        }
+    fun execute(acceptedPrivacy: Boolean) : UiText? {
 
-        return ValidationResult(succesful = true)
+        if (!acceptedPrivacy)
+            return  UiText.StringResource(resId = R.string.privacy_not_accepted_error)
+
+        return null
     }
 }

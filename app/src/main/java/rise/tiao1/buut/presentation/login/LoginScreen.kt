@@ -30,20 +30,20 @@ import androidx.compose.ui.unit.dp
 import rise.tiao1.buut.R
 import rise.tiao1.buut.presentation.components.ButtonComponent
 import rise.tiao1.buut.presentation.components.BuutLogo
+import rise.tiao1.buut.presentation.components.ErrorMessageContainer
 import rise.tiao1.buut.presentation.components.OutlinedTextFieldComponent
 import rise.tiao1.buut.presentation.components.PasswordTextFieldComponent
 import rise.tiao1.buut.presentation.components.rememberImeState
-import rise.tiao1.buut.utils.FieldKeys
-import rise.tiao1.buut.utils.FieldKeys.EMAIL
-import rise.tiao1.buut.utils.FieldKeys.PASSWORD
+import rise.tiao1.buut.utils.InputKeys
 
 
 @Composable
 fun LoginScreen(
     state: LoginScreenState,
-    onValueUpdate: (input: String, field: FieldKeys) -> Unit,
+    onValueUpdate: (input: String, field: String) -> Unit,
     login: () -> Unit,
     onRegisterClick: () -> Unit,
+    onValidate: (input: String, field: String) -> Unit,
 ){
     val imeState = rememberImeState()
     val scrollState = rememberScrollState()
@@ -75,33 +75,36 @@ fun LoginScreen(
         Spacer(modifier = Modifier.heightIn(70.dp))
         Column {
             OutlinedTextFieldComponent(
-                value = state.fields.get(EMAIL) ?: "",
-                onValueChanged = { onValueUpdate(it, EMAIL) },
-                errorMessage = state.errors.get(EMAIL) ?: "",
+                value = state.email ?: "",
+                onValueChanged = { onValueUpdate(it, InputKeys.EMAIL) },
+                errorMessage = state.emailError?.asString(),
                 label = R.string.email_label,
-                onFocusLost = {},
+                onFocusLost = {onValidate(state.email, InputKeys.EMAIL)},
                 keyboardOptions = KeyboardOptions(
                     keyboardType = KeyboardType.Email,
                     imeAction = ImeAction.Next
                 ),
             )
             PasswordTextFieldComponent(
-                value = state.fields.get(PASSWORD) ?: "",
-                onValueChanged = { onValueUpdate(it, PASSWORD) },
-                errorMessage = state.fields.get(PASSWORD) ?: "",
+                value = state.password ?: "",
+                onValueChanged = { onValueUpdate(it, InputKeys.PASSWORD) },
+                errorMessage = state.passwordError?.asString(),
                 label = R.string.password,
-                onFocusLost = {},
+                onFocusLost = {onValidate(state.password, InputKeys.PASSWORD)},
                 keyboardOptions = KeyboardOptions(
                     keyboardType = KeyboardType.Password,
                     imeAction = ImeAction.Done
                 ),
             )
         }
-            Spacer(modifier = Modifier.heightIn(50.dp))
+            Spacer(modifier = Modifier.heightIn(25.dp))
+            ErrorMessageContainer(errorMessage = state.apiError)
+            Spacer(modifier = Modifier.heightIn(25.dp))
             Column {
                 ButtonComponent(
                     label = R.string.log_in_button,
                     onClick = { login() },
+                    isLoading = state.isLoading
                 )
                 Spacer(modifier = Modifier.heightIn(6.dp))
                 Row {

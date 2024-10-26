@@ -4,18 +4,18 @@ import org.junit.Test
 
 import org.junit.Assert.*
 import org.junit.Before
-import rise.tiao1.buut.presentation.register.RegisterViewModel
+import rise.tiao1.buut.presentation.register.RegistrationViewModel
 import java.time.LocalDate
 
 
 
-class RegisterViewModelTest {
+class RegistrationViewModelTest {
 
-    lateinit var toTest: RegisterViewModel
+    lateinit var toTest: RegistrationViewModel
 
     @Before
     fun setUp() {
-        toTest = RegisterViewModel()
+        toTest = RegistrationViewModel()
     }
 
     @Test

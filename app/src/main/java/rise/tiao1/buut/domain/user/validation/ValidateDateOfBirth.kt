@@ -11,20 +11,18 @@ import javax.inject.Inject
 const val MINIMUM_AGE = 18
 
 class ValidateDateOfBirth @Inject constructor(){
-    fun execute(dateOfBirth: String) : ValidationResult {
+    fun execute(dateOfBirth: String) : UiText? {
 
         if (dateOfBirth.isNotEmpty()) {
             val currentDate = LocalDate.now()
             val age = Period.between(dateOfBirth.toDate(), currentDate).years
 
             if (age >= MINIMUM_AGE)
-                return ValidationResult(succesful = true)
+                return null
 
         }
-        return ValidationResult(
-            succesful = false,
-            errorMessage = UiText.StringResource(resId = R.string.minimum_age_error, MINIMUM_AGE)
-        )
+        return UiText.StringResource(resId = R.string.minimum_age_error, MINIMUM_AGE)
+
     }
 
 }

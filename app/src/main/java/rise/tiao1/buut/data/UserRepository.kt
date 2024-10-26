@@ -5,8 +5,9 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import rise.tiao1.buut.data.local.user.UserDao
 import rise.tiao1.buut.data.remote.user.UserApiService
-import rise.tiao1.buut.data.remote.user.dto.RegistrationDTO
+import rise.tiao1.buut.data.remote.user.dto.UserDTO
 import rise.tiao1.buut.domain.user.User
+import rise.tiao1.buut.domain.user.toLocalUser
 import rise.tiao1.buut.utils.toLocalUser
 import rise.tiao1.buut.utils.toUser
 import javax.inject.Inject
@@ -36,8 +37,8 @@ class UserRepository @Inject constructor(
         }
     }
 
-    suspend fun registerUser(registerDto: RegistrationDTO): Boolean? {
-        val response = apiService.registerUser(registerDto)
+    suspend fun registerUser(userDto: UserDTO): Boolean? {
+        val response = apiService.registerUser(userDto)
         if (response.isSuccessful)
             return response.body()
         return false

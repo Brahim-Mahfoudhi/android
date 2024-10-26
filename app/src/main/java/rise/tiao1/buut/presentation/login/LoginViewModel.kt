@@ -1,60 +1,74 @@
 package rise.tiao1.buut.presentation.login
 
-import android.content.SharedPreferences
 import android.util.Log
+import androidx.compose.runtime.Composable
 import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.auth0.android.authentication.AuthenticationAPIClient
-import com.auth0.android.authentication.AuthenticationException
-import com.auth0.android.authentication.storage.CredentialsManager
-import com.auth0.android.callback.Callback
-import com.auth0.android.result.Credentials
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
-import rise.tiao1.buut.utils.FieldKeys
-import rise.tiao1.buut.utils.FieldKeys.*
-import rise.tiao1.buut.utils.SharedPreferencesKeys
+import rise.tiao1.buut.domain.user.useCases.LoginUseCase
+import rise.tiao1.buut.domain.user.validation.ValidateEmail
+import rise.tiao1.buut.domain.user.validation.ValidatePassword
+import rise.tiao1.buut.utils.InputKeys
 import javax.inject.Inject
 
 @HiltViewModel
 class LoginViewModel @Inject constructor(
-    private val authentication: AuthenticationAPIClient,
-    private val credentialsManager: CredentialsManager,
-    private val sharedPreferences: SharedPreferences,
+    private val login: LoginUseCase,
+    private val validateEmail: ValidateEmail,
+    private val validatePassword: ValidatePassword,
 ): ViewModel() {
     private val _state = mutableStateOf(LoginScreenState())
     val state : State<LoginScreenState> get() = _state
 
 
-    fun update(inputValue: String, field: FieldKeys) {
-        _state.value = state.value.copy(fields = state.value.fields.toMutableMap().apply{
-            this[field] = inputValue
+    private fun updateState(update: LoginScreenState.() -> LoginScreenState) {
+        _state.value = state.value.update()
+    }
+
+    fun update(input: String, field: String) {
+        updateState {
+            when (field) {
+                InputKeys.EMAIL -> copy(email = input)
+                InputKeys.PASSWORD -> copy(password = input)
+                else -> LoginScreenState()
+            }
         }
-        )
+    }
+
+    fun validate(input: String, field: String) {
+        updateState {
+            when (field) {
+                InputKeys.EMAIL-> copy(emailError = validateEmail.execute(input))
+                InputKeys.PASSWORD -> copy(passwordError = validatePassword.execute(input))
+                else -> LoginScreenState()
+            }
+        }
     }
 
 
     fun login(navigateToProfile: ()->Unit) {
-        authentication.login(state.value.fields[EMAIL] ?: "", state.value.fields[PASSWORD] ?: "")
-            .setAudience("https://api.rise.buut.com")
-            .start(object : Callback<Credentials, AuthenticationException> {
-                override fun onFailure(error: AuthenticationException) {
-                }
-
-                override fun onSuccess(result: Credentials) {
-                    viewModelScope.launch {
-                        Log.d("authToken", "bij succesvolle login builde ${result.accessToken}")
-                        credentialsManager.saveCredentials(result)
-                        sharedPreferences.edit()
-                            .putString(SharedPreferencesKeys.ACCESSTOKEN, result.accessToken)
-                            .putString(SharedPreferencesKeys.IDTOKEN, result.idToken)
-                            .apply()
+        _state.value = state.value.copy(isLoading = true)
+        viewModelScope.launch {
+                login.invoke(
+                    state.value.email,
+                    state.value.password,
+                    onSuccess = {
+                        _state.value = state.value.copy(isLoading = false)
                         navigateToProfile()
+                    },
+                    onError = { error ->
+                        _state.value = state.value.copy(
+                            isLoading = false,
+                            apiError = error
+                        )
                     }
-                }
-            })
+                )
+        }
+
+
     }
 
 

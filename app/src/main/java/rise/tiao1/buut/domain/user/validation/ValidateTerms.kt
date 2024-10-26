@@ -5,14 +5,11 @@ import rise.tiao1.buut.utils.UiText
 import javax.inject.Inject
 
 class ValidateTerms @Inject constructor(){
-    fun execute(acceptedTerms: Boolean) : ValidationResult {
-        if (!acceptedTerms) {
-            return ValidationResult(
-                succesful = false,
-                errorMessage = UiText.StringResource(resId = R.string.terms_not_accepted_error)
-            )
-        }
+    fun execute(acceptedTerms: Boolean) : UiText? {
 
-        return ValidationResult(succesful = true)
+        if (!acceptedTerms)
+            return  UiText.StringResource(resId = R.string.terms_not_accepted_error)
+
+        return null
     }
 }
