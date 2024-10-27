@@ -46,5 +46,5 @@
     <string name="morning_label">Morning</string>
     <string name="afternoon_label">Afternoon</string>
     <string name="evening_label">Evening</string>
-    <string name="make_reservation_title">Make a reservation</string>
+    <string name="make_reservation">Make a reservation</string>
 </resources>
