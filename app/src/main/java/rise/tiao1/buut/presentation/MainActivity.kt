@@ -11,14 +11,14 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.auth0.android.authentication.storage.CredentialsManager
 import dagger.hilt.android.AndroidEntryPoint
+import rise.tiao1.buut.presentation.booking.BookingScreen
 import rise.tiao1.buut.presentation.login.LoginScreen
 import rise.tiao1.buut.presentation.login.LoginViewModel
 import rise.tiao1.buut.presentation.profile.ProfileScreen
 import rise.tiao1.buut.presentation.profile.ProfileViewModel
 import rise.tiao1.buut.presentation.register.RegistrationViewModel
 import rise.tiao1.buut.presentation.register.RegistrationScreen
-import rise.tiao1.buut.presentation.reservation.ReservationScreen
-import rise.tiao1.buut.presentation.reservation.ReservationViewModel
+import rise.tiao1.buut.presentation.booking.BookingViewModel
 import rise.tiao1.buut.ui.theme.AppTheme
 import rise.tiao1.buut.utils.NavigationKeys.Route
 import javax.inject.Inject
@@ -97,11 +97,11 @@ class MainActivity : ComponentActivity() {
                     )
                 }
                 composable(route = Route.RESERVATION) {
-                    val reservationViewModel: ReservationViewModel = hiltViewModel()
-                    ReservationScreen(
-                        state = reservationViewModel.state.value,
+                    val bookingViewModel: BookingViewModel = hiltViewModel()
+                    BookingScreen (
+                        state = bookingViewModel.state.value,
                         onValueChanged = { input: Long? ->
-                            reservationViewModel.update(input)
+                            bookingViewModel.update(input)
                         }
                     )
                 }
