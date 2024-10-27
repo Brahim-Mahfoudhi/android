@@ -1,10 +1,9 @@
 package rise.tiao1.buut.data.remote.booking
 
-import retrofit2.http.Body
 import retrofit2.http.GET
 import retrofit2.http.Path
 
-interface bookingApiService {
+interface BookingApiService {
     @GET("api/Booking/all")
     suspend fun getAllBookings(): List<BookingDTO>
 

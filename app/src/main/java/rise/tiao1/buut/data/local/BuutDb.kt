@@ -2,6 +2,7 @@ package rise.tiao1.buut.data.local
 
 import androidx.room.Database
 import androidx.room.RoomDatabase
+import rise.tiao1.buut.data.local.booking.BookingDao
 import rise.tiao1.buut.data.local.user.LocalUser
 import rise.tiao1.buut.data.local.user.UserDao
 
@@ -11,7 +12,7 @@ import rise.tiao1.buut.data.local.user.UserDao
  */
 @Database(
     entities = [LocalUser::class],
-    version = 9,
+    version = 10,
     exportSchema = false
 )
 
@@ -19,5 +20,6 @@ abstract class BuutDb : RoomDatabase() {
     /**
      * Provides access to the Data Access Object (DAO) for database operations.
      */
-    abstract val dao: UserDao
+    abstract val userDao: UserDao
+    abstract val bookingDao: BookingDao
 }
