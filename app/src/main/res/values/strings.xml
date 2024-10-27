@@ -43,4 +43,8 @@
     <string name="register_here">Sign up here</string>
     <string name="invalid_box">Box number is invalid</string>
     <string name="invalid_street">You must select a valid street</string>
+    <string name="morning_label">Morning</string>
+    <string name="afternoon_label">Afternoon</string>
+    <string name="evening_label">Evening</string>
+    <string name="make_reservation">Make a reservation</string>
 </resources>

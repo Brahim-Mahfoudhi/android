@@ -40,7 +40,8 @@ fun PasswordTextFieldComponent(
         keyboardType = KeyboardType.Password,
         imeAction = ImeAction.Next
     ),
-    onFocusLost: () -> Unit
+    onFocusLost: () -> Unit,
+    modifier: Modifier = Modifier
 ) {
 
     val passwordVisible = remember {
@@ -72,7 +73,8 @@ fun PasswordTextFieldComponent(
             IconButton(onClick = { passwordVisible.value = !passwordVisible.value}) {
                 Icon(imageVector = iconImage, contentDescription = description)
             }
-        }
+        },
+        modifier = modifier
     )
 
 

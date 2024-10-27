@@ -17,8 +17,9 @@ import rise.tiao1.buut.presentation.profile.ProfileScreen
 import rise.tiao1.buut.presentation.profile.ProfileViewModel
 import rise.tiao1.buut.presentation.register.RegistrationViewModel
 import rise.tiao1.buut.presentation.register.RegistrationScreen
+import rise.tiao1.buut.presentation.reservation.ReservationScreen
+import rise.tiao1.buut.presentation.reservation.ReservationViewModel
 import rise.tiao1.buut.ui.theme.AppTheme
-import rise.tiao1.buut.utils.InputKeys
 import rise.tiao1.buut.utils.NavigationKeys.Route
 import javax.inject.Inject
 
@@ -37,6 +38,7 @@ class MainActivity : ComponentActivity() {
             }
         }
     }
+
 
     @Composable
     fun BuutApp() {
@@ -74,7 +76,8 @@ class MainActivity : ComponentActivity() {
                             viewModel.logout {
                                 navController.navigate(Route.HOME)
                             }
-                        }
+                        },
+                        toReservationPage = {navController.navigate(Route.RESERVATION)}
                     )
                 }
                 composable(route = Route.REGISTER) {
@@ -91,6 +94,15 @@ class MainActivity : ComponentActivity() {
                             registrationViewModel.validate(field)
                         },
                         onSubmitClick = { registrationViewModel.onRegisterClick() }
+                    )
+                }
+                composable(route = Route.RESERVATION) {
+                    val reservationViewModel: ReservationViewModel = hiltViewModel()
+                    ReservationScreen(
+                        state = reservationViewModel.state.value,
+                        onValueChanged = { input: Long? ->
+                            reservationViewModel.update(input)
+                        }
                     )
                 }
             }

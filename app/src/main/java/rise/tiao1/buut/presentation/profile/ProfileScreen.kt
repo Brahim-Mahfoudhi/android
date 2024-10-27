@@ -27,7 +27,7 @@ import rise.tiao1.buut.presentation.components.ErrorMessageContainer
 
 
 @Composable
-fun ProfileScreen(state: ProfileScreenState, logout: () -> Unit) {
+fun ProfileScreen(state: ProfileScreenState, logout: () -> Unit, toReservationPage: () -> Unit) {
     Column(
         modifier = Modifier.padding(20.dp).fillMaxSize(),
         horizontalAlignment = Alignment.CenterHorizontally,
@@ -56,7 +56,13 @@ fun ProfileScreen(state: ProfileScreenState, logout: () -> Unit) {
                 value = state.user?.email,
             )
         }
-
+        ButtonComponent(
+            label = R.string.make_reservation,
+            onClick = { toReservationPage() },
+        )
+        Spacer(
+            modifier = Modifier.width(10.dp),
+        )
         ButtonComponent(
             label = R.string.log_out_button,
             onClick = { logout() },

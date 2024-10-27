@@ -24,6 +24,7 @@ import java.util.*
 
 @Composable
 fun DatePickerComponent(
+    modifier: Modifier  = Modifier,
     value: String,
     onDatePicked: (String) -> Unit,
     onFocusLost: () -> Unit,
@@ -47,7 +48,8 @@ fun DatePickerComponent(
             IconButton(onClick = { isDialogOpen = true }) {
                 Icon(imageVector = Icons.Filled.DateRange, contentDescription = "Show calendar")
             }
-        }
+        },
+        modifier = modifier
     )
 
 

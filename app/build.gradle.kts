@@ -100,4 +100,6 @@ dependencies {
     testImplementation("org.jetbrains.kotlinx:kotlinx-coroutines-test:1.7.3")
     testImplementation("androidx.arch.core:core-testing:2.2.0")
 
+    implementation("androidx.compose.material3:material3-window-size-class")
+
 }
