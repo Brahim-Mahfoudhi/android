@@ -1,4 +1,4 @@
-package rise.tiao1.buut.data.remote
+package rise.tiao1.buut.data
 
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
@@ -21,7 +21,11 @@ class BookingRepository @Inject constructor(
             return@withContext apiService.getAllBookings().map { it.toBooking() }
         }
 
-    suspend fun getAllBookingsFromUser(userId: String): List<Booking> =
+    suspend fun getAllBookingsFromUser(userId: String): List<Booking> {
+        return DummyContent.getDummyBookings().filter { it.userId == userId }.map { it.toBooking() }
+    }
+
+    /*
         withContext(Dispatchers.IO) {
             try {
                 refreshCache(userId)
@@ -29,7 +33,8 @@ class BookingRepository @Inject constructor(
                 throw Exception("We can not load the bookings at this moment in time.")
             }
             return@withContext bookingDao.getBookingsByUserId(userId).map { it.toBooking() }
-        }
+        }*/
+
 
 
     private suspend fun refreshCache(userId: String) {

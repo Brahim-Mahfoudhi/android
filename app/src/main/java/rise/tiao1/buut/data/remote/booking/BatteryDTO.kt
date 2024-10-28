@@ -5,5 +5,5 @@ import com.google.gson.annotations.SerializedName
 data class BatteryDTO(
     val name: String,
     @SerializedName("r_listComments")
-    val comments: List<String>?
+    val comments: List<String>? = null
 )

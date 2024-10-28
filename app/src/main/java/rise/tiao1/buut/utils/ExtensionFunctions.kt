@@ -1,5 +1,6 @@
 package rise.tiao1.buut.utils
 
+import com.google.type.DateTime
 import rise.tiao1.buut.data.local.user.LocalUser
 import rise.tiao1.buut.data.remote.user.RemoteUser
 import rise.tiao1.buut.domain.user.User
@@ -50,4 +51,9 @@ fun Long.toDateString(): String {
 fun LocalDateTime.toDateString(): String {
     val formatter = DateTimeFormatter.ofPattern("d/M/yyyy")
     return formatter.format(this)
+}
+
+fun String.toLocalDateTime(): LocalDateTime {
+    val formatter = DateTimeFormatter.ofPattern("d/M/yyyy")
+    return LocalDateTime.parse(this, formatter)
 }

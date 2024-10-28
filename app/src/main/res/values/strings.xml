@@ -47,4 +47,9 @@
     <string name="afternoon_label">Afternoon</string>
     <string name="evening_label">Evening</string>
     <string name="make_reservation">Make a reservation</string>
+    <string name="date_of_booking">Date of booking</string>
+    <string name="number_of_adults">Adults</string>
+    <string name="number_of_children">Children</string>
+    <string name="boat">Boat</string>
+    <string name="battery">Battery</string>
 </resources>

@@ -22,17 +22,23 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import rise.tiao1.buut.R
+import rise.tiao1.buut.presentation.booking.BookingList
 import rise.tiao1.buut.presentation.components.ButtonComponent
+import rise.tiao1.buut.presentation.components.BuutLogo
 import rise.tiao1.buut.presentation.components.ErrorMessageContainer
+import rise.tiao1.buut.presentation.components.SecondaryBackgroundImage
 
 
 @Composable
 fun ProfileScreen(state: ProfileScreenState, logout: () -> Unit, toReservationPage: () -> Unit) {
+    Box {
+        SecondaryBackgroundImage()
     Column(
-        modifier = Modifier.padding(20.dp).fillMaxSize(),
+        modifier = Modifier.padding(20.dp),
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.SpaceBetween,
     ) {
+        BuutLogo()
         Text(
             text = stringResource(R.string.initial_title)
         )
@@ -56,12 +62,10 @@ fun ProfileScreen(state: ProfileScreenState, logout: () -> Unit, toReservationPa
                 value = state.user?.email,
             )
         }
+        BookingList(state = state)
         ButtonComponent(
             label = R.string.make_reservation,
             onClick = { toReservationPage() },
-        )
-        Spacer(
-            modifier = Modifier.width(10.dp),
         )
         ButtonComponent(
             label = R.string.log_out_button,
@@ -69,6 +73,7 @@ fun ProfileScreen(state: ProfileScreenState, logout: () -> Unit, toReservationPa
         )
         }
 }
+    }
 
 
 @Composable

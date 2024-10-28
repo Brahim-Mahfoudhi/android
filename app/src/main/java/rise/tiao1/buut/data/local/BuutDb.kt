@@ -3,6 +3,7 @@ package rise.tiao1.buut.data.local
 import androidx.room.Database
 import androidx.room.RoomDatabase
 import rise.tiao1.buut.data.local.booking.BookingDao
+import rise.tiao1.buut.data.local.booking.LocalBooking
 import rise.tiao1.buut.data.local.user.LocalUser
 import rise.tiao1.buut.data.local.user.UserDao
 
@@ -11,7 +12,7 @@ import rise.tiao1.buut.data.local.user.UserDao
  * Defines the entities and version of the database, and provides access to the DAO.
  */
 @Database(
-    entities = [LocalUser::class],
+    entities = [LocalUser::class, LocalBooking::class],
     version = 10,
     exportSchema = false
 )
