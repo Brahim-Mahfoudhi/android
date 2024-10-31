@@ -38,7 +38,7 @@ class RegisterUserUseCaseTest {
         registerUserUseCase.invoke(user, onSuccess = {result = false }, onError = {result = true})
         assert(result)
     }
-    
+
     fun getUser() : User {
         return User(
             id = "TestId",
