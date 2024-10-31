@@ -97,4 +97,5 @@ dependencies {
     testImplementation ("androidx.lifecycle:lifecycle-viewmodel-ktx:2.5.1")
     androidTestImplementation("androidx.lifecycle:lifecycle-viewmodel-ktx:2.5.1")
     implementation("androidx.compose.material3:material3-window-size-class")
+    testImplementation("org.robolectric:robolectric:4.13")
 }
