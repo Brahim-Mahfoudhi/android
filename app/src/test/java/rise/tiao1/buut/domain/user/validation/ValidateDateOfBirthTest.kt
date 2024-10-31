@@ -28,9 +28,8 @@ class ValidateDateOfBirthTest{
         val validateDateOfBirth = ValidateDateOfBirth()
         val result = validateDateOfBirth.execute("")
         assert(result != null)
-        if (result != null) {
-            assert(result.getStringId() == UiText.StringResource(R.string.minimum_age_error).getStringId())
-        }
+        assert(result?.getStringId() == UiText.StringResource(R.string.minimum_age_error).getStringId())
+
 
     }
 
@@ -39,10 +38,7 @@ class ValidateDateOfBirthTest{
         val validateDateOfBirth = ValidateDateOfBirth()
         val result = validateDateOfBirth.execute(LocalDateTime.now().minusYears(17).toDateString())
         assert(result != null)
-        if (result != null) {
-            assert(result.getStringId() == UiText.StringResource(R.string.minimum_age_error).getStringId())
-        }
-
+         assert(result?.getStringId() == UiText.StringResource(R.string.minimum_age_error).getStringId())
     }
 
 }
