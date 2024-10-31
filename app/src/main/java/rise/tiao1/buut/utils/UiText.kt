@@ -17,4 +17,11 @@ sealed class UiText {
             is StringResource -> stringResource(resId, *args)
         }
     }
+
+    fun getStringId(): String {
+        return when(this) {
+            is StringResource -> resId.toString()
+        }
+
+    }
 }

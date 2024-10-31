@@ -54,16 +54,7 @@ fun RegistrationScreen(
     onValidate : (field: String) -> Unit,
     onSubmitClick: () -> Unit = {}
 ) {
-    val imeState = rememberImeState()
     val scrollState = rememberScrollState()
-
-    /*
-    LaunchedEffect(key1 = imeState.value) {
-        if (imeState.value) {
-            scrollState.animateScrollTo(scrollState.maxValue)
-        }
-    }
-    */
 
 
     Box (modifier = Modifier.fillMaxSize()) {

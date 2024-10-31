@@ -1,6 +1,5 @@
 package rise.tiao1.buut.presentation.register
 
-import android.util.Log
 import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
@@ -28,7 +27,7 @@ import rise.tiao1.buut.utils.toApiDateString
 import javax.inject.Inject
 
 @HiltViewModel
-class RegistrationViewModel @Inject constructor(
+public class RegistrationViewModel @Inject constructor(
     private val validateFirstName: ValidateFirstName,
     private val validateLastName: ValidateLastName,
     private val validateEmail: ValidateEmail,

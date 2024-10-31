@@ -1,11 +1,9 @@
 package rise.tiao1.buut.presentation.profile
 
-import android.util.Log
 import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.auth0.android.authentication.storage.CredentialsManager
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.launch
@@ -14,7 +12,7 @@ import rise.tiao1.buut.domain.user.User
 import rise.tiao1.buut.domain.user.useCases.GetUserUseCase
 import rise.tiao1.buut.domain.user.useCases.LogoutUseCase
 import javax.inject.Inject
-import kotlin.math.log
+
 
 @HiltViewModel
 class ProfileViewModel @Inject constructor(
