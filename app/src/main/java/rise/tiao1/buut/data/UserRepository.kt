@@ -1,6 +1,5 @@
 package rise.tiao1.buut.data
 
-import android.util.Log
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import rise.tiao1.buut.data.local.user.UserDao
@@ -21,10 +20,8 @@ class UserRepository @Inject constructor(
     suspend fun getUser(id: String): User =
         withContext(Dispatchers.IO) {
             var localUser = dao.getUserById(id)
-            Log.d("user", "localuser in de repo $id")
             if (localUser == null){
                 val remoteUser = apiService.getUserById(id) /* DummyContent.getDummyUsers().find { it.id == id }*/
-                Log.d("user", "remoteUse in de repo $id")
                 localUser = remoteUser.toLocalUser()
                 dao.insertUser(localUser)
             }

@@ -14,6 +14,7 @@ class RegisterUserUseCase @Inject constructor(
         onError: (String) -> Unit
     ) {
         try {
+
             repository.registerUser(user.toUserDTO())
             onSuccess()
         } catch (e: Exception) {

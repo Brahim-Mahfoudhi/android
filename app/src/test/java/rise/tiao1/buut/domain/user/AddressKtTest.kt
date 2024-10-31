@@ -5,6 +5,7 @@ import kotlinx.coroutines.test.StandardTestDispatcher
 import kotlinx.coroutines.test.TestScope
 import kotlinx.coroutines.test.runTest
 import org.junit.Test
+import rise.tiao1.buut.data.remote.user.dto.AddressDTO
 import rise.tiao1.buut.utils.StreetType
 
 @ExperimentalCoroutinesApi
@@ -14,10 +15,18 @@ class AddressKtTest {
 
     @Test
     fun toDtoIsCalled_returnsCorrectDto() = scope.runTest{
-        val address = Address(StreetType.AFRIKALAAN, "1", "1")
-        val dto = address.toAddressDTO()
-        assert(dto.street == StreetType.AFRIKALAAN)
-        assert(dto.houseNumber == "1")
-        assert(dto.box == "1")
+        val address = getAddress()
+        val expected = getAddressDto()
+        val result = address.toAddressDTO()
+        assert(result.equals(expected))
     }
+
+    fun getAddress() : Address {
+        return Address(StreetType.AFRIKALAAN, "TestHuisnummer", "TestBox")
+    }
+
+    fun getAddressDto() : AddressDTO {
+        return AddressDTO(StreetType.AFRIKALAAN, "TestHuisnummer", "TestBox")
+    }
+
 }

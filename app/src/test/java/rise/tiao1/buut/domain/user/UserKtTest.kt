@@ -17,33 +17,58 @@ class UserKtTest {
 
     @Test
     fun whenToLocalUserIsCalled_returnsCorrectLocalUser() = scope.runTest{
-        val user = User("1", "test1", "test2", "test3", "test4", "test5", "test6", getAddress())
-        val expected = LocalUser("fg", "test1", "test2", "test3")
+        val user = getUser()
+        val expected = getLocalUser()
         val result = user.toLocalUser()
-        assert(result == expected)
+        assert(result.equals(expected))
     }
 
     @Test
     fun whenToDtoIsCalled_returnsCorrectDto() = scope.runTest{
-        val user = User("1", "test1", "test2", "test3", "test4", "test5", "test6", getAddress())
-        val expected = UserDTO("test1", "test2", getAddressDto(), "test5", "test3", "test4", "test6")
+        val user = getUser()
+        val expected = getUserDto()
         val result = user.toUserDTO()
-        assert(result.firstName == expected.firstName)
-        assert(result.lastName == expected.lastName)
-        assert(result.address?.street == expected.address?.street)
-        assert(result.address?.houseNumber == expected.address?.houseNumber)
-        assert(result.address?.box == expected.address?.box)
-        assert(result.phone == expected.phone)
-        assert(result.email == expected.email)
-        assert(result.password == expected.password)
-        assert(result.dateOfBirth == expected.dateOfBirth)
+        assert(result.equals(expected))
     }
 
     fun getAddress() : Address {
-        return Address(StreetType.AFRIKALAAN, "1", "1")
+        return Address(StreetType.AFRIKALAAN, "TestHuisnummer", "TestBox")
     }
 
     fun getAddressDto() : AddressDTO {
-        return Address(StreetType.AFRIKALAAN, "1", "1").toAddressDTO()
+        return AddressDTO(StreetType.AFRIKALAAN, "TestHuisnummer", "TestBox")
+    }
+
+    fun getUser() : User {
+        return User(
+            id = "TestId",
+            firstName = "TestFirstName",
+            lastName = "TestLastName",
+            email = "TestEmail",
+            password = "TestPassword",
+            phone = "TestPhone",
+            dateOfBirth = "TestDateOfBirth",
+            address = getAddress()
+        )
+    }
+
+    fun getUserDto() : UserDTO {
+        return UserDTO(
+            firstName = "TestFirstName",
+            lastName = "TestLastName",
+            email = "TestEmail",
+            password = "TestPassword",
+            phone = "TestPhone",
+            dateOfBirth = "TestDateOfBirth",
+            address = getAddressDto()
+        )
+    }
+
+    fun getLocalUser(): LocalUser {
+        return LocalUser(
+            id = "fg",
+            firstName = "TestFirstName",
+            lastName = "TestLastName",
+            email = "TestEmail")
     }
 }
