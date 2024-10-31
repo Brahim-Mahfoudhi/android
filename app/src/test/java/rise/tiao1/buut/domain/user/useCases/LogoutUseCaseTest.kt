@@ -13,16 +13,13 @@ import kotlinx.coroutines.test.StandardTestDispatcher
 import kotlinx.coroutines.test.TestScope
 import kotlinx.coroutines.test.runTest
 import org.junit.Test
-import org.junit.runner.RunWith
 import io.mockk.verify
-import org.mockito.junit.MockitoJUnitRunner
 import rise.tiao1.buut.data.UserRepository
 import rise.tiao1.buut.domain.user.Address
 import rise.tiao1.buut.domain.user.User
 import rise.tiao1.buut.utils.StreetType
 
 @ExperimentalCoroutinesApi
-@RunWith(MockitoJUnitRunner::class)
 class LogoutUseCaseTest {
 
     private val dispatcher = StandardTestDispatcher()
@@ -60,7 +57,7 @@ class LogoutUseCaseTest {
         verify(exactly = 0) { sharedPreferences.edit() }
         verify(exactly = 0) { credentialsManager.clearCredentials() }
     }
-    
+
     fun getUser() : User {
         return User(
             id = "TestId",
