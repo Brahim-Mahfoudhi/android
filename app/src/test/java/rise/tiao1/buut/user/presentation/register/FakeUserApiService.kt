@@ -17,5 +17,5 @@ class FakeUserApiService : UserApiService {
     override suspend fun getUserById(id: String): RemoteUser {
         delay(500)
         return DummyContent.getDummyUsers().find { dummyUser -> dummyUser.id == id }!!
-    };
+    }
 }

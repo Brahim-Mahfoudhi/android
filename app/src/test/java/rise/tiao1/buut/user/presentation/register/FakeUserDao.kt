@@ -19,7 +19,7 @@ class FakeUserDao : UserDao {
 
     override suspend fun updateUser(localUser: LocalUser) {
         delay(500)
-        var toUpdate = users.find { dummyUser -> dummyUser.id == localUser.id}
+        val toUpdate = users.find { dummyUser -> dummyUser.id == localUser.id}
         if (toUpdate != null) {
             users.remove(toUpdate)
             users.add(localUser)
