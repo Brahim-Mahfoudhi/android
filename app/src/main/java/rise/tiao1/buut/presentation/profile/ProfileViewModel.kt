@@ -18,7 +18,6 @@ import javax.inject.Inject
 class ProfileViewModel @Inject constructor(
     private val getUserUseCase: GetUserUseCase,
     private val logoutUseCase: LogoutUseCase,
-    @MainDispatcher private val dispatcher: CoroutineDispatcher
     ): ViewModel() {
     private val _state = mutableStateOf(ProfileScreenState())
     val state : State<ProfileScreenState> get() = _state

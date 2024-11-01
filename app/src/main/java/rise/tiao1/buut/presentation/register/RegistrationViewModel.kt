@@ -27,7 +27,7 @@ import rise.tiao1.buut.utils.toApiDateString
 import javax.inject.Inject
 
 @HiltViewModel
-public class RegistrationViewModel @Inject constructor(
+class RegistrationViewModel @Inject constructor(
     private val validateFirstName: ValidateFirstName,
     private val validateLastName: ValidateLastName,
     private val validateEmail: ValidateEmail,
@@ -47,7 +47,7 @@ public class RegistrationViewModel @Inject constructor(
     val state: State<RegistrationScreenState>
         get() = _state
 
-    private fun updateState(update: RegistrationScreenState.() -> RegistrationScreenState) {
+    fun updateState(update: RegistrationScreenState.() -> RegistrationScreenState) {
         _state.value = state.value.update()
     }
 
