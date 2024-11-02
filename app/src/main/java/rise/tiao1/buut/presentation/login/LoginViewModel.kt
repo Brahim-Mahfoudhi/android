@@ -24,7 +24,7 @@ class LoginViewModel @Inject constructor(
     val state : State<LoginScreenState> get() = _state
 
 
-    private fun updateState(update: LoginScreenState.() -> LoginScreenState) {
+    fun updateState(update: LoginScreenState.() -> LoginScreenState) {
         _state.value = state.value.update()
     }
 

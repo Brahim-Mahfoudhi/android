@@ -15,7 +15,8 @@
     <string name="password_not_valid_error">assword must have at least 8 characters, one uppercase letter, one number, and one special character</string>
     <string name="invalid_password_length_error">The password must be at least %d characters</string>
     <string name="invalid_password_no_digit_error">The password must have at least one digit</string>
-    <string name="invalid_password_no_upper_case_error">The password must containt at least one upper case character</string>
+    <string name="invalid_password_no_upper_case_error">The password must contain at least one upper case character</string>
+    <string name="invalid_password_no_special_character_error">The password must contain at least one special character</string>
     <string name="repeated_password_error">Passwords do not match</string>
     <string name="first_name_is_blank_error">First name can not be empty</string>
     <string name="last_name_is_blank_error">Last name can not be empty</string>
