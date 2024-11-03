@@ -58,7 +58,7 @@ fun LoginScreen(
    {
     Image(
         painter = painterResource(R.drawable.buut_background),
-        contentDescription = null,
+        contentDescription = "BuutLogo",
         contentScale = ContentScale.Crop,
         modifier = Modifier.fillMaxSize()
     )

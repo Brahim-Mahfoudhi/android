@@ -100,7 +100,7 @@ class RegistrationViewModel @Inject constructor(
     }
 
 
-    fun onRegisterClick() {
+    fun onRegisterClick(navigateToHome: () -> Unit) {
 
         listOfInputKeys.forEach { validate(it) }
 
@@ -130,7 +130,7 @@ class RegistrationViewModel @Inject constructor(
                         newUser,
                         onSuccess = {
                             _state.value = state.value.copy(isLoading = false, apiError = "Registratie voltooid")
-
+                            navigateToHome()
                         },
                     onError = { error ->
                         _state.value = state.value.copy(

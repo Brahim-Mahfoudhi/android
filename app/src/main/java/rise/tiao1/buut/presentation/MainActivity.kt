@@ -93,7 +93,9 @@ class MainActivity : ComponentActivity() {
                         onValidate = { field : String ->
                             registrationViewModel.validate(field)
                         },
-                        onSubmitClick = { registrationViewModel.onRegisterClick() }
+                        onSubmitClick = { registrationViewModel.onRegisterClick (
+                            navigateToHome =  { navController.navigate(Route.HOME) }
+                        ) }
                     )
                 }
                 composable(route = Route.RESERVATION) {

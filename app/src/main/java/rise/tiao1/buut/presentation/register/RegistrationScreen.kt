@@ -49,7 +49,7 @@ fun RegistrationScreen(
     Box (modifier = Modifier.fillMaxSize()) {
         Image(
             painter = painterResource(R.drawable.buut_background),
-            contentDescription = null,
+            contentDescription = "BuutBackground",
             contentScale = ContentScale.Crop,
             modifier = Modifier.fillMaxSize()
         )

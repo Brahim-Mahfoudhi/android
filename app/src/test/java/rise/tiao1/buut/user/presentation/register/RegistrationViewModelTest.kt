@@ -2,27 +2,21 @@ package rise.tiao1.buut.user.presentation.register
 
 import io.mockk.Runs
 import io.mockk.coEvery
-import io.mockk.coVerify
 import io.mockk.every
 import io.mockk.just
 import io.mockk.mockk
-import io.mockk.runs
 import io.mockk.spyk
 import io.mockk.verify
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.StandardTestDispatcher
-import kotlinx.coroutines.test.TestCoroutineDispatcher
 import kotlinx.coroutines.test.TestScope
 import kotlinx.coroutines.test.advanceUntilIdle
 import kotlinx.coroutines.test.resetMain
 import kotlinx.coroutines.test.runTest
 import kotlinx.coroutines.test.setMain
-import org.junit.Assert
 import org.junit.Test
 import rise.tiao1.buut.R
-import rise.tiao1.buut.data.UserRepository
-import rise.tiao1.buut.domain.user.User
 import rise.tiao1.buut.domain.user.useCases.RegisterUserUseCase
 import rise.tiao1.buut.domain.user.validation.LOWEST_POSSIBLE_HOUSE_NUMBER
 import rise.tiao1.buut.domain.user.validation.MINIMUM_AGE
@@ -348,7 +342,7 @@ class RegistrationViewModelTest {
        coEvery { registerUserUseCase.invoke(any(), any(), any()) } just Runs
        val testDispatcher = StandardTestDispatcher()
        Dispatchers.setMain(testDispatcher)
-       viewModel.onRegisterClick()
+       viewModel.onRegisterClick({println("Success")})
        advanceUntilIdle()
        verify { validateFirstName.execute(any()) }
        verify { validateLastName.execute(any()) }
@@ -362,7 +356,7 @@ class RegistrationViewModelTest {
        verify { validateRepeatedPassword.execute(any(), any()) }
        verify { validateTerms.execute(any()) }
        verify { validatePrivacy.execute(any()) }
-       verify { viewModel.onRegisterClick() }
+       verify { viewModel.onRegisterClick(any()) }
        Dispatchers.resetMain()
    }
 
@@ -389,7 +383,7 @@ class RegistrationViewModelTest {
         coEvery { registerUserUseCase.invoke(any(), any(), any()) } just Runs
         val testDispatcher = StandardTestDispatcher()
         Dispatchers.setMain(testDispatcher)
-        viewModel.onRegisterClick()
+        viewModel.onRegisterClick({println("Success")})
         verify { validateFirstName.execute(any()) }
         verify { validateLastName.execute(any()) }
         verify { validateEmail.execute(any()) }
@@ -402,7 +396,7 @@ class RegistrationViewModelTest {
         verify { validateRepeatedPassword.execute(any(), any()) }
         verify { validateTerms.execute(any()) }
         verify { validatePrivacy.execute(any()) }
-        verify { viewModel.onRegisterClick() }
+        verify { viewModel.onRegisterClick(any())}
         Dispatchers.resetMain()
     }
 
