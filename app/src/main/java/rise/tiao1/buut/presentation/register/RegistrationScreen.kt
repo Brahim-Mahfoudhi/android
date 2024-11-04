@@ -14,11 +14,16 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material3.AlertDialog
+import androidx.compose.material3.Button
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
@@ -41,7 +46,8 @@ fun RegistrationScreen(
     onValueChanged: (input: String, field: String) -> Unit,
     onCheckedChanged: (input: Boolean, field: String) -> Unit,
     onValidate : (field: String) -> Unit,
-    onSubmitClick: () -> Unit = {}
+    onSubmitClick: () -> Unit = {},
+    onRegistrationSuccessDismissed: () -> Unit = {}
 ) {
     val scrollState = rememberScrollState()
 
@@ -228,6 +234,22 @@ fun RegistrationScreen(
 
         }
     }
+
+    if (state.registrationSuccess) {
+        AlertDialog(
+            modifier = Modifier.testTag("RegistrationSuccessModal"),
+            onDismissRequest = onRegistrationSuccessDismissed,
+            title = { Text(stringResource(R.string.registration_succesful)) },
+            text = { Text(stringResource(R.string.account_created)) },
+            confirmButton = {
+                Button(modifier = Modifier.testTag("RegistrationSuccessModalButton"),
+                    onClick = onRegistrationSuccessDismissed) {
+                    Text(stringResource(R.string.close_label))
+                }
+            }
+        )
+    }
+
 
 }
 

@@ -31,6 +31,7 @@ data class RegistrationScreenState(
 
     val isLoading: Boolean = false,
     val formHasErrors: Boolean= false,
+    val registrationSuccess: Boolean = false,
 
     val apiError: String = ""
 )

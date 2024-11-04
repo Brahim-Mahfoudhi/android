@@ -342,7 +342,7 @@ class RegistrationViewModelTest {
        coEvery { registerUserUseCase.invoke(any(), any(), any()) } just Runs
        val testDispatcher = StandardTestDispatcher()
        Dispatchers.setMain(testDispatcher)
-       viewModel.onRegisterClick({println("Success")})
+       viewModel.onRegisterClick()
        advanceUntilIdle()
        verify { validateFirstName.execute(any()) }
        verify { validateLastName.execute(any()) }
@@ -356,7 +356,7 @@ class RegistrationViewModelTest {
        verify { validateRepeatedPassword.execute(any(), any()) }
        verify { validateTerms.execute(any()) }
        verify { validatePrivacy.execute(any()) }
-       verify { viewModel.onRegisterClick(any()) }
+       verify { viewModel.onRegisterClick()}
        Dispatchers.resetMain()
    }
 
@@ -383,7 +383,7 @@ class RegistrationViewModelTest {
         coEvery { registerUserUseCase.invoke(any(), any(), any()) } just Runs
         val testDispatcher = StandardTestDispatcher()
         Dispatchers.setMain(testDispatcher)
-        viewModel.onRegisterClick({println("Success")})
+        viewModel.onRegisterClick()
         verify { validateFirstName.execute(any()) }
         verify { validateLastName.execute(any()) }
         verify { validateEmail.execute(any()) }
@@ -396,7 +396,7 @@ class RegistrationViewModelTest {
         verify { validateRepeatedPassword.execute(any(), any()) }
         verify { validateTerms.execute(any()) }
         verify { validatePrivacy.execute(any()) }
-        verify { viewModel.onRegisterClick(any())}
+        verify { viewModel.onRegisterClick()}
         Dispatchers.resetMain()
     }
 

@@ -100,7 +100,7 @@ class RegistrationViewModel @Inject constructor(
     }
 
 
-    fun onRegisterClick(navigateToHome: () -> Unit) {
+    fun onRegisterClick() {
 
         listOfInputKeys.forEach { validate(it) }
 
@@ -129,8 +129,7 @@ class RegistrationViewModel @Inject constructor(
                 registerUserUseCase.invoke(
                         newUser,
                         onSuccess = {
-                            _state.value = state.value.copy(isLoading = false, apiError = "Registratie voltooid")
-                            navigateToHome()
+                            _state.value = state.value.copy(isLoading = false, registrationSuccess = true)
                         },
                     onError = { error ->
                         _state.value = state.value.copy(
@@ -140,6 +139,11 @@ class RegistrationViewModel @Inject constructor(
                         })
             }
         }
+    }
+
+    fun onRegistrationSuccessDismissed(navigateToHome: () -> Unit) {
+        _state.value = state.value.copy(registrationSuccess = false)
+        navigateToHome()
     }
 
     private val listOfInputKeys = listOf(

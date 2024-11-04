@@ -13,7 +13,10 @@
         </DropdownSelection>
         <DialogSelection />
       </SelectionState>
-      <SelectionState runConfigName="registrationScreen_boxLabelInput_UpdatesState()">
+      <SelectionState runConfigName="RegistrationScreenKtTest">
+        <option name="selectionMode" value="DROPDOWN" />
+      </SelectionState>
+      <SelectionState runConfigName="registrationScreen_displayCorrectly()">
         <option name="selectionMode" value="DROPDOWN" />
       </SelectionState>
     </selectionStates>

@@ -48,4 +48,7 @@
     <string name="afternoon_label">Afternoon</string>
     <string name="evening_label">Evening</string>
     <string name="make_reservation">Make a reservation</string>
+    <string name="close_label">Close</string>
+    <string name="registration_succesful">Registration Successful</string>
+    <string name="account_created">Your account has been created.</string>
 </resources>

@@ -5,6 +5,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.test.assertIsDisplayed
 import androidx.compose.ui.test.assertIsNotDisplayed
+import androidx.compose.ui.test.isNotDisplayed
 import androidx.compose.ui.test.junit4.ComposeContentTestRule
 import androidx.compose.ui.test.junit4.createComposeRule
 import androidx.compose.ui.test.onNodeWithContentDescription
@@ -53,6 +54,8 @@ class RegistrationScreenKtTest{
     val termsInput = rule.onNodeWithTag(context.getString(R.string.terms_of_usage))
     val privacyInput = rule.onNodeWithTag(context.getString(R.string.privacy_policy))
     val errorMessage = rule.onNodeWithText("TestError")
+    val registrationSuccessModal = rule.onNodeWithTag("RegistrationSuccessModal")
+    val registrationSuccessModalButton = rule.onNodeWithTag("RegistrationSuccessModalButton")
 
     @Test
     fun registrationScreen_displayCorrectly() {
@@ -469,29 +472,98 @@ class RegistrationScreenKtTest{
     }
 
     @Test
-    fun registrationScreen_onRegisterClick_routeToHome(){
+    fun registrationScreen_onRegistrationSuccess_showModal(){
         rule.setContent {
-            val navController = rememberNavController()
-            navControllerState = navController
-            NavHost(navController = navController, startDestination = NavigationKeys.Route.REGISTER) {
-                composable(NavigationKeys.Route.HOME)  { LoginScreen(
-                    state = LoginScreenState(),
-                    onValueUpdate = { _, _ -> },
-                    login = { },
-                    onRegisterClick = { },
-                    onValidate = { _, _ -> }
-                ) }
-                composable(NavigationKeys.Route.REGISTER) { RegistrationScreen(
-                    state = RegistrationScreenState(),
-                    onValueChanged = { _,_ ->  },
-                    onCheckedChanged = { _,_ ->  },
-                    onValidate = {_ ->  },
-                    onSubmitClick = {navController.navigate(NavigationKeys.Route.HOME)}
-                ) }
-            }
+            RegistrationScreen(
+                state = RegistrationScreenState(registrationSuccess = true),
+                onValueChanged = { _, _ -> },
+                onCheckedChanged = { _, _ -> },
+                onValidate = {},
+                onSubmitClick = {},
+                onRegistrationSuccessDismissed = {  }
+            )
         }
-        val navController = navControllerState!!
-        registerButton.performClick()
-        assert(navController.currentDestination?.route == NavigationKeys.Route.HOME)
+        rule.waitForIdle()
+        registrationSuccessModal.assertIsDisplayed()
+        registrationSuccessModalButton.assertIsDisplayed()
     }
-}
+
+        @Test
+        fun registrationScreen_onRegisterClickAndSuccesfulRegistration_openRegistrationSuccessModal(){
+            var registrationSuccess by mutableStateOf(false)
+            rule.setContent {
+                RegistrationScreen(
+                    state = RegistrationScreenState(registrationSuccess = registrationSuccess),
+                    onValueChanged = { _, _ -> },
+                    onCheckedChanged = { _, _ -> },
+                    onValidate = {},
+                    onSubmitClick = {registrationSuccess = true},
+                    onRegistrationSuccessDismissed = {  }
+                )
+            }
+            registerButton.performClick()
+            rule.waitForIdle()
+            registrationSuccessModal.assertIsDisplayed()
+            registrationSuccessModalButton.assertIsDisplayed()
+            errorMessage.assertIsNotDisplayed()
+        }
+
+        @Test
+        fun registrationScreen_onRegisterButtonClickAndError_DisplaysErrorAndNotModal() {
+            var apiError by mutableStateOf("")
+            rule.setContent {
+                RegistrationScreen(
+                    state = RegistrationScreenState(apiError = apiError),
+                    onValueChanged = { _, _ -> },
+                    onCheckedChanged = { _, _ -> },
+                    onValidate = {},
+                    onSubmitClick = {apiError = "TestError"},
+                    onRegistrationSuccessDismissed = {  }
+                )
+            }
+            registerButton.performClick()
+            rule.waitForIdle()
+            errorMessage.assertIsDisplayed()
+            registrationSuccessModal.isNotDisplayed()
+            registrationSuccessModalButton.isNotDisplayed()
+        }
+
+        @Test
+        fun registrationScreen_onRegistrationSuccessModalButtonClick_dismissModalAndRouteToHome(){
+            var registrationSuccess by mutableStateOf(true)
+            val state = RegistrationScreenState(registrationSuccess = registrationSuccess)
+            rule.setContent {
+                val navController = rememberNavController()
+                navControllerState = navController
+                NavHost(navController = navController, startDestination = NavigationKeys.Route.REGISTER) {
+                    composable(NavigationKeys.Route.HOME)  { LoginScreen(
+                        state = LoginScreenState(),
+                        onValueUpdate = { _, _ -> },
+                        login = { },
+                        onRegisterClick = { },
+                        onValidate = { _, _ -> }
+                    ) }
+                    composable(NavigationKeys.Route.REGISTER) { RegistrationScreen(
+                        state = state,
+                        onValueChanged = { _,_ ->  },
+                        onCheckedChanged = { _,_ ->  },
+                        onValidate = {_ ->  },
+                        onSubmitClick = {},
+                        onRegistrationSuccessDismissed = {
+                            registrationSuccess = false
+                            navController.navigate(NavigationKeys.Route.HOME)}
+                    ) }
+                }
+            }
+            val navController = navControllerState!!
+            rule.waitForIdle()
+            registrationSuccessModal.assertIsDisplayed()
+            registrationSuccessModalButton.assertIsDisplayed()
+            registrationSuccessModalButton.performClick()
+            rule.waitForIdle()
+            assert(registrationSuccess == false)
+            registrationSuccessModal.isNotDisplayed()
+            registrationSuccessModalButton.isNotDisplayed()
+            assert(navController.currentDestination?.route == NavigationKeys.Route.HOME)
+        }
+    }
