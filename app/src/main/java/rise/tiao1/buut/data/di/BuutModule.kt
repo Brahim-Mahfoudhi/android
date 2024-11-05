@@ -3,7 +3,6 @@ package rise.tiao1.buut.data.di
 import UnsafeOkHttpClient
 import android.content.Context
 import android.content.SharedPreferences
-import android.util.Log
 import androidx.room.Room
 import com.auth0.android.Auth0
 import com.auth0.android.authentication.AuthenticationAPIClient
@@ -15,13 +14,14 @@ import dagger.hilt.InstallIn
 import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
 import okhttp3.Interceptor
-import okhttp3.OkHttpClient
 import okhttp3.Response
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import rise.tiao1.buut.data.local.BuutDb
+import rise.tiao1.buut.data.local.booking.BookingDao
 import rise.tiao1.buut.data.local.user.UserDao
+import rise.tiao1.buut.data.remote.booking.BookingApiService
 import rise.tiao1.buut.data.remote.user.UserApiService
 import rise.tiao1.buut.utils.SharedPreferencesKeys
 import javax.inject.Singleton
@@ -40,9 +40,15 @@ object BuutModule {
      * Provides the [BuutDao] for Room database operations.
      */
     @Provides
-    fun provideRoomDao(database: BuutDb): UserDao {
-        return database.dao
+    fun provideUserDao(database: BuutDb): UserDao {
+        return database.userDao
     }
+
+    @Provides
+    fun provideBookingDao(database: BuutDb): BookingDao {
+        return database.bookingDao
+    }
+
 
     /**
      * Provides the Room database instance using Dagger/Hilt.
@@ -96,6 +102,11 @@ object BuutModule {
         return retrofit.create(UserApiService::class.java)
     }
 
+    @Provides
+    @Singleton
+    fun provideBookingApiService(retrofit: Retrofit): BookingApiService {
+        return retrofit.create(BookingApiService::class.java)
+    }
 
     @Singleton
     @Provides
@@ -128,14 +139,11 @@ class AuthInterceptor(private val accessToken: String?) : Interceptor {
 
     override fun intercept(chain: Interceptor.Chain): Response {
         val request= chain.request()
-        Log.d("okht", "Sending request to ${request.url} with headers ${request.headers}")
         val requestWithHeader = request.newBuilder()
             .addHeader("Accept", "application/json")
             .addHeader("Authorization", "Bearer $accessToken")
             .build()
-        Log.d("okhtt", "wat is dit ${requestWithHeader}")
         val response =  chain.proceed(requestWithHeader)
-        Log.d("okhtt", "response $response")
         return response
     }
 }

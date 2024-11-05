@@ -1,10 +1,10 @@
-package rise.tiao1.buut.presentation.reservation
+package rise.tiao1.buut.presentation.booking
 
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.SelectableDates
 import rise.tiao1.buut.utils.NonSelectableDates
 
-data class ReservationScreenState @OptIn(ExperimentalMaterial3Api::class) constructor(
+data class BookingScreenState @OptIn(ExperimentalMaterial3Api::class) constructor(
 
     val selectedDate: Long? = 0,
     val nonSelectableDates: SelectableDates = NonSelectableDates()

@@ -1,4 +1,4 @@
-package rise.tiao1.buut.presentation.reservation
+package rise.tiao1.buut.presentation.booking
 
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.runtime.State
@@ -8,10 +8,10 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 
 @HiltViewModel
-class ReservationViewModel @Inject constructor ():ViewModel() {
+class BookingViewModel @Inject constructor ():ViewModel() {
 
-    private val _state = mutableStateOf(ReservationScreenState())
-        val state: State<ReservationScreenState>
+    private val _state = mutableStateOf(BookingScreenState())
+        val state: State<BookingScreenState>
         get() = _state
 
     @OptIn(ExperimentalMaterial3Api::class)

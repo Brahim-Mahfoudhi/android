@@ -1,6 +1,6 @@
 package rise.tiao1.buut.domain.user.useCases
 
-import rise.tiao1.buut.data.UserRepository
+import rise.tiao1.buut.data.repositories.UserRepository
 import rise.tiao1.buut.domain.user.User
 import rise.tiao1.buut.domain.user.toUserDTO
 import javax.inject.Inject
