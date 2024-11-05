@@ -10,11 +10,11 @@ class GetBookingsSortedByDateUseCase @Inject constructor (
     suspend operator fun invoke(
         userId: String
     ):List<Booking> {
-       lateinit var sortedBookings: List<Booking>
        val bookings = bookingRepository.getAllBookingsFromUser(userId)
-        if (bookings.isNotEmpty())
-            sortedBookings = bookings.sortedBy { it.date }
-        return sortedBookings
+        return if (bookings.isNotEmpty())
+            bookings.sortedBy { it.date }
+        else
+            emptyList()
 
     }
 }
