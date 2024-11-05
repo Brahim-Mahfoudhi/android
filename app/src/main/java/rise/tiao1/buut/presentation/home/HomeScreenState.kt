@@ -1,12 +1,12 @@
-package rise.tiao1.buut.presentation.profile
+package rise.tiao1.buut.presentation.home
 
 import rise.tiao1.buut.domain.booking.Booking
 import rise.tiao1.buut.domain.user.User
 
 
-data class ProfileScreenState (
+data class HomeScreenState (
     val user: User? = null,
     val bookings: List<Booking> = emptyList(),
-    val isLoading: Boolean = false,
-    val apiError: String = "",
+    val isLoading: Boolean = true,
+    val apiError: String? = "",
 )

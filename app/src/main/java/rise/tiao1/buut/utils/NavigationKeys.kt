@@ -17,12 +17,12 @@ object NavigationKeys {
         /**
          * Route for the home screen.
          */
-        const val HOME = "home"
+        const val LOGIN = "login"
 
         /**
          * Route for the user profile screen.
          */
-        const val PROFILE = "profile"
+        const val HOME = "home"
 
         /**
          * Route for the registration screen.

@@ -5,6 +5,9 @@ import rise.tiao1.buut.data.remote.booking.BatteryDTO
 import rise.tiao1.buut.data.remote.booking.BoatDTO
 import rise.tiao1.buut.data.remote.booking.BookingDTO
 import rise.tiao1.buut.data.remote.user.RemoteUser
+import rise.tiao1.buut.utils.toApiDateString
+import rise.tiao1.buut.utils.toDateString
+import rise.tiao1.buut.utils.toMillis
 import java.time.LocalDateTime
 
 object DummyContent {
@@ -14,27 +17,36 @@ object DummyContent {
         RemoteUser("auth0|6713ad524e8a8907fbf0d57f", "TestVoornaam3", "TestAchternaam3", "TestEmail3@hogent.be")
     )
 
-    fun getDummyBookings() = ArrayList<BookingDTO>().apply {
+    fun getDummyBookings(userId: String? = null): List<BookingDTO> {
+        var count = 0
+        val bookings = ArrayList<BookingDTO>().apply {
         repeat(30) {
             add(
                 BookingDTO(
-                    numberOfAdults = getRandomAdults(),
-                    numberOfChildren = getRandomChildren(),
-                    date = getRandomDate(),
-                    boat = BoatDTO(name = "boot${it + 1}", comments = null),
-                    battery = BatteryDTO(name = "batterij${it + 1}", comments = null),
+                    /*id = "id${++count}",*/
+                    date = getRandomDate().toApiDateString(),
+                    boat = BoatDTO(name = "boot${it + 1}"),
+                    battery = BatteryDTO(name = "batterij${it + 1}"),
                     userId = getRandomUserId()
                 )
             )
         }
-    }
+            add(
+                BookingDTO(
+                   /* id = "id${++count}",*/
+                    date = getRandomDate().toApiDateString(),
+                    boat = BoatDTO(name = "boot${55}"),
+                    battery = BatteryDTO(name = "batterij${55}"),
+                    userId = "auth0|6713adbf2d2a7c11375ac64c"
+                )
+            )
+        }
+        if (userId == null)
+            return bookings
+        else {
+            return bookings.filter { it.userId == userId }
+        }
 
-    private fun getRandomAdults(): Int {
-        return (1..8).random()
-    }
-
-    private fun getRandomChildren(): Int {
-        return (0..6).random()
     }
 
     private fun getRandomDate(): LocalDateTime {

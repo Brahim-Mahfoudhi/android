@@ -1,8 +1,10 @@
-package rise.tiao1.buut.data
+package rise.tiao1.buut.data.repositories
 
 import android.util.Log
+import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
+import rise.tiao1.buut.data.di.IoDispatcher
 import rise.tiao1.buut.data.local.user.UserDao
 import rise.tiao1.buut.data.remote.user.UserApiService
 import rise.tiao1.buut.data.remote.user.dto.UserDTO
@@ -16,15 +18,15 @@ import javax.inject.Singleton
 @Singleton
 class UserRepository @Inject constructor(
     private val dao: UserDao,
-    private val apiService: UserApiService
+    private val apiService: UserApiService,
+    @IoDispatcher private val dispatcher:
+        CoroutineDispatcher
 ) {
     suspend fun getUser(id: String): User =
-        withContext(Dispatchers.IO) {
+        withContext(dispatcher) {
             var localUser = dao.getUserById(id)
-            Log.d("user", "localuser in de repo $id")
             if (localUser == null){
                 val remoteUser = apiService.getUserById(id) /* DummyContent.getDummyUsers().find { it.id == id }*/
-                Log.d("user", "remoteUse in de repo $id")
                 localUser = remoteUser.toLocalUser()
                 dao.insertUser(localUser)
             }
@@ -32,7 +34,7 @@ class UserRepository @Inject constructor(
         }
 
     suspend fun deleteUser(user: User) {
-        withContext(Dispatchers.IO) {
+        withContext(dispatcher) {
             dao.deleteUser(user.toLocalUser())
         }
     }

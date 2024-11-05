@@ -7,12 +7,9 @@ import rise.tiao1.buut.utils.toDateString
 import java.time.LocalDateTime
 
 data class BookingDTO(
-    @SerializedName("r_countAdults")
-    val numberOfAdults: Int,
-    @SerializedName("r_countChildren")
-    val numberOfChildren: Int,
-    @SerializedName("r_bookingDate")
-    val date: LocalDateTime,
+    /*val id: String,*/
+    @SerializedName("bookingDate")
+    val date: String,
     val boat: BoatDTO? = null,
     val battery: BatteryDTO? = null,
     val userId: String? = null
@@ -20,9 +17,8 @@ data class BookingDTO(
 
 fun BookingDTO.toLocalBooking(userId: String): LocalBooking{
     return LocalBooking(
-        numberOfAdults = this.numberOfAdults,
-        numberOfChildren = this.numberOfChildren,
-        date = this.date.toDateString(),
+        /*id = this.id,*/
+        date = this.date,
         boat = this.boat?.name,
         battery = this.battery?.name,
         userId = userId

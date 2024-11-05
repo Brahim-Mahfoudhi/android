@@ -9,10 +9,7 @@ import java.time.LocalDateTime
 @Entity(tableName = "booking")
 data class LocalBooking (
     @PrimaryKey(autoGenerate = true)
-    @ColumnInfo
-    val numberOfAdults: Int,
-    @ColumnInfo
-    val numberOfChildren: Int,
+    val id: Long = 0,
     @ColumnInfo
     val date: String,
     @ColumnInfo

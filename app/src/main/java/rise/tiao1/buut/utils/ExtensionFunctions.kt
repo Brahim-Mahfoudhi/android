@@ -1,6 +1,6 @@
 package rise.tiao1.buut.utils
 
-import com.google.type.DateTime
+import androidx.compose.material3.Text
 import rise.tiao1.buut.data.local.user.LocalUser
 import rise.tiao1.buut.data.remote.user.RemoteUser
 import rise.tiao1.buut.domain.user.User
@@ -9,7 +9,8 @@ import java.time.LocalDate
 import java.time.LocalDateTime
 import java.time.ZoneId
 import java.time.format.DateTimeFormatter
-
+import java.time.format.TextStyle
+import java.util.Locale
 
 
 fun RemoteUser.toLocalUser(): LocalUser {
@@ -40,6 +41,11 @@ fun String.toApiDateString(): String {
     return this.toDate().format(formatter)
 }
 
+fun LocalDateTime.toApiDateString(): String {
+    val formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss")
+    return this.format(formatter)
+}
+
 fun LocalDateTime.toMillis(): Long{
     return this.atZone(ZoneId.systemDefault()).toInstant().toEpochMilli()
 }
@@ -50,10 +56,21 @@ fun Long.toDateString(): String {
 
 fun LocalDateTime.toDateString(): String {
     val formatter = DateTimeFormatter.ofPattern("d/M/yyyy")
-    return formatter.format(this)
+    val dayOfWeek = this.dayOfWeek
+    val formattedDayOfWeek = dayOfWeek
+        .getDisplayName(TextStyle.FULL, Locale.getDefault())
+        .lowercase()
+        .replaceFirstChar { it.uppercase() }
+    return "$formattedDayOfWeek  ${formatter.format(this)}"
 }
 
 fun String.toLocalDateTime(): LocalDateTime {
     val formatter = DateTimeFormatter.ofPattern("d/M/yyyy")
     return LocalDateTime.parse(this, formatter)
 }
+
+fun String.toLocalDateTimeFromApiString(): LocalDateTime {
+    val formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss")
+    return LocalDateTime.parse(this, formatter)
+}
+
