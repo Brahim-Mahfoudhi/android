@@ -18,6 +18,9 @@ class ValidatePassword @Inject constructor(){
         if (!password.any {it.isUpperCase()})
             return  UiText.StringResource(resId = R.string.invalid_password_no_upper_case_error)
 
+        if (!password.any { !it.isLetterOrDigit() && !it.isWhitespace() })
+        return  UiText.StringResource(resId = R.string.invalid_password_no_special_character_error)
+
         return null
     }
 }

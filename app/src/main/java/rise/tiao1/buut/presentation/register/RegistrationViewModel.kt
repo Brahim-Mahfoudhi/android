@@ -1,6 +1,5 @@
 package rise.tiao1.buut.presentation.register
 
-import android.util.Log
 import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
@@ -48,7 +47,7 @@ class RegistrationViewModel @Inject constructor(
     val state: State<RegistrationScreenState>
         get() = _state
 
-    private fun updateState(update: RegistrationScreenState.() -> RegistrationScreenState) {
+    fun updateState(update: RegistrationScreenState.() -> RegistrationScreenState) {
         _state.value = state.value.update()
     }
 
@@ -130,8 +129,7 @@ class RegistrationViewModel @Inject constructor(
                 registerUserUseCase.invoke(
                         newUser,
                         onSuccess = {
-                            _state.value = state.value.copy(isLoading = false, apiError = "Registratie voltooid")
-
+                            _state.value = state.value.copy(isLoading = false, registrationSuccess = true)
                         },
                     onError = { error ->
                         _state.value = state.value.copy(
@@ -141,6 +139,11 @@ class RegistrationViewModel @Inject constructor(
                         })
             }
         }
+    }
+
+    fun onRegistrationSuccessDismissed(navigateToHome: () -> Unit) {
+        _state.value = state.value.copy(registrationSuccess = false)
+        navigateToHome()
     }
 
     private val listOfInputKeys = listOf(

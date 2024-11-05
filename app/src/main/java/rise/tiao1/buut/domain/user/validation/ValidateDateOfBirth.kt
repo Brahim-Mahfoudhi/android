@@ -5,7 +5,6 @@ import rise.tiao1.buut.utils.UiText
 import rise.tiao1.buut.utils.toDate
 import java.time.LocalDate
 import java.time.Period
-import java.time.format.DateTimeFormatter
 import javax.inject.Inject
 
 const val MINIMUM_AGE = 18

@@ -14,7 +14,7 @@ class GetUserUseCase @Inject constructor(
 
     suspend operator fun invoke(
         onSuccess: (User) -> Unit,
-        onError: (String) -> Unit
+        onError: (String) -> Unit,
     ) {
         try {
             val idToken = (sharedPreferences.getString(SharedPreferencesKeys.IDTOKEN, ""))

@@ -1,7 +1,6 @@
 package rise.tiao1.buut.presentation.register
 
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -15,24 +14,20 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material3.AlertDialog
+import androidx.compose.material3.Button
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.layout.onGloballyPositioned
-import androidx.compose.ui.layout.positionInRoot
-import androidx.compose.ui.platform.LocalConfiguration
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import kotlinx.coroutines.coroutineScope
-import kotlinx.coroutines.launch
 import rise.tiao1.buut.R
 import rise.tiao1.buut.utils.StreetType
 import rise.tiao1.buut.presentation.components.AutoCompleteTextFieldComponent
@@ -42,7 +37,6 @@ import rise.tiao1.buut.presentation.components.DatePickerComponent
 import rise.tiao1.buut.presentation.components.ErrorMessageContainer
 import rise.tiao1.buut.presentation.components.OutlinedTextFieldComponent
 import rise.tiao1.buut.presentation.components.PasswordTextFieldComponent
-import rise.tiao1.buut.presentation.components.rememberImeState
 import rise.tiao1.buut.ui.theme.AppTheme
 import rise.tiao1.buut.utils.InputKeys
 
@@ -52,24 +46,16 @@ fun RegistrationScreen(
     onValueChanged: (input: String, field: String) -> Unit,
     onCheckedChanged: (input: Boolean, field: String) -> Unit,
     onValidate : (field: String) -> Unit,
-    onSubmitClick: () -> Unit = {}
+    onSubmitClick: () -> Unit = {},
+    onRegistrationSuccessDismissed: () -> Unit = {}
 ) {
-    val imeState = rememberImeState()
     val scrollState = rememberScrollState()
-
-    /*
-    LaunchedEffect(key1 = imeState.value) {
-        if (imeState.value) {
-            scrollState.animateScrollTo(scrollState.maxValue)
-        }
-    }
-    */
 
 
     Box (modifier = Modifier.fillMaxSize()) {
         Image(
             painter = painterResource(R.drawable.buut_background),
-            contentDescription = null,
+            contentDescription = "BuutBackground",
             contentScale = ContentScale.Crop,
             modifier = Modifier.fillMaxSize()
         )
@@ -248,6 +234,22 @@ fun RegistrationScreen(
 
         }
     }
+
+    if (state.registrationSuccess) {
+        AlertDialog(
+            modifier = Modifier.testTag("RegistrationSuccessModal"),
+            onDismissRequest = onRegistrationSuccessDismissed,
+            title = { Text(stringResource(R.string.registration_succesful)) },
+            text = { Text(stringResource(R.string.account_created)) },
+            confirmButton = {
+                Button(modifier = Modifier.testTag("RegistrationSuccessModalButton"),
+                    onClick = onRegistrationSuccessDismissed) {
+                    Text(stringResource(R.string.close_label))
+                }
+            }
+        )
+    }
+
 
 }
 
