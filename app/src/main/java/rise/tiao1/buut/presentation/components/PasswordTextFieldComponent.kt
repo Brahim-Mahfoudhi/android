@@ -31,6 +31,7 @@ import java.security.Key
 
 @Composable
 fun PasswordTextFieldComponent(
+    modifier: Modifier = Modifier,
     value: String,
     onValueChanged: (String) -> Unit,
     isError: Boolean = false,
@@ -41,7 +42,6 @@ fun PasswordTextFieldComponent(
         imeAction = ImeAction.Next
     ),
     onFocusLost: () -> Unit,
-    modifier: Modifier = Modifier
 ) {
 
     val passwordVisible = remember {

@@ -53,100 +53,109 @@ class MainActivity : ComponentActivity() {
         val uiLayout = setUiLayout(windowSize, configuration)
 
         NavHost(
-                navController,
-                startDestination =  setStartingPage()
-            ) {
-                composable(route = Route.LOGIN) {
-                    val loginViewModel: LoginViewModel = hiltViewModel()
-                    LoginScreen(
-                        state = loginViewModel.state.value,
-                        onValueUpdate = {input, field: String ->
-                            loginViewModel.update(input, field)
-                        },
-                        login = {
-                            loginViewModel.login {
-                                navController.navigate(Route.HOME)
-                            }
-                        },
-                        onRegisterClick = {
-                            navController.navigate(Route.REGISTER)
-                        },
-                        onValidate = {input, field: String ->
-                            loginViewModel.validate(input, field)
+            navController,
+            startDestination = setStartingPage()
+        ) {
+            composable(route = Route.LOGIN) {
+                val loginViewModel: LoginViewModel = hiltViewModel()
+                LoginScreen(
+                    state = loginViewModel.state.value,
+                    onValueUpdate = { input, field: String ->
+                        loginViewModel.update(input, field)
+                    },
+                    login = {
+                        loginViewModel.login {
+                            navController.navigate(Route.HOME)
                         }
-                    )
-                }
-                composable(route = Route.HOME) {
-                    val viewModel: HomeViewModel = hiltViewModel()
-                    HomeScreen(
-                        state = viewModel.state.value,
-                        logout = {
-                            viewModel.logout {
-                                navController.navigate(Route.LOGIN)
-                            }
-                        },
-                        toReservationPage = {navController.navigate(Route.RESERVATION)},
-                        uiLayout = uiLayout
-                    )
-                }
-                composable(route = Route.REGISTER) {
-                    val registrationViewModel: RegistrationViewModel = hiltViewModel()
-                    RegistrationScreen(
-                        state = registrationViewModel.state.value,
-                        onValueChanged = { input: String, field :String->
-                            registrationViewModel.update(input, field)
-                        },
-                        onCheckedChanged = { input: Boolean, field: String ->
-                            registrationViewModel.update(input, field)
-                        },
-                        onValidate = { field : String ->
-                            registrationViewModel.validate(field)
-                        },
-                        onSubmitClick = { registrationViewModel.onRegisterClick () },
-                        onRegistrationSuccessDismissed = {registrationViewModel.onRegistrationSuccessDismissed(navigateToHome =  { navController.navigate(Route.HOME) })}
-                    )
-                }
-                composable(route = Route.RESERVATION) {
-                    val bookingViewModel: BookingViewModel = hiltViewModel()
-                    BookingScreen (
-                        state = bookingViewModel.state.value,
-                        onValueChanged = { input: Long? ->
-                            bookingViewModel.update(input)
+                    },
+                    onRegisterClick = {
+                        navController.navigate(Route.REGISTER)
+                    },
+                    onValidate = { input, field: String ->
+                        loginViewModel.validate(input, field)
+                    },
+                    windowSize = windowSize
+                )
+            }
+            composable(route = Route.HOME) {
+                val viewModel: HomeViewModel = hiltViewModel()
+                HomeScreen(
+                    state = viewModel.state.value,
+                    logout = {
+                        viewModel.logout {
+                            navController.navigate(Route.LOGIN)
                         }
-                    )
-                }
+                    },
+                    toReservationPage = { navController.navigate(Route.RESERVATION) },
+                    uiLayout = uiLayout
+                )
+            }
+            composable(route = Route.REGISTER) {
+                val registrationViewModel: RegistrationViewModel = hiltViewModel()
+                RegistrationScreen(
+                    state = registrationViewModel.state.value,
+                    onValueChanged = { input: String, field: String ->
+                        registrationViewModel.update(input, field)
+                    },
+                    onCheckedChanged = { input: Boolean, field: String ->
+                        registrationViewModel.update(input, field)
+                    },
+                    onValidate = { field: String ->
+                        registrationViewModel.validate(field)
+                    },
+                    onSubmitClick = { registrationViewModel.onRegisterClick() },
+                    onRegistrationSuccessDismissed = {
+                        registrationViewModel.onRegistrationSuccessDismissed(
+                            navigateToHome = { navController.navigate(Route.HOME) })
+                    }
+                )
+            }
+            composable(route = Route.RESERVATION) {
+                val bookingViewModel: BookingViewModel = hiltViewModel()
+                BookingScreen(
+                    state = bookingViewModel.state.value,
+                    onValueChanged = { input: Long? ->
+                        bookingViewModel.update(input)
+                    }
+                )
             }
         }
+    }
 
-   private fun setStartingPage(): String{
+    private fun setStartingPage(): String {
         if (!credentialsManager.hasValidCredentials())
             return Route.LOGIN
         else
             return Route.HOME
     }
 
-    private fun setUiLayout(windowSize: WindowWidthSizeClass, configuration : Configuration): UiLayout{
-
+    private fun setUiLayout(
+        windowSize: WindowWidthSizeClass,
+        configuration: Configuration
+    ): UiLayout {
 
         when (windowSize) {
             WindowWidthSizeClass.Compact -> {
-                if(configuration.orientation == Configuration.ORIENTATION_PORTRAIT)
+                if (configuration.orientation == Configuration.ORIENTATION_PORTRAIT)
                     return UiLayout.PORTRAIT_SMALL
                 else
-                    return UiLayout.LANDSCAPE
+                    return UiLayout.LANDSCAPE_SMALL
             }
+
             WindowWidthSizeClass.Medium -> {
-                if(configuration.orientation == Configuration.ORIENTATION_PORTRAIT)
+                if (configuration.orientation == Configuration.ORIENTATION_PORTRAIT)
                     return UiLayout.PORTRAIT_LARGE
                 else
                     return UiLayout.LANDSCAPE
             }
+
             WindowWidthSizeClass.Expanded -> {
-                if(configuration.orientation == Configuration.ORIENTATION_PORTRAIT)
+                if (configuration.orientation == Configuration.ORIENTATION_PORTRAIT)
                     return UiLayout.PORTRAIT_LARGE
                 else
                     return UiLayout.LANDSCAPE
             }
+
             else -> {
                 return UiLayout.LANDSCAPE
             }

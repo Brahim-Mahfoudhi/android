@@ -21,14 +21,14 @@ import rise.tiao1.buut.ui.theme.Primary
 
 @Composable
 fun ButtonComponent(
+    modifier: Modifier = Modifier,
     @StringRes label: Int,
     onClick: () -> Unit,
     isLoading: Boolean = false
 ){
     Button(
         onClick = { onClick() },
-        modifier = Modifier
-            .fillMaxWidth()
+        modifier = modifier
             .heightIn(48.dp),
 
         shape = RoundedCornerShape(8.dp),

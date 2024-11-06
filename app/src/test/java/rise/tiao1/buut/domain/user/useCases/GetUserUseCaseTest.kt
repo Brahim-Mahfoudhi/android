@@ -9,7 +9,7 @@ import kotlinx.coroutines.test.TestScope
 import kotlinx.coroutines.test.runTest
 import org.junit.Assert
 import org.junit.Test
-import rise.tiao1.buut.data.UserRepository
+import rise.tiao1.buut.data.repositories.UserRepository
 
 
 @ExperimentalCoroutinesApi

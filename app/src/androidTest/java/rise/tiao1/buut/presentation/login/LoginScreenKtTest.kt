@@ -1,5 +1,6 @@
 package rise.tiao1.buut.presentation.login
 
+import androidx.compose.material3.windowsizeclass.WindowWidthSizeClass
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
@@ -47,7 +48,8 @@ class LoginScreenKtTest {
                 onValueUpdate = { _, _ -> },
                 login = { },
                 onRegisterClick = { },
-                onValidate = { _, _ -> }
+                onValidate = { _, _ -> },
+                windowSize = WindowWidthSizeClass.Compact
             )
         }
 
@@ -72,7 +74,8 @@ class LoginScreenKtTest {
                 },
                 login = { },
                 onRegisterClick = { },
-                onValidate = { _, _ -> }
+                onValidate = { _, _ -> },
+                windowSize = WindowWidthSizeClass.Compact
             )
         }
 
@@ -94,7 +97,8 @@ class LoginScreenKtTest {
                 },
                 login = { },
                 onRegisterClick = { },
-                onValidate = { _, _ -> }
+                onValidate = { _, _ -> },
+                windowSize = WindowWidthSizeClass.Compact
             )
         }
         passwordInput.performTextInput("Password1!")
@@ -110,7 +114,8 @@ class LoginScreenKtTest {
                 onValueUpdate = { _, _ -> },
                 login = { loginButtonClicked = true },
                 onRegisterClick = { },
-                onValidate = { _, _ -> }
+                onValidate = { _, _ -> },
+                windowSize = WindowWidthSizeClass.Compact
             )
         }
 
@@ -129,7 +134,8 @@ class LoginScreenKtTest {
                 onValueUpdate = { _, _ -> },
                 login = { },
                 onRegisterClick = { },
-                onValidate = { _, _ -> }
+                onValidate = { _, _ -> },
+                windowSize = WindowWidthSizeClass.Compact
             )
         }
 
@@ -144,7 +150,8 @@ class LoginScreenKtTest {
                 onValueUpdate = { _, _ -> },
                 login = { },
                 onRegisterClick = { },
-                onValidate = { _, _ -> }
+                onValidate = { _, _ -> },
+                windowSize = WindowWidthSizeClass.Compact
             )
         }
 
@@ -159,7 +166,8 @@ class LoginScreenKtTest {
                 onValueUpdate = { _, _ -> },
                 login = { },
                 onRegisterClick = { },
-                onValidate = { _, _ -> }
+                onValidate = { _, _ -> },
+                windowSize = WindowWidthSizeClass.Compact
             )
         }
 
@@ -177,7 +185,8 @@ class LoginScreenKtTest {
                     onValueUpdate = { _, _ -> },
                     login = { },
                     onRegisterClick = {navController.navigate(NavigationKeys.Route.REGISTER) },
-                    onValidate = { _, _ -> }
+                    onValidate = { _, _ -> },
+                    windowSize = WindowWidthSizeClass.Compact
                 ) }
                 composable(NavigationKeys.Route.REGISTER) { RegistrationScreen(
                     state = RegistrationScreenState(),

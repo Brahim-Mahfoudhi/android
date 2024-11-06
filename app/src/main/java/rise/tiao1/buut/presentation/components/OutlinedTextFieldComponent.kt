@@ -57,7 +57,6 @@ fun OutlinedTextFieldComponent(
 
         ),
         modifier = modifier
-            .fillMaxWidth()
             .clip(RoundedCornerShape(4.dp))
             .onFocusChanged { focusState ->
             if (focusState.isFocused) {
