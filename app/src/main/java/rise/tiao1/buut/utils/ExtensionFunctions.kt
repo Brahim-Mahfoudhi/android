@@ -36,6 +36,11 @@ fun String.toDate(): LocalDate {
     return LocalDate.parse(this, formatter)
 }
 
+fun LocalDateTime.toTestDateString(): String {
+    val formatter = DateTimeFormatter.ofPattern("d/M/yyyy")
+    return this.format(formatter)
+}
+
 fun String.toApiDateString(): String {
     val formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd")
     return this.toDate().format(formatter)

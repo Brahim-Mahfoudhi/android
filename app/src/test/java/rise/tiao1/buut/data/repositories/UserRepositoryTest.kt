@@ -1,4 +1,4 @@
-package rise.tiao1.buut.data
+package rise.tiao1.buut.data.repositories
 
 import io.mockk.coEvery
 import io.mockk.coVerify
@@ -29,7 +29,7 @@ class UserRepositoryTest {
     private val scope = TestScope(dispatcher)
     private val dao: UserDao = mockk()
     private val apiService: UserApiService = mockk()
-    private val userRepository = UserRepository(dao, apiService)
+    private val userRepository = UserRepository(dao, apiService, dispatcher)
 
     @Test
     fun getUser_userExistsInRoom_returnsUser() = scope.runTest {
