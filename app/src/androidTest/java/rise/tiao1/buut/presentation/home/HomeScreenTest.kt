@@ -1,4 +1,4 @@
-package rise.tiao1.buut.home
+package rise.tiao1.buut.presentation.home
 
 import androidx.compose.ui.semantics.SemanticsProperties
 import androidx.compose.ui.semantics.getOrNull

@@ -1,5 +1,6 @@
 package rise.tiao1.buut.presentation.register
 
+import androidx.compose.material3.windowsizeclass.WindowWidthSizeClass
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
@@ -541,7 +542,8 @@ class RegistrationScreenKtTest{
                         onValueUpdate = { _, _ -> },
                         login = { },
                         onRegisterClick = { },
-                        onValidate = { _, _ -> }
+                        onValidate = { _, _ -> },
+                        windowSize = WindowWidthSizeClass.Compact
                     ) }
                     composable(NavigationKeys.Route.REGISTER) { RegistrationScreen(
                         state = state,

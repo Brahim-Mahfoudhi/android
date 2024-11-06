@@ -26,7 +26,7 @@ fun BuutLogo(){
     ) {
         Image(
             painter = painterResource(R.drawable.buut_logo),
-            contentDescription = "BUUT Logo",
+            contentDescription = "BuutLogo",
             contentScale = ContentScale.Fit,
             modifier = Modifier
                 .fillMaxSize()
