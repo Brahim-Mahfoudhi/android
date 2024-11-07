@@ -1,5 +1,8 @@
 package rise.tiao1.buut.presentation.home
 
+import android.content.res.Configuration
+import android.util.Log
+import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -10,21 +13,21 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ExpandLess
 import androidx.compose.material.icons.filled.ExpandMore
+import androidx.compose.material.icons.filled.Menu
 import androidx.compose.material3.Card
-import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -37,22 +40,21 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.semantics.testTag
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.google.api.ResourceDescriptor.History
 import kotlinx.coroutines.launch
 import rise.tiao1.buut.R
 import rise.tiao1.buut.domain.booking.Booking
-import rise.tiao1.buut.presentation.components.ButtonComponent
-import rise.tiao1.buut.presentation.components.BuutLogo
 import rise.tiao1.buut.presentation.components.HeaderOne
+import rise.tiao1.buut.presentation.components.Navigation
 import rise.tiao1.buut.ui.theme.AppTheme
+import rise.tiao1.buut.utils.NavigationKeys
 import rise.tiao1.buut.utils.UiLayout
+import rise.tiao1.buut.utils.UiLayout.*
 import rise.tiao1.buut.utils.toDateString
 import java.time.LocalDateTime
 
@@ -61,63 +63,56 @@ import java.time.LocalDateTime
 fun HomeScreen(
     state: HomeScreenState,
     logout: () -> Unit,
-    toReservationPage: () -> Unit,
+    navigateTo: (String) -> Unit,
     uiLayout: UiLayout
 ) {
-    Box {
-        when (uiLayout) {
-            UiLayout.PORTRAIT_SMALL -> {
+    Scaffold(
+        bottomBar = {
+            if (uiLayout == PORTRAIT_SMALL) {
+                Navigation(
+                    logout = logout,
+                    navigateTo = navigateTo,
+                    uiLayout = PORTRAIT_SMALL,
+                    currentPage = NavigationKeys.Route.HOME
+                )
+            }
+        }
+    ) { innerPadding ->
+        Box(modifier = Modifier.padding(innerPadding)) {
+            if (uiLayout == PORTRAIT_SMALL) {
                 Column {
-                    HeaderOne(state.apiError ?: "")
-                    Spacer(modifier = Modifier.heightIn(8.dp))
                     HeaderOne(stringResource(R.string.booking_list_title))
                     BookingList(state = state)
                     Spacer(modifier = Modifier.heightIn(8.dp))
-                }
-            }
 
-            UiLayout.PORTRAIT_LARGE -> {
-                Row {
-                    Column(
-                        modifier = Modifier
-                            .weight(1f) // Pas hier de weight toe
-                            .padding(8.dp),
-                        horizontalAlignment = Alignment.CenterHorizontally,
-                        verticalArrangement = Arrangement.SpaceBetween
-                    ) {
-                        navigationTemporary(logout = logout, toReservationPage = toReservationPage)
-                    }
-                    Spacer(modifier = Modifier.width(8.dp))
-                    Column(
-                        modifier = Modifier
-                            .weight(5f) // Pas hier de weight toe
-                            .padding(8.dp),
-                        horizontalAlignment = Alignment.CenterHorizontally,
-                        verticalArrangement = Arrangement.SpaceBetween
-                    ) {
-                        HeaderOne(state.apiError ?: "")
-                        Spacer(modifier = Modifier.heightIn(8.dp))
-                        HeaderOne(stringResource(R.string.booking_list_title))
-                        BookingList(state = state)
-                    }
                 }
-            }
-
-            else -> {
+            } else if (uiLayout == PORTRAIT_EXPANDED || uiLayout == LANDSCAPE_EXPANDED) {
                 Row {
-                    Column(
-                        modifier = Modifier
-                            .weight(1f) // Pas hier de weight toe
-                            .padding(8.dp)
-                    ) {
-                        navigationTemporary(logout = logout, toReservationPage = toReservationPage)
+                    Navigation(
+                        uiLayout = uiLayout,
+                        navigateTo = navigateTo,
+                        logout = logout,
+                        currentPage = NavigationKeys.Route.HOME,
+                        content = {
+                            Column {
+                                HeaderOne(stringResource(R.string.booking_list_title))
+                                BookingList(state = state)
+                            }
+                        },
+                    )
+
+                }
+            } else {
+                Row {
+                    AnimatedVisibility(visible = uiLayout == LANDSCAPE_SMALL || uiLayout == LANDSCAPE_MEDIUM || uiLayout == PORTRAIT_MEDIUM) {
+                        Navigation(
+                            uiLayout = uiLayout,
+                            navigateTo = navigateTo,
+                            logout = logout,
+                            currentPage = NavigationKeys.Route.HOME
+                        )
                     }
-                    Spacer(modifier = Modifier.width(8.dp))
-                    Column(
-                        modifier = Modifier
-                            .weight(5f) // Pas hier de weight toe
-                            .padding(8.dp)
-                    ) {
+                    Column {
                         HeaderOne(stringResource(R.string.booking_list_title))
                         BookingList(state = state)
                     }
@@ -283,52 +278,116 @@ fun BookingDetails(
     }
 }
 
-
-@Composable
-fun navigationTemporary(
-    logout: () -> Unit,
-    toReservationPage: () -> Unit,
-) {
-
-    BuutLogo()
-    ButtonComponent(
-        label = R.string.make_reservation,
-        onClick = { toReservationPage() }
-    )
-    ButtonComponent(
-        label = R.string.log_out_button,
-        onClick = { logout() }
+private fun getPreviewHomeScreenState(): HomeScreenState {
+    return HomeScreenState(
+        null, listOf(
+            Booking(
+                date = LocalDateTime.now().minusDays(2),
+                boat = "Boat 0",
+                battery = "Battery Z"
+            ),
+            Booking(
+                date = LocalDateTime.now(),
+                boat = "Boat 1",
+                battery = "Battery A"
+            ),
+            Booking(
+                date = LocalDateTime.now().plusDays(1),
+                boat = "Boat 2",
+                battery = "Battery B"
+            ),
+            Booking(
+                date = LocalDateTime.now().plusDays(2),
+                boat = "Boat 3",
+                battery = "Battery C"
+            )
+        ), false
     )
 }
 
-@Preview()
+@Preview(showBackground = true)
 @Composable
-fun DefaultPreview() {
+fun PortraitPreview() {
     AppTheme {
-        HomeScreen(HomeScreenState(
-            null, listOf(
-                Booking(
-                    date = LocalDateTime.now().minusDays(2),
-                    boat = "Boat 0",
-                    battery = "Battery Z"
-                ),
-                Booking(
-                    date = LocalDateTime.now(),
-                    boat = "Boat 1",
-                    battery = "Battery A"
-                ),
-                Booking(
-                    date = LocalDateTime.now().plusDays(1),
-                    boat = "Boat 2",
-                    battery = "Battery B"
-                ),
-                Booking(
-                    date = LocalDateTime.now().plusDays(2),
-                    boat = "Boat 3",
-                    battery = "Battery C"
-                )
-            ), false
-        ), {}, {}, UiLayout.PORTRAIT_SMALL
+        HomeScreen(
+            getPreviewHomeScreenState(), {}, {}, PORTRAIT_SMALL
+        )
+    }
+}
+
+@Preview(
+    showBackground = true,
+    widthDp = 600,
+    heightDp = 300,
+    uiMode = Configuration.ORIENTATION_LANDSCAPE
+)
+@Composable
+fun LandscapePreview() {
+    AppTheme {
+        HomeScreen(
+            getPreviewHomeScreenState(), {}, {}, LANDSCAPE_SMALL
+        )
+    }
+}
+
+
+@Preview(
+    showBackground = true,
+    widthDp = 610,
+    heightDp = 890,
+    uiMode = Configuration.ORIENTATION_PORTRAIT
+)
+@Composable
+fun PortraitMediumPreview() {
+    AppTheme {
+        HomeScreen(
+            getPreviewHomeScreenState(), {}, {}, PORTRAIT_MEDIUM
+        )
+    }
+}
+
+@Preview(
+    showBackground = true,
+    widthDp = 830,
+    heightDp = 482,
+    uiMode = Configuration.ORIENTATION_LANDSCAPE
+)
+@Composable
+fun LandscapeMediumPreview() {
+    AppTheme {
+        HomeScreen(
+            getPreviewHomeScreenState(), {}, {}, LANDSCAPE_MEDIUM
+        )
+    }
+}
+
+
+@Preview(
+    showBackground = true,
+    widthDp = 600,
+    heightDp = 1000,
+    uiMode = Configuration.ORIENTATION_PORTRAIT
+)
+@Composable
+fun PortraitExpandedPreview() {
+    AppTheme {
+        HomeScreen(
+            getPreviewHomeScreenState(), {}, {}, PORTRAIT_EXPANDED
+        )
+    }
+}
+
+@Preview(
+    showBackground = true,
+    widthDp = 1000,
+    heightDp = 480,
+    uiMode = Configuration.ORIENTATION_LANDSCAPE
+)
+@Composable
+fun LandscapeExpandedPreview() {
+    AppTheme {
+        HomeScreen(
+            getPreviewHomeScreenState(), {}, {}, LANDSCAPE_EXPANDED
         )
     }
 }

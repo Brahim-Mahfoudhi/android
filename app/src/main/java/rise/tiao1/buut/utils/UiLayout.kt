@@ -2,7 +2,9 @@ package rise.tiao1.buut.utils
 
 enum class UiLayout {
     PORTRAIT_SMALL,
-    PORTRAIT_LARGE,
     LANDSCAPE_SMALL,
-    LANDSCAPE
+    PORTRAIT_MEDIUM,
+    LANDSCAPE_MEDIUM,
+    PORTRAIT_EXPANDED,
+    LANDSCAPE_EXPANDED
 }

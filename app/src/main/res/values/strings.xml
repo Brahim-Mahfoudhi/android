@@ -62,4 +62,7 @@
     <string name="close_label">Close</string>
     <string name="registration_succesful">Registration Successful</string>
     <string name="account_created">Your account has been created.</string>
+    <string name="home">Home</string>
+    <string name="new_booking">New Booking</string>
+    <string name="menu_button">Menu button</string>
 </resources>

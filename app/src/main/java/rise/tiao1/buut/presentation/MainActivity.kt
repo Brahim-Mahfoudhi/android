@@ -45,7 +45,6 @@ class MainActivity : ComponentActivity() {
         }
     }
 
-
     @Composable
     fun BuutApp(windowSize: WindowWidthSizeClass) {
         val navController = rememberNavController()
@@ -86,7 +85,7 @@ class MainActivity : ComponentActivity() {
                             navController.navigate(Route.LOGIN)
                         }
                     },
-                    toReservationPage = { navController.navigate(Route.RESERVATION) },
+                    navigateTo =  { route:String -> navController.navigate(route)} ,
                     uiLayout = uiLayout
                 )
             }
@@ -134,31 +133,31 @@ class MainActivity : ComponentActivity() {
         configuration: Configuration
     ): UiLayout {
 
-        when (windowSize) {
+        return when (windowSize) {
             WindowWidthSizeClass.Compact -> {
                 if (configuration.orientation == Configuration.ORIENTATION_PORTRAIT)
-                    return UiLayout.PORTRAIT_SMALL
+                     UiLayout.PORTRAIT_SMALL
                 else
-                    return UiLayout.LANDSCAPE_SMALL
+                     UiLayout.LANDSCAPE_SMALL
             }
 
             WindowWidthSizeClass.Medium -> {
                 if (configuration.orientation == Configuration.ORIENTATION_PORTRAIT)
-                    return UiLayout.PORTRAIT_LARGE
+                     UiLayout.PORTRAIT_MEDIUM
                 else
-                    return UiLayout.LANDSCAPE
+                     UiLayout.LANDSCAPE_MEDIUM
             }
 
             WindowWidthSizeClass.Expanded -> {
                 if (configuration.orientation == Configuration.ORIENTATION_PORTRAIT)
-                    return UiLayout.PORTRAIT_LARGE
+                     UiLayout.PORTRAIT_EXPANDED
                 else
-                    return UiLayout.LANDSCAPE
+                     UiLayout.LANDSCAPE_EXPANDED
+            }
+            else -> {
+                 UiLayout.PORTRAIT_SMALL
             }
 
-            else -> {
-                return UiLayout.LANDSCAPE
-            }
         }
     }
 
