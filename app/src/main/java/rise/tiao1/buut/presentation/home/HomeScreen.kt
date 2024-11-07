@@ -1,6 +1,7 @@
 package rise.tiao1.buut.presentation.home
 
 import android.content.res.Configuration
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -15,13 +16,18 @@ import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ExpandLess
 import androidx.compose.material.icons.filled.ExpandMore
+import androidx.compose.material.icons.filled.Lightbulb
+import androidx.compose.material.icons.filled.WarningAmber
 import androidx.compose.material3.Card
+import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -33,7 +39,9 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
+import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.dimensionResource
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.semantics.testTag
@@ -58,6 +66,7 @@ import rise.tiao1.buut.utils.toDateString
 import java.time.LocalDateTime
 
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun HomeScreen(
     state: HomeScreenState,
@@ -66,6 +75,23 @@ fun HomeScreen(
     uiLayout: UiLayout
 ) {
     Scaffold(
+        topBar = {
+            CenterAlignedTopAppBar(
+                title = {
+                    Row(
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        Image(
+                            modifier = Modifier
+                                .size(dimensionResource(R.dimen.image_size_standard)),
+                            painter = painterResource(R.drawable.buut_logo),
+                            contentDescription = stringResource(R.string.buut_logo)
+                        )
+                    }
+                },
+                modifier = Modifier.padding(dimensionResource(R.dimen.padding_medium)),
+            )
+        },
         bottomBar = {
             if (uiLayout == PORTRAIT_SMALL) {
                 Navigation(
@@ -80,7 +106,9 @@ fun HomeScreen(
         Box(modifier = Modifier.padding(innerPadding)) {
             when (uiLayout) {
                 PORTRAIT_SMALL -> {
-                    Column {
+                    Column (
+                        modifier = Modifier.padding(horizontal = dimensionResource(R.dimen.padding_medium)),
+                    ) {
                         HeaderOne(stringResource(R.string.booking_list_title))
                         BookingList(state = state)
                     }
@@ -94,13 +122,14 @@ fun HomeScreen(
                             logout = logout,
                             currentPage = NavigationKeys.Route.HOME,
                             content = {
-                                Column {
+                                Column (
+                                    modifier = Modifier.padding(horizontal = dimensionResource(R.dimen.padding_medium)),
+                                ) {
                                     HeaderOne(stringResource(R.string.booking_list_title))
                                     BookingList(state = state)
                                 }
                             },
                         )
-
                     }
                 }
 
@@ -112,7 +141,9 @@ fun HomeScreen(
                             logout = logout,
                             currentPage = NavigationKeys.Route.HOME
                         )
-                        Column {
+                        Column  (
+                            modifier = Modifier.padding(horizontal =  dimensionResource(R.dimen.padding_medium)),
+                        ) {
                             HeaderOne(stringResource(R.string.booking_list_title))
                             BookingList(state = state)
                         }
@@ -142,18 +173,57 @@ fun BookingList(
                     .semantics { this.testTag = "LoadingIndicator" }
             )
         }
-    } else if (state.bookings.isEmpty()) {
-        Card {
-            Column(modifier = Modifier.padding(
-                horizontal = dimensionResource(R.dimen.padding_medium),
-                vertical = dimensionResource(R.dimen.padding_small))
+    } else if (!state.apiError.isNullOrBlank()) {
+        Surface(
+            color = MaterialTheme.colorScheme.errorContainer,
+            shape = MaterialTheme.shapes.large,
+        ) {
+            Row(
+                modifier = Modifier.fillMaxWidth()
+                    .padding(
+                        horizontal = dimensionResource(R.dimen.padding_large),
+                        vertical = dimensionResource(R.dimen.padding_large)
+                    ),
+                verticalAlignment = Alignment.CenterVertically,
             ) {
+                Icon(
+                    imageVector = Icons.Filled.WarningAmber,
+                    contentDescription = stringResource(R.string.warning_icon),
+                    tint = MaterialTheme.colorScheme.error,
+                    modifier = Modifier.padding(end = dimensionResource(R.dimen.padding_medium))
+                )
+                Text(
+                    text = state.apiError,
+                    style = MaterialTheme.typography.bodyLarge,
+                    color = MaterialTheme.colorScheme.onErrorContainer,
+                    textAlign = TextAlign.Center,
+                )
+
+            }
+        }
+    } else if (state.bookings.isEmpty()) {
+        Surface(
+            color = MaterialTheme.colorScheme.tertiaryContainer,
+            shape = MaterialTheme.shapes.large,
+        ) {
+            Row(
+                modifier = Modifier.fillMaxWidth()
+                    .padding(
+                    horizontal = dimensionResource(R.dimen.padding_large),
+                    vertical = dimensionResource(R.dimen.padding_large)
+                ),
+                verticalAlignment = Alignment.CenterVertically,
+            ) {
+                Icon(
+                    imageVector = Icons.Filled.Lightbulb,
+                    contentDescription = stringResource(R.string.lightbulb),
+                    modifier = Modifier.padding(end = dimensionResource(R.dimen.padding_medium))
+                )
                 Text(
                     text = stringResource(R.string.user_has_no_bookings),
                     style = MaterialTheme.typography.bodyLarge,
                     textAlign = TextAlign.Center,
                 )
-
             }
         }
     } else {
@@ -267,9 +337,9 @@ fun BookingDetails(
     }
 }
 
-private fun getPreviewHomeScreenState(): HomeScreenState {
+private fun getPreviewHomeScreenState(emptyList: Boolean = false): HomeScreenState {
     return HomeScreenState(
-        null, listOf(
+        null, if (emptyList) emptyList() else listOf(
             Booking(
                 date = LocalDateTime.now().minusDays(2),
                 boat = "Boat 0",
@@ -299,7 +369,7 @@ private fun getPreviewHomeScreenState(): HomeScreenState {
 fun PortraitPreview() {
     AppTheme {
         HomeScreen(
-            getPreviewHomeScreenState(), {}, {}, PORTRAIT_SMALL
+            getPreviewHomeScreenState(true), {}, {}, PORTRAIT_SMALL
         )
     }
 }

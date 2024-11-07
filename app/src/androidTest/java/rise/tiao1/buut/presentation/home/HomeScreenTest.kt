@@ -1,7 +1,5 @@
 package rise.tiao1.buut.presentation.home
 
-import androidx.compose.ui.semantics.SemanticsProperties
-import androidx.compose.ui.semantics.getOrNull
 import androidx.compose.ui.test.assertIsDisplayed
 import androidx.compose.ui.test.assertIsNotDisplayed
 import androidx.compose.ui.test.junit4.createComposeRule
@@ -10,20 +8,27 @@ import androidx.compose.ui.test.onNodeWithContentDescription
 import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.performClick
+import androidx.test.espresso.device.DeviceInteraction.Companion.setScreenOrientation
+import androidx.test.espresso.device.EspressoDevice.Companion.onDevice
+import androidx.test.espresso.device.action.ScreenOrientation
+import androidx.test.espresso.device.rules.ScreenOrientationRule
+import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.platform.app.InstrumentationRegistry
 import org.junit.Rule
 import org.junit.Test
+import org.junit.runner.RunWith
 import rise.tiao1.buut.R
 import rise.tiao1.buut.domain.booking.Booking
 import rise.tiao1.buut.domain.user.User
-import rise.tiao1.buut.presentation.home.HomeScreen
-import rise.tiao1.buut.presentation.home.HomeScreenState
-import rise.tiao1.buut.utils.UiLayout.PORTRAIT_SMALL
+import rise.tiao1.buut.utils.UiLayout.*
 import java.time.LocalDateTime
 
+@RunWith(AndroidJUnit4::class)
 class HomeScreenTest {
     @get:Rule
     val rule = createComposeRule()
+    @get:Rule
+    val screenOrientationRule: ScreenOrientationRule = ScreenOrientationRule(ScreenOrientation.PORTRAIT)
     val context = InstrumentationRegistry.getInstrumentation().targetContext
 
     @Test
@@ -32,7 +37,7 @@ class HomeScreenTest {
             HomeScreen(
                 state = getState(isLoading = true),
                 logout = {},
-                toReservationPage = {},
+                navigateTo = {},
                 uiLayout = PORTRAIT_SMALL
             )
         }
@@ -49,7 +54,7 @@ class HomeScreenTest {
             HomeScreen(
                 state = getState(apiError = errorMessage),
                 logout = {},
-                toReservationPage = {},
+                navigateTo = {},
                 uiLayout = PORTRAIT_SMALL
             )
         }
@@ -63,7 +68,7 @@ class HomeScreenTest {
             HomeScreen(
                 state = HomeScreenState(bookings = emptyList(), isLoading = false),
                 logout = {},
-                toReservationPage = {},
+                navigateTo = {},
                 uiLayout = PORTRAIT_SMALL
             )
         }
@@ -83,7 +88,7 @@ class HomeScreenTest {
             HomeScreen(
                 state = getState(bookings = bookings),
                 logout = {},
-                toReservationPage = {},
+                navigateTo = {},
                 uiLayout = PORTRAIT_SMALL
             )
         }
@@ -104,7 +109,7 @@ class HomeScreenTest {
             HomeScreen(
                 state = getState(bookings = bookings),
                 logout = {},
-                toReservationPage = {},
+                navigateTo = {},
                 uiLayout = PORTRAIT_SMALL
             )
         }
@@ -123,7 +128,7 @@ class HomeScreenTest {
             HomeScreen(
                 state = getState(bookings = listOf(pastBooking)),
                 logout = {},
-                toReservationPage = {},
+                navigateTo = {},
                 uiLayout = PORTRAIT_SMALL
             )
         }
@@ -140,7 +145,7 @@ class HomeScreenTest {
             HomeScreen(
                 state = getState(bookings = listOf(booking)),
                 logout = {},
-                toReservationPage = {},
+                navigateTo = {},
                 uiLayout = PORTRAIT_SMALL
             )
         }
@@ -157,7 +162,7 @@ class HomeScreenTest {
             HomeScreen(
                 state = getState(bookings = listOf(booking)),
                 logout = {},
-                toReservationPage = {},
+                navigateTo = {},
                 uiLayout = PORTRAIT_SMALL
             )
         }
@@ -175,7 +180,7 @@ class HomeScreenTest {
             HomeScreen(
                 state = getState(bookings = listOf(booking)),
                 logout = {},
-                toReservationPage = {},
+                navigateTo = {},
                 uiLayout = PORTRAIT_SMALL
             )
         }
@@ -191,12 +196,108 @@ class HomeScreenTest {
             HomeScreen(
                 state = HomeScreenState(bookings = listOf(booking), isLoading = false),
                 logout = {},
-                toReservationPage = {},
+                navigateTo = {},
                 uiLayout = PORTRAIT_SMALL
             )
         }
 
         rule.onNodeWithText(context.getString(R.string.no_battery_assigned)).assertIsDisplayed()
+    }
+
+    @Test
+    fun homeScreen_compactDevicePortraitLayout_verifyUsingBottomNavigation(){
+        onDevice().setScreenOrientation(ScreenOrientation.PORTRAIT)
+
+        rule.setContent {
+            HomeScreen(
+                state = getState(),
+                logout = {},
+                navigateTo = {},
+                uiLayout = PORTRAIT_SMALL
+            )
+        }
+
+        rule.onNodeWithTag(context.getString(R.string.navigation_bar)).assertExists()
+    }
+
+    @Test
+    fun homeScreen_compactDeviceLandscapeLayout_verifyUsingRailNavigation(){
+        onDevice().setScreenOrientation(ScreenOrientation.LANDSCAPE)
+
+        rule.setContent {
+            HomeScreen(
+                state = getState(),
+                logout = {},
+                navigateTo = {},
+                uiLayout = LANDSCAPE_SMALL
+            )
+        }
+
+        rule.onNodeWithTag(context.getString(R.string.navigation_rail)).assertExists()
+    }
+
+    @Test
+    fun homeScreen_mediumDevicePortraitLayout_verifyUsingRailNavigation(){
+        onDevice().setScreenOrientation(ScreenOrientation.PORTRAIT)
+
+        rule.setContent {
+            HomeScreen(
+                state = getState(),
+                logout = {},
+                navigateTo = {},
+                uiLayout = PORTRAIT_MEDIUM
+            )
+        }
+
+        rule.onNodeWithTag(context.getString(R.string.navigation_rail)).assertExists()
+    }
+
+    @Test
+    fun homeScreen_mediumDeviceLandscapeLayout_verifyUsingRailNavigation(){
+        onDevice().setScreenOrientation(ScreenOrientation.LANDSCAPE)
+
+        rule.setContent {
+            HomeScreen(
+                state = getState(),
+                logout = {},
+                navigateTo = {},
+                uiLayout = LANDSCAPE_MEDIUM
+            )
+        }
+
+        rule.onNodeWithTag(context.getString(R.string.navigation_rail)).assertExists()
+    }
+
+    @Test
+    fun homeScreen_expandedDevicePortraitLayout_verifyUsingDrawerNavigation(){
+        onDevice().setScreenOrientation(ScreenOrientation.PORTRAIT)
+
+        rule.setContent {
+            HomeScreen(
+                state = getState(),
+                logout = {},
+                navigateTo = {},
+                uiLayout = PORTRAIT_EXPANDED
+            )
+        }
+
+        rule.onNodeWithTag(context.getString(R.string.navigation_drawer)).assertExists()
+    }
+
+    @Test
+    fun homeScreen_expandedDeviceLandscapeLayout_verifyUsingDrawerNavigation(){
+        onDevice().setScreenOrientation(ScreenOrientation.LANDSCAPE)
+
+        rule.setContent {
+            HomeScreen(
+                state = getState(),
+                logout = {},
+                navigateTo = {},
+                uiLayout = LANDSCAPE_EXPANDED
+            )
+        }
+
+        rule.onNodeWithTag(context.getString(R.string.navigation_drawer)).assertExists()
     }
 
 

@@ -31,6 +31,7 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
@@ -79,7 +80,9 @@ fun Navigation(
 
     when (uiLayout) {
         PORTRAIT_SMALL -> {
-            NavigationBar {
+            NavigationBar (
+                modifier = Modifier.testTag(stringResource(R.string.navigation_bar))
+            ) {
                 navItems.forEach { item ->
                     NavigationBarItem(
                         selected = currentPage == item.pageName,
@@ -105,9 +108,8 @@ fun Navigation(
         LANDSCAPE_SMALL, PORTRAIT_MEDIUM, LANDSCAPE_MEDIUM -> {
             NavigationRail(
                 modifier = Modifier.padding(
-                    vertical = dimensionResource(R.dimen.padding_large),
-                    horizontal = dimensionResource(R.dimen.padding_tiny)
-                )
+                    dimensionResource(R.dimen.padding_tiny)
+                ).testTag(stringResource(R.string.navigation_rail))
             ) {
                 navItems.forEach{item ->
                     NavigationRailItem(
@@ -154,7 +156,8 @@ fun Navigation(
                         }
                     }
                 },
-                drawerState = drawerState
+                drawerState = drawerState,
+                modifier = Modifier.testTag(stringResource(R.string.navigation_drawer))
             ) {
                 Scaffold(
                     floatingActionButton = {

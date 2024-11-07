@@ -22,6 +22,11 @@ android {
         manifestPlaceholders["auth0Domain"] = "@string/com_auth0_domain"
         manifestPlaceholders["auth0Scheme"] = "@string/com_auth0_scheme"
     }
+    testOptions {
+        emulatorControl {
+            enable = true
+        }
+    }
     buildFeatures {
         compose = true
     }
@@ -52,6 +57,8 @@ android {
         )
         )
     }
+
+
 }
 
 
@@ -111,6 +118,7 @@ dependencies {
     testImplementation("org.mockito.kotlin:mockito-kotlin:4.1.0")
     testImplementation("io.mockk:mockk:1.13.5")
     androidTestImplementation("androidx.test.ext:junit:1.1.5")
+    androidTestImplementation("androidx.test.espresso:espresso-device:1.0.1")
     androidTestImplementation("androidx.test.espresso:espresso-core:3.5.1")
     androidTestImplementation(platform("androidx.compose:compose-bom:2023.10.00"))
     androidTestImplementation("androidx.compose.ui:ui-test-junit4:1.5.4")
