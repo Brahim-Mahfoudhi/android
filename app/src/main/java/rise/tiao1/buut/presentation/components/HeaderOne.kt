@@ -2,6 +2,7 @@ package rise.tiao1.buut.presentation.components
 
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
@@ -19,9 +20,7 @@ fun HeaderOne (text: String) {
 
     Text(
         text = text,
-        fontSize = 20.sp,
-        fontWeight = FontWeight.Bold,
-        color = Color.White,
+        style = MaterialTheme.typography.displayMedium,
         textAlign = TextAlign.Center,
         modifier = Modifier.fillMaxWidth()
             .padding(bottom = 4.dp)

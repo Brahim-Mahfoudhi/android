@@ -1,16 +1,12 @@
 package rise.tiao1.buut.presentation.home
 
 import android.content.res.Configuration
-import android.util.Log
-import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
@@ -19,10 +15,8 @@ import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ExpandLess
 import androidx.compose.material.icons.filled.ExpandMore
-import androidx.compose.material.icons.filled.Menu
 import androidx.compose.material3.Card
 import androidx.compose.material3.CircularProgressIndicator
-import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -39,7 +33,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
-import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.semantics.testTag
@@ -54,7 +48,12 @@ import rise.tiao1.buut.presentation.components.Navigation
 import rise.tiao1.buut.ui.theme.AppTheme
 import rise.tiao1.buut.utils.NavigationKeys
 import rise.tiao1.buut.utils.UiLayout
-import rise.tiao1.buut.utils.UiLayout.*
+import rise.tiao1.buut.utils.UiLayout.LANDSCAPE_EXPANDED
+import rise.tiao1.buut.utils.UiLayout.LANDSCAPE_MEDIUM
+import rise.tiao1.buut.utils.UiLayout.LANDSCAPE_SMALL
+import rise.tiao1.buut.utils.UiLayout.PORTRAIT_EXPANDED
+import rise.tiao1.buut.utils.UiLayout.PORTRAIT_MEDIUM
+import rise.tiao1.buut.utils.UiLayout.PORTRAIT_SMALL
 import rise.tiao1.buut.utils.toDateString
 import java.time.LocalDateTime
 
@@ -79,42 +78,44 @@ fun HomeScreen(
         }
     ) { innerPadding ->
         Box(modifier = Modifier.padding(innerPadding)) {
-            if (uiLayout == PORTRAIT_SMALL) {
-                Column {
-                    HeaderOne(stringResource(R.string.booking_list_title))
-                    BookingList(state = state)
-                    Spacer(modifier = Modifier.heightIn(8.dp))
-
+            when (uiLayout) {
+                PORTRAIT_SMALL -> {
+                    Column {
+                        HeaderOne(stringResource(R.string.booking_list_title))
+                        BookingList(state = state)
+                    }
                 }
-            } else if (uiLayout == PORTRAIT_EXPANDED || uiLayout == LANDSCAPE_EXPANDED) {
-                Row {
-                    Navigation(
-                        uiLayout = uiLayout,
-                        navigateTo = navigateTo,
-                        logout = logout,
-                        currentPage = NavigationKeys.Route.HOME,
-                        content = {
-                            Column {
-                                HeaderOne(stringResource(R.string.booking_list_title))
-                                BookingList(state = state)
-                            }
-                        },
-                    )
 
+                PORTRAIT_EXPANDED, LANDSCAPE_EXPANDED -> {
+                    Row {
+                        Navigation(
+                            uiLayout = uiLayout,
+                            navigateTo = navigateTo,
+                            logout = logout,
+                            currentPage = NavigationKeys.Route.HOME,
+                            content = {
+                                Column {
+                                    HeaderOne(stringResource(R.string.booking_list_title))
+                                    BookingList(state = state)
+                                }
+                            },
+                        )
+
+                    }
                 }
-            } else {
-                Row {
-                    AnimatedVisibility(visible = uiLayout == LANDSCAPE_SMALL || uiLayout == LANDSCAPE_MEDIUM || uiLayout == PORTRAIT_MEDIUM) {
+
+                else -> {
+                    Row {
                         Navigation(
                             uiLayout = uiLayout,
                             navigateTo = navigateTo,
                             logout = logout,
                             currentPage = NavigationKeys.Route.HOME
                         )
-                    }
-                    Column {
-                        HeaderOne(stringResource(R.string.booking_list_title))
-                        BookingList(state = state)
+                        Column {
+                            HeaderOne(stringResource(R.string.booking_list_title))
+                            BookingList(state = state)
+                        }
                     }
                 }
             }
@@ -142,16 +143,14 @@ fun BookingList(
             )
         }
     } else if (state.bookings.isEmpty()) {
-        Card(
-            modifier = Modifier
-                .padding(4.dp)
-                .fillMaxWidth()
-        ) {
-            Column(modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp)) {
-
+        Card {
+            Column(modifier = Modifier.padding(
+                horizontal = dimensionResource(R.dimen.padding_medium),
+                vertical = dimensionResource(R.dimen.padding_small))
+            ) {
                 Text(
                     text = stringResource(R.string.user_has_no_bookings),
-                    color = Color.Black,
+                    style = MaterialTheme.typography.bodyLarge,
                     textAlign = TextAlign.Center,
                 )
 
@@ -175,7 +174,8 @@ fun BookingList(
             itemsIndexed(state.bookings) { index, booking ->
                 BookingItem(
                     item = booking,
-                    isExpanded = index == firstUpcomingBookingIndex // Open de eerstvolgende boeking
+                    isExpanded = index == firstUpcomingBookingIndex,
+                    modifier = Modifier.padding(dimensionResource(R.dimen.padding_tiny))
                 )
             }
         }
@@ -186,20 +186,24 @@ fun BookingList(
 @Composable
 fun BookingItem(
     item: Booking,
-    isExpanded: Boolean = false
+    isExpanded: Boolean = false,
+    modifier: Modifier
 ) {
     var expanded by remember { mutableStateOf(isExpanded) }
     val isHistory = item.date.isBefore(LocalDateTime.now().minusDays(1))
 
     Card(
-        modifier = Modifier
-            .padding(4.dp)
-            .fillMaxWidth()
+        modifier = modifier
             .alpha(if (isHistory) 0.5f else 1f)
             .semantics { testTag = if (isHistory) "PastBooking" else "UpcomingBooking" }
             .semantics { testTag = "BookingItem" }
     ) {
-        Column(modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp)) {
+        Column(
+            modifier = Modifier.padding(
+                horizontal = dimensionResource(R.dimen.padding_medium),
+                vertical = dimensionResource(R.dimen.padding_small)
+            )
+        ) {
             Row(
                 horizontalArrangement = Arrangement.SpaceBetween,
                 verticalAlignment = Alignment.CenterVertically,
@@ -207,7 +211,7 @@ fun BookingItem(
             ) {
                 Text(
                     text = item.date.toDateString(),
-                    color = Color.Black,
+                    style = MaterialTheme.typography.labelMedium,
                     textAlign = TextAlign.Center,
                 )
                 IconButton(
@@ -217,25 +221,19 @@ fun BookingItem(
                     Icon(
                         imageVector = if (expanded) Icons.Filled.ExpandLess else Icons.Filled.ExpandMore,
                         contentDescription = stringResource(R.string.expand_button_content_description),
-                        tint = Color.Black
                     )
                 }
 
             }
             if (expanded) {
                 HorizontalDivider(
-                    color = Color.LightGray,
-                    thickness = 1.dp,
                     modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(horizontal = 8.dp)
+                        .padding(dimensionResource(R.dimen.padding_medium))
                 )
                 Row(
                     horizontalArrangement = Arrangement.SpaceBetween,
                     modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(horizontal = 2.dp, vertical = 8.dp)
-
+                        .padding(dimensionResource(R.dimen.padding_small))
                 ) {
                     BookingDetails(
                         item.boat,
@@ -253,28 +251,19 @@ fun BookingDetails(
     battery: String? = null,
 ) {
     Column {
-        Row(
-            verticalAlignment = Alignment.CenterVertically,
-        ) {
-            Text(
-                text = if (boat != null) stringResource(R.string.boat) + ": $boat" else stringResource(
-                    R.string.no_boat_assigned
-                ),
-                style = MaterialTheme.typography.bodyMedium,
-                color = Color.Gray,
-            )
-        }
-        Row(
-            verticalAlignment = Alignment.CenterVertically,
-        ) {
-            Text(
-                text = if (battery != null) stringResource(R.string.battery) + ": $battery" else stringResource(
-                    R.string.no_battery_assigned
-                ),
-                style = MaterialTheme.typography.bodyMedium,
-                color = Color.Gray,
-            )
-        }
+        Text(
+            text = if (boat != null) stringResource(R.string.boat) + ": $boat" else stringResource(
+                R.string.no_boat_assigned
+            ),
+            style = MaterialTheme.typography.bodyLarge,
+        )
+
+        Text(
+            text = if (battery != null) stringResource(R.string.battery) + ": $battery" else stringResource(
+                R.string.no_battery_assigned
+            ),
+            style = MaterialTheme.typography.bodyLarge,
+        )
     }
 }
 

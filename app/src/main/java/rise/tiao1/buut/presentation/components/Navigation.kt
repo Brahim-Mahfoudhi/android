@@ -1,6 +1,7 @@
 package rise.tiao1.buut.presentation.components
 
 import android.util.Log
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.material.icons.Icons
@@ -30,6 +31,7 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import kotlinx.coroutines.launch
@@ -78,7 +80,7 @@ fun Navigation(
     when (uiLayout) {
         PORTRAIT_SMALL -> {
             NavigationBar {
-                navItems.forEach{item ->
+                navItems.forEach { item ->
                     NavigationBarItem(
                         selected = currentPage == item.pageName,
                         onClick = {
@@ -102,9 +104,12 @@ fun Navigation(
 
         LANDSCAPE_SMALL, PORTRAIT_MEDIUM, LANDSCAPE_MEDIUM -> {
             NavigationRail(
-                modifier = Modifier.padding(vertical = 40.dp, horizontal = 5.dp)
+                modifier = Modifier.padding(
+                    vertical = dimensionResource(R.dimen.padding_large),
+                    horizontal = dimensionResource(R.dimen.padding_tiny)
+                )
             ) {
-                navItems.forEachIndexed { index, item ->
+                navItems.forEach{item ->
                     NavigationRailItem(
                         selected = currentPage == item.pageName,
                         onClick = {
@@ -130,7 +135,7 @@ fun Navigation(
             ModalNavigationDrawer(
                 drawerContent = {
                     ModalDrawerSheet(Modifier.width(180.dp)) {
-                        navItems.forEach{ item ->
+                        navItems.forEach { item ->
                             NavigationDrawerItem(
                                 selected = currentPage == item.pageName,
                                 label = { Text(text = item.text) },
@@ -154,11 +159,13 @@ fun Navigation(
                 Scaffold(
                     floatingActionButton = {
                         FloatingActionButton(
-                            onClick = { scope.launch {
-                                drawerState.apply {
-                                    if (isClosed) open() else close()
+                            onClick = {
+                                scope.launch {
+                                    drawerState.apply {
+                                        if (isClosed) open() else close()
+                                    }
                                 }
-                            }},
+                            },
                             modifier = Modifier.padding(16.dp)
                         ) {
                             Icon(
@@ -166,10 +173,12 @@ fun Navigation(
                                 contentDescription = stringResource(R.string.menu_button)
                             )
                         }
-                    }
-                ) { innerPadding ->
-                    content()
-                }
+                    },
+                    content = { paddingValues ->
+                        Box(Modifier.padding(paddingValues)) {
+                            content()
+                        }
+                    })
             }
         }
     }
@@ -183,4 +192,4 @@ private data class NavigationItemContent(
     val pageName: String,
     val navigateTo: () -> Unit,
 
-)
+    )
