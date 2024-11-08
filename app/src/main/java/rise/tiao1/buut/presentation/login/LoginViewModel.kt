@@ -49,7 +49,7 @@ class LoginViewModel @Inject constructor(
     }
 
 
-    fun login(navigateToProfile: ()->Unit) {
+    fun login(navigateToHome: ()->Unit) {
         _state.value = state.value.copy(isLoading = true)
         viewModelScope.launch {
                 login.invoke(
@@ -57,7 +57,7 @@ class LoginViewModel @Inject constructor(
                     state.value.password,
                     onSuccess = {
                         _state.value = state.value.copy(isLoading = false)
-                        navigateToProfile()
+                        navigateToHome()
                     },
                     onError = { error ->
                         _state.value = state.value.copy(

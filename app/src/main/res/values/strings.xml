@@ -62,4 +62,13 @@
     <string name="close_label">Close</string>
     <string name="registration_succesful">Registration Successful</string>
     <string name="account_created">Your account has been created.</string>
+    <string name="home">Home</string>
+    <string name="new_booking">New Booking</string>
+    <string name="menu_button">Menu button</string>
+    <string name="buut_logo">Buut logo</string>
+    <string name="lightbulb">Lightbulb</string>
+    <string name="navigation_bar">Navigation bar</string>
+    <string name="navigation_rail">Navigation rail</string>
+    <string name="navigation_drawer">Navigation drawer</string>
+    <string name="warning_icon">Warning icon</string>
 </resources>

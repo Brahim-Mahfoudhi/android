@@ -17,7 +17,6 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import rise.tiao1.buut.ui.theme.Primary
 
 @Composable
 fun ButtonComponent(
@@ -32,12 +31,6 @@ fun ButtonComponent(
             .heightIn(48.dp),
 
         shape = RoundedCornerShape(8.dp),
-        colors = ButtonColors(
-            containerColor = Primary,
-            contentColor = Color.White,
-            disabledContainerColor = Color.LightGray,
-            disabledContentColor = Color.Gray
-        ),
         enabled = !isLoading
     ) {
         if (isLoading) {
