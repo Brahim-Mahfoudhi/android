@@ -6,7 +6,7 @@ import rise.tiao1.buut.utils.toLocalDateTimeFromApiString
 import java.time.LocalDateTime
 
 data class Booking(
-    /*val id: String,*/
+    val id: String,
     val date: LocalDateTime,
     val boat: String? = null,
     val battery: String? = null
@@ -14,7 +14,7 @@ data class Booking(
 
 fun BookingDTO.toBooking(): Booking{
     return Booking(
-        /*id = this.id,*/
+        id = this.id,
         date = this.date.toLocalDateTimeFromApiString(),
         boat = this.boat?.name,
         battery = this.battery?.name,
@@ -23,7 +23,7 @@ fun BookingDTO.toBooking(): Booking{
 
 fun LocalBooking.toBooking(): Booking {
     return Booking(
-       /* id = this.id,*/
+        id = this.id,
         date = this.date.toLocalDateTimeFromApiString(),
         boat = this.boat,
         battery = this.battery,

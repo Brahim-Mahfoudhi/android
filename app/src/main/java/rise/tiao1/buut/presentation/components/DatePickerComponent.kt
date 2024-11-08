@@ -1,25 +1,17 @@
 package rise.tiao1.buut.presentation.components
 
+import android.app.DatePickerDialog
 import androidx.annotation.StringRes
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.DateRange
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
-import androidx.compose.ui.draw.clip
-import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.res.stringResource
-
-import android.app.DatePickerDialog
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.material3.OutlinedTextField
-import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.unit.dp
-import androidx.compose.material3.Text
-import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
+import rise.tiao1.buut.R
 import java.util.*
 
 @Composable
@@ -46,7 +38,7 @@ fun DatePickerComponent(
         trailingIcon = {
             // Een knop om de DatePicker te openen
             IconButton(onClick = { isDialogOpen = true }) {
-                Icon(imageVector = Icons.Filled.DateRange, contentDescription = "Show calendar")
+                Icon(imageVector = Icons.Filled.DateRange, contentDescription = stringResource(R.string.show_calendar))
             }
         },
         modifier = modifier

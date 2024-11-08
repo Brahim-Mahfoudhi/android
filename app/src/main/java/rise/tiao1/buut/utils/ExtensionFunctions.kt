@@ -69,6 +69,11 @@ fun LocalDateTime.toDateString(): String {
     return "$formattedDayOfWeek  ${formatter.format(this)}"
 }
 
+fun LocalDateTime.toTimeString():String {
+    val formatter = DateTimeFormatter.ofPattern("HH:mm")
+    return this.format(formatter)
+}
+
 fun String.toLocalDateTime(): LocalDateTime {
     val formatter = DateTimeFormatter.ofPattern("d/M/yyyy")
     return LocalDateTime.parse(this, formatter)

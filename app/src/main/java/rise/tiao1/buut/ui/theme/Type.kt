@@ -33,7 +33,7 @@ val Typography = Typography(
     headlineLarge = TextStyle(
         fontFamily = Montserrat,
         fontWeight = FontWeight.Normal,
-        fontSize = 32.sp
+        fontSize = 16.sp
     ),
     headlineMedium = TextStyle(
         fontFamily = Montserrat,
@@ -44,6 +44,11 @@ val Typography = Typography(
         fontFamily = Roboto,
         fontWeight = FontWeight.Bold,
         fontSize = 22.sp
+    ),
+    labelLarge = TextStyle(
+        fontFamily = Roboto,
+        fontWeight = FontWeight.Bold,
+        fontSize = 18.sp
     ),
     labelMedium = TextStyle(
         fontFamily = Roboto,
