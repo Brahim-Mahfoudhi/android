@@ -32,7 +32,7 @@ class LoginScreenKtTest {
         createComposeRule()
     val context = InstrumentationRegistry.getInstrumentation().targetContext
     var navControllerState by mutableStateOf<NavController?>(null)
-    val logo = rule.onNodeWithContentDescription("BuutLogo")
+    val logo = rule.onNodeWithContentDescription(context.getString(R.string.buut_logo))
     val emailInput = rule.onNodeWithText(context.getString(R.string.email_label))
     val passwordInput = rule.onNodeWithText(context.getString(R.string.password))
     val noAccountLabel = rule.onNodeWithText(context.getString(R.string.no_account_yet))

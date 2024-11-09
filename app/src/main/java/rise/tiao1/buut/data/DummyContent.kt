@@ -7,6 +7,8 @@ import rise.tiao1.buut.data.remote.user.RemoteUser
 import rise.tiao1.buut.utils.toApiDateString
 import java.time.LocalDateTime
 
+const val USER_ID_WITH_BOOKINGS = "auth0|6713adbf2d2a7c11375ac64c"
+
 object DummyContent {
     fun getDummyUsers() = arrayListOf(
         RemoteUser(
@@ -52,7 +54,10 @@ object DummyContent {
             )
         }
         if (userId == null)
+            return emptyList()
+        else if (userId == USER_ID_WITH_BOOKINGS) {
             return bookings
+        }
         else {
             return bookings.filter { it.userId == userId }
         }
