@@ -13,7 +13,7 @@ import rise.tiao1.buut.data.local.user.UserDao
  */
 @Database(
     entities = [LocalUser::class, LocalBooking::class],
-    version = 13,
+    version = 14,
     exportSchema = false
 )
 

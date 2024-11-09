@@ -8,8 +8,9 @@ import java.time.LocalDateTime
 
 @Entity(tableName = "booking")
 data class LocalBooking (
-    @PrimaryKey(autoGenerate = true)
-    val id: Long = 0,
+    @PrimaryKey
+    @ColumnInfo
+    val id: String,
     @ColumnInfo
     val date: String,
     @ColumnInfo

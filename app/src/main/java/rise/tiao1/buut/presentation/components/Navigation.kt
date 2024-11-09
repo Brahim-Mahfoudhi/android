@@ -16,6 +16,7 @@ import androidx.compose.material3.DrawerValue
 import androidx.compose.material3.ExtendedFloatingActionButton
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ModalDrawerSheet
 import androidx.compose.material3.ModalNavigationDrawer
 import androidx.compose.material3.NavigationBar
@@ -79,8 +80,9 @@ fun Navigation(
     )
 
     when (uiLayout) {
-        PORTRAIT_SMALL -> {
+        PORTRAIT_SMALL, PORTRAIT_MEDIUM -> {
             NavigationBar (
+                containerColor = MaterialTheme.colorScheme.inversePrimary,
                 modifier = Modifier.testTag(stringResource(R.string.navigation_bar))
             ) {
                 navItems.forEach { item ->
@@ -105,11 +107,9 @@ fun Navigation(
             }
         }
 
-        LANDSCAPE_SMALL, PORTRAIT_MEDIUM, LANDSCAPE_MEDIUM -> {
+        LANDSCAPE_SMALL, LANDSCAPE_MEDIUM -> {
             NavigationRail(
-                modifier = Modifier.padding(
-                    dimensionResource(R.dimen.padding_tiny)
-                ).testTag(stringResource(R.string.navigation_rail))
+                modifier = Modifier.testTag(stringResource(R.string.navigation_rail))
             ) {
                 navItems.forEach{item ->
                     NavigationRailItem(
@@ -124,7 +124,7 @@ fun Navigation(
                                 } else item.unselectedIcon,
                                 contentDescription = item.text
                             )
-                        }
+                        },
                     )
                 }
             }
@@ -136,7 +136,9 @@ fun Navigation(
 
             ModalNavigationDrawer(
                 drawerContent = {
-                    ModalDrawerSheet(Modifier.width(180.dp)) {
+                    ModalDrawerSheet(
+                        Modifier.width(180.dp),
+                        ) {
                         navItems.forEach { item ->
                             NavigationDrawerItem(
                                 selected = currentPage == item.pageName,

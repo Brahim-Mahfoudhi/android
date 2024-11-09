@@ -14,13 +14,19 @@ import androidx.test.espresso.device.action.ScreenOrientation
 import androidx.test.espresso.device.rules.ScreenOrientationRule
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.platform.app.InstrumentationRegistry
+import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
 import rise.tiao1.buut.R
 import rise.tiao1.buut.domain.booking.Booking
 import rise.tiao1.buut.domain.user.User
-import rise.tiao1.buut.utils.UiLayout.*
+import rise.tiao1.buut.utils.UiLayout.LANDSCAPE_EXPANDED
+import rise.tiao1.buut.utils.UiLayout.LANDSCAPE_MEDIUM
+import rise.tiao1.buut.utils.UiLayout.LANDSCAPE_SMALL
+import rise.tiao1.buut.utils.UiLayout.PORTRAIT_EXPANDED
+import rise.tiao1.buut.utils.UiLayout.PORTRAIT_MEDIUM
+import rise.tiao1.buut.utils.UiLayout.PORTRAIT_SMALL
 import java.time.LocalDateTime
 
 @RunWith(AndroidJUnit4::class)
@@ -29,7 +35,12 @@ class HomeScreenTest {
     val rule = createComposeRule()
     @get:Rule
     val screenOrientationRule: ScreenOrientationRule = ScreenOrientationRule(ScreenOrientation.PORTRAIT)
-    val context = InstrumentationRegistry.getInstrumentation().targetContext
+    private val context = InstrumentationRegistry.getInstrumentation().targetContext
+
+    @Before
+    fun setStartOrientation() {
+        onDevice().setScreenOrientation(ScreenOrientation.PORTRAIT)
+    }
 
     @Test
     fun homeScreen_loadingState_isDisplayedCorrectly(){
@@ -41,6 +52,8 @@ class HomeScreenTest {
                 uiLayout = PORTRAIT_SMALL
             )
         }
+
+        rule.onNodeWithTag(context.getString(R.string.booking_list_title)).performClick()
         rule.onNodeWithTag("LoadingIndicator").assertIsDisplayed()
         rule.onNodeWithTag("BookingItem").assertIsNotDisplayed()
         rule.onNodeWithText(context.getString(R.string.user_has_no_bookings))
@@ -59,6 +72,7 @@ class HomeScreenTest {
             )
         }
 
+        rule.onNodeWithTag(context.getString(R.string.booking_list_title)).performClick()
         rule.onNodeWithText(errorMessage).assertIsDisplayed()
     }
 
@@ -73,15 +87,16 @@ class HomeScreenTest {
             )
         }
 
+        rule.onNodeWithTag(context.getString(R.string.booking_list_title)).performClick()
         rule.onNodeWithText(context.getString(R.string.user_has_no_bookings)).assertIsDisplayed()
     }
 
     @Test
     fun homeScreen_bookingsList_isDisplayed() {
         val bookings = listOf(
-            Booking(date = LocalDateTime.now().plusDays(1)),
-            Booking(date = LocalDateTime.now().plusDays(2)),
-            Booking(date = LocalDateTime.now().plusDays(3))
+            Booking(id= "1", date = LocalDateTime.now().plusDays(1)),
+            Booking(id= "2", date = LocalDateTime.now().plusDays(2)),
+            Booking(id= "3", date = LocalDateTime.now().plusDays(3))
         )
 
         rule.setContent {
@@ -93,6 +108,8 @@ class HomeScreenTest {
             )
         }
 
+        rule.onNodeWithTag(context.getString(R.string.booking_list_title)).performClick()
+        rule.onNodeWithTag(context.getString(R.string.booking_list_title)).performClick()
         val displayedBookings = rule.onAllNodesWithTag("UpcomingBooking").fetchSemanticsNodes()
         assert(displayedBookings.size == bookings.size)
     }
@@ -100,9 +117,9 @@ class HomeScreenTest {
     @Test
     fun homeScreen_onlyFirstUpcomingBooking_isExpanded() {
         val bookings = listOf(
-            Booking(date = LocalDateTime.now().minusDays(2)),
-            Booking(date = LocalDateTime.now().plusDays(1), boat = "expandedBoat", battery = "expandedBattery"),
-            Booking(date = LocalDateTime.now().plusDays(2), boat="collapsedBoat", battery = "collapsedBattery")
+            Booking(id= "1", date = LocalDateTime.now().minusDays(2)),
+            Booking(id= "2", date = LocalDateTime.now().plusDays(1), boat = "expandedBoat", battery = "expandedBattery"),
+            Booking(id= "3", date = LocalDateTime.now().plusDays(2), boat="collapsedBoat", battery = "collapsedBattery")
         )
 
         rule.setContent {
@@ -114,6 +131,7 @@ class HomeScreenTest {
             )
         }
 
+        rule.onNodeWithTag(context.getString(R.string.booking_list_title)).performClick()
         rule.onNodeWithText("Boat: expandedBoat").assertIsDisplayed()
         rule.onNodeWithText("Battery: expandedBattery").assertIsDisplayed()
         rule.onNodeWithText("Boat: collapsedBoat").assertIsNotDisplayed()
@@ -122,7 +140,7 @@ class HomeScreenTest {
 
     @Test
     fun homeScreen_pastBookings_areFaded() {
-        val pastBooking = Booking(date = LocalDateTime.now().minusDays(1))
+        val pastBooking = Booking(id= "1", date = LocalDateTime.now().minusDays(1))
 
         rule.setContent {
             HomeScreen(
@@ -133,13 +151,15 @@ class HomeScreenTest {
             )
         }
 
+        rule.onNodeWithTag(context.getString(R.string.booking_list_title)).performClick()
+
         rule.onNodeWithTag("PastBooking").assertIsDisplayed()
         rule.onNodeWithTag("UpcomingBooking").assertIsNotDisplayed()
     }
 
     @Test
     fun homeScreen_expandBooking_onIconClick() {
-        val booking = Booking(date = LocalDateTime.now().minusDays(2), boat = "testBoat")
+        val booking = Booking(id= "1", date = LocalDateTime.now().minusDays(2), boat = "testBoat")
 
         rule.setContent {
             HomeScreen(
@@ -150,13 +170,14 @@ class HomeScreenTest {
             )
         }
 
+        rule.onNodeWithTag(context.getString(R.string.booking_list_title)).performClick()
         rule.onNodeWithTag("ExpandButton").performClick()
         rule.onNodeWithText("${context.getString(R.string.boat)}: ${booking.boat}").assertIsDisplayed()
     }
 
     @Test
     fun homeScreen_collapseBooking_onIconClick() {
-        val booking = Booking(date = LocalDateTime.now().minusDays(1), boat = "testBoat")
+        val booking = Booking(id= "1", date = LocalDateTime.now().minusDays(1), boat = "testBoat")
 
         rule.setContent {
             HomeScreen(
@@ -167,6 +188,7 @@ class HomeScreenTest {
             )
         }
 
+        rule.onNodeWithTag(context.getString(R.string.booking_list_title)).performClick()
         rule.onNodeWithContentDescription(context.getString(R.string.expand_button_content_description)).performClick()
         rule.onNodeWithContentDescription(context.getString(R.string.expand_button_content_description)).performClick()
         rule.onNodeWithText("${context.getString(R.string.boat)}: ${booking.boat}").assertDoesNotExist()
@@ -174,7 +196,7 @@ class HomeScreenTest {
 
     @Test
     fun homeScreen_missingBoatMessage_isDisplayed() {
-        val booking = Booking(date = LocalDateTime.now().plusDays(1), boat = null)
+        val booking = Booking(id= "1", date = LocalDateTime.now().plusDays(1), boat = null)
 
         rule.setContent {
             HomeScreen(
@@ -185,12 +207,13 @@ class HomeScreenTest {
             )
         }
 
+        rule.onNodeWithTag(context.getString(R.string.booking_list_title)).performClick()
         rule.onNodeWithText(context.getString(R.string.no_boat_assigned)).assertIsDisplayed()
     }
 
     @Test
     fun homeScreen_missingBatteryMessage_isDisplayed() {
-        val booking = Booking(date = LocalDateTime.now().plusDays(1), battery = null)
+        val booking = Booking(id= "1", date = LocalDateTime.now().plusDays(1), battery = null)
 
         rule.setContent {
             HomeScreen(
@@ -201,6 +224,8 @@ class HomeScreenTest {
             )
         }
 
+        rule.onNodeWithTag(context.getString(R.string.booking_list_title)).performClick()
+        rule.onNodeWithTag(context.getString(R.string.booking_list_title)).performClick()
         rule.onNodeWithText(context.getString(R.string.no_battery_assigned)).assertIsDisplayed()
     }
 
@@ -237,7 +262,7 @@ class HomeScreenTest {
     }
 
     @Test
-    fun homeScreen_mediumDevicePortraitLayout_verifyUsingRailNavigation(){
+    fun homeScreen_mediumDevicePortraitLayout_verifyUsingNavigationBar(){
         onDevice().setScreenOrientation(ScreenOrientation.PORTRAIT)
 
         rule.setContent {
@@ -249,7 +274,7 @@ class HomeScreenTest {
             )
         }
 
-        rule.onNodeWithTag(context.getString(R.string.navigation_rail)).assertExists()
+        rule.onNodeWithTag(context.getString(R.string.navigation_bar)).assertExists()
     }
 
     @Test

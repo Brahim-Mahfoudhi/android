@@ -42,7 +42,6 @@ class BookingRepository @Inject constructor(
             return@withContext  bookingDao.getBookingsByUserId(userId).map { it.toBooking() }
     }
 
-
     private suspend fun refreshCache(userId: String) {
         val remoteBookings = apiService
             .getAllBookingsFromUser(userId)

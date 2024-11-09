@@ -71,4 +71,7 @@
     <string name="navigation_rail">Navigation rail</string>
     <string name="navigation_drawer">Navigation drawer</string>
     <string name="warning_icon">Warning icon</string>
+    <string name="main_background_image">Main background image</string>
+    <string name="work_in_progress">WIP - Work in Progress</string>
+    <string name="show_calendar">Show calendar</string>
 </resources>

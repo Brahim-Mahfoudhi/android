@@ -4,10 +4,10 @@ import retrofit2.http.GET
 import retrofit2.http.Path
 
 interface BookingApiService {
-    @GET("api/Booking/all")
+    @GET("api/Booking")
     suspend fun getAllBookings(): List<BookingDTO>
 
-    @GET("api/Booking/all/{userId}")
+    @GET("api/User/{userId}/bookings")
     suspend fun getAllBookingsFromUser(@Path("userId") userId: String): List<BookingDTO>
 }
 

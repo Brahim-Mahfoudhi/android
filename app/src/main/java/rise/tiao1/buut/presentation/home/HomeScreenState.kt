@@ -7,6 +7,8 @@ import rise.tiao1.buut.domain.user.User
 data class HomeScreenState (
     val user: User? = null,
     val bookings: List<Booking> = emptyList(),
+    val notifications: List<Any> = emptyList(),
     val isLoading: Boolean = true,
     val apiError: String? = "",
+
 )
