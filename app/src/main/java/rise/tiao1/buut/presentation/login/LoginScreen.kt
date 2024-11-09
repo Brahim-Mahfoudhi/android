@@ -1,6 +1,8 @@
 package rise.tiao1.buut.presentation.login
 
 import android.content.res.Configuration
+import androidx.compose.foundation.gestures.Orientation
+import androidx.compose.foundation.gestures.scrollable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -11,7 +13,9 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.widthIn
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.windowsizeclass.WindowWidthSizeClass
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -31,6 +35,7 @@ import rise.tiao1.buut.presentation.components.OutlinedTextFieldComponent
 import rise.tiao1.buut.presentation.components.PasswordTextFieldComponent
 import rise.tiao1.buut.ui.theme.AppTheme
 import rise.tiao1.buut.utils.InputKeys
+import rise.tiao1.buut.utils.UiLayout
 
 
 @Composable
@@ -40,23 +45,24 @@ fun LoginScreen(
     login: () -> Unit,
     onRegisterClick: () -> Unit,
     onValidate: (input: String, field: String) -> Unit,
-    windowSize: WindowWidthSizeClass
+    windowSize: WindowWidthSizeClass = WindowWidthSizeClass.Compact,
 ) {
 
     val configuration = LocalConfiguration.current
+    val scrollState = rememberScrollState()
 
     Box()
     {
         MainBackgroundImage()
 
         if (
-            (windowSize == WindowWidthSizeClass.Medium || windowSize == WindowWidthSizeClass.Compact)
+            windowSize == WindowWidthSizeClass.Medium
             && configuration.orientation == Configuration.ORIENTATION_LANDSCAPE
         ) {
             Row(
                 modifier = Modifier.fillMaxSize(),
                 horizontalArrangement = Arrangement.Center,
-                verticalAlignment = Alignment.CenterVertically
+                verticalAlignment = Alignment.CenterVertically,
             ) {
                 BuutLogo()
                 Spacer(modifier = Modifier.widthIn(40.dp))
@@ -70,7 +76,8 @@ fun LoginScreen(
         } else {
             Column(
                 modifier = Modifier
-                    .fillMaxSize(),
+                    .fillMaxSize()
+                    .verticalScroll(scrollState),
                 horizontalAlignment = Alignment.CenterHorizontally,
                 verticalArrangement = Arrangement.Center
             ) {
@@ -170,10 +177,12 @@ fun LoginLandscapeSmallPreview() {
             {},
             {},
             { _, _ -> },
-            windowSize = WindowWidthSizeClass.Compact
+            windowSize = WindowWidthSizeClass.Medium
         )
     }
 }
+
+
 
 @Preview(showBackground = true, widthDp = 1000)
 @Composable
