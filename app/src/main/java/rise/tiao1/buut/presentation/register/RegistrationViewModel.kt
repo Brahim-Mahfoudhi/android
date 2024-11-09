@@ -2,6 +2,7 @@ package rise.tiao1.buut.presentation.register
 
 import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.ui.platform.LocalContext
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -98,7 +99,6 @@ class RegistrationViewModel @Inject constructor(
             }
         }
     }
-
 
     fun onRegisterClick() {
 

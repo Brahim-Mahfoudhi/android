@@ -15,8 +15,13 @@ import androidx.navigation.NavController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import androidx.test.espresso.device.DeviceInteraction.Companion.setScreenOrientation
+import androidx.test.espresso.device.EspressoDevice.Companion.onDevice
+import androidx.test.espresso.device.action.ScreenOrientation
+import androidx.test.espresso.device.rules.ScreenOrientationRule
 import androidx.test.platform.app.InstrumentationRegistry
 import org.junit.Assert
+import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 import rise.tiao1.buut.R
@@ -26,18 +31,29 @@ import rise.tiao1.buut.utils.InputKeys
 import rise.tiao1.buut.utils.NavigationKeys
 import rise.tiao1.buut.utils.UiText
 
-class LoginScreenKtTest {
+class LoginScreenKtMediumLandscapeTest {
+    val startOrientation = ScreenOrientation.LANDSCAPE
+    val updatedOrientation = ScreenOrientation.PORTRAIT
+    val windowSize = WindowWidthSizeClass.Medium
+
     @get:Rule
     val rule: ComposeContentTestRule =
         createComposeRule()
+    @get:Rule
+    val screenOrientationRule: ScreenOrientationRule = ScreenOrientationRule(startOrientation)
     val context = InstrumentationRegistry.getInstrumentation().targetContext
     var navControllerState by mutableStateOf<NavController?>(null)
-    val logo = rule.onNodeWithContentDescription(context.getString(R.string.buut_logo))
+    val logo = rule.onNodeWithContentDescription("BuutLogo")
     val emailInput = rule.onNodeWithText(context.getString(R.string.email_label))
     val passwordInput = rule.onNodeWithText(context.getString(R.string.password))
     val noAccountLabel = rule.onNodeWithText(context.getString(R.string.no_account_yet))
     val loginButton = rule.onNodeWithText(context.getString(R.string.log_in_button))
     val registerButton = rule.onNodeWithText(context.getString(R.string.register_here))
+
+    @Before
+    fun resetOrientation(){
+        onDevice().setScreenOrientation(startOrientation)
+    }
 
 
     @Test
@@ -49,7 +65,7 @@ class LoginScreenKtTest {
                 login = { },
                 onRegisterClick = { },
                 onValidate = { _, _ -> },
-                windowSize = WindowWidthSizeClass.Compact
+                windowSize = windowSize
             )
         }
 
@@ -75,12 +91,37 @@ class LoginScreenKtTest {
                 login = { },
                 onRegisterClick = { },
                 onValidate = { _, _ -> },
-                windowSize = WindowWidthSizeClass.Compact
+                windowSize = windowSize
             )
         }
 
 
         emailInput.performTextInput("buut@buut.buut")
+        Assert.assertEquals("buut@buut.buut", email)
+    }
+
+    @Test
+    fun loginScreen_emailInputAndOrientationChange_keepsState() {
+        var email by mutableStateOf("")
+        rule.setContent {
+            LoginScreen(
+                state = LoginScreenState(email = email),
+                onValueUpdate = { input, field ->
+                    if (field == InputKeys.EMAIL) {
+                        email = input
+                    }
+                },
+                login = { },
+                onRegisterClick = { },
+                onValidate = { _, _ -> },
+                windowSize = windowSize
+            )
+        }
+
+
+        emailInput.performTextInput("buut@buut.buut")
+        Assert.assertEquals("buut@buut.buut", email)
+        onDevice().setScreenOrientation(updatedOrientation)
         Assert.assertEquals("buut@buut.buut", email)
     }
 
@@ -98,12 +139,36 @@ class LoginScreenKtTest {
                 login = { },
                 onRegisterClick = { },
                 onValidate = { _, _ -> },
-                windowSize = WindowWidthSizeClass.Compact
+                windowSize = windowSize
             )
         }
         passwordInput.performTextInput("Password1!")
         Assert.assertEquals("Password1!", password)
     }
+
+    @Test
+    fun loginScreen_passwordInputAndOrientationChange_keepsState() {
+        var password by mutableStateOf("")
+        rule.setContent {
+            LoginScreen(
+                state = LoginScreenState(password = password),
+                onValueUpdate = { input, field ->
+                    if (field == InputKeys.PASSWORD) {
+                        password = input
+                    }
+                },
+                login = { },
+                onRegisterClick = { },
+                onValidate = { _, _ -> },
+                windowSize = windowSize
+            )
+        }
+        passwordInput.performTextInput("Password1!")
+        Assert.assertEquals("Password1!", password)
+        onDevice().setScreenOrientation(updatedOrientation)
+        Assert.assertEquals("Password1!", password)
+    }
+
 
     @Test
     fun loginScreen_loginButtonPressed_triggersLogin() {
@@ -115,7 +180,7 @@ class LoginScreenKtTest {
                 login = { loginButtonClicked = true },
                 onRegisterClick = { },
                 onValidate = { _, _ -> },
-                windowSize = WindowWidthSizeClass.Compact
+                windowSize = windowSize
             )
         }
 
@@ -135,7 +200,7 @@ class LoginScreenKtTest {
                 login = { },
                 onRegisterClick = { },
                 onValidate = { _, _ -> },
-                windowSize = WindowWidthSizeClass.Compact
+                windowSize = windowSize
             )
         }
 
@@ -151,7 +216,7 @@ class LoginScreenKtTest {
                 login = { },
                 onRegisterClick = { },
                 onValidate = { _, _ -> },
-                windowSize = WindowWidthSizeClass.Compact
+                windowSize = windowSize
             )
         }
 
@@ -167,7 +232,7 @@ class LoginScreenKtTest {
                 login = { },
                 onRegisterClick = { },
                 onValidate = { _, _ -> },
-                windowSize = WindowWidthSizeClass.Compact
+                windowSize = windowSize
             )
         }
 
@@ -186,14 +251,15 @@ class LoginScreenKtTest {
                     login = { },
                     onRegisterClick = {navController.navigate(NavigationKeys.Route.REGISTER) },
                     onValidate = { _, _ -> },
-                    windowSize = WindowWidthSizeClass.Compact
+                    windowSize = windowSize
                 ) }
                 composable(NavigationKeys.Route.REGISTER) { RegistrationScreen(
                     state = RegistrationScreenState(),
-                    onValueChanged = { _,_ ->  },
-                    onCheckedChanged = { _,_ ->  },
-                    onValidate = {_ ->  },
-                    onSubmitClick = {}
+                    onValueChanged = { _, _ -> },
+                    onCheckedChanged = { _, _ -> },
+                    onValidate = { _ -> },
+                    onSubmitClick = {},
+                    windowSize = windowSize,
                 ) }
             }
         }
