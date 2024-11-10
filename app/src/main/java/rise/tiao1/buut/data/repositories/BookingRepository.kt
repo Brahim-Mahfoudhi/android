@@ -8,7 +8,9 @@ import rise.tiao1.buut.data.remote.booking.BookingApiService
 import rise.tiao1.buut.data.remote.booking.BookingDTO
 import rise.tiao1.buut.data.remote.booking.toLocalBooking
 import rise.tiao1.buut.domain.booking.Booking
+import rise.tiao1.buut.domain.booking.TimeSlot
 import rise.tiao1.buut.domain.booking.toBooking
+import rise.tiao1.buut.domain.booking.toTimeSlot
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -19,18 +21,6 @@ class BookingRepository @Inject constructor(
     @IoDispatcher private val dispatcher:
         CoroutineDispatcher
 ) {
-
-    suspend fun getAllBookings(): List<Booking> =
-        withContext(dispatcher) {
-            lateinit var bookings: List<BookingDTO>
-            try {
-                bookings =  apiService.getAllBookings()
-            } catch (e: Exception) {
-                throw Exception("Something went wrong")
-            }
-            return@withContext bookings.map { it.toBooking() }
-        }
-
     suspend fun getAllBookingsFromUser(userId: String): List<Booking>  =
         withContext(dispatcher) {
             try {
@@ -48,5 +38,15 @@ class BookingRepository @Inject constructor(
         bookingDao.insertAllBookings(remoteBookings.map {
             it.toLocalBooking(userId)
         })
+    }
+
+    suspend fun getFreeTimeSlotsForDateRange(startDate: String, endDate: String): List<TimeSlot> =
+        withContext(dispatcher) {
+        try {
+            val remoteTimeSlots = apiService.getFreeTimeSlotsForDateRange(startDate, endDate)
+            return@withContext remoteTimeSlots.map { it.toTimeSlot() }
+        } catch (e: Exception) {
+            throw Exception(e)
+        }
     }
 }

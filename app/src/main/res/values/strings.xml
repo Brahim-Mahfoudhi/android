@@ -74,4 +74,6 @@
     <string name="main_background_image">Main background image</string>
     <string name="work_in_progress">WIP - Work in Progress</string>
     <string name="show_calendar">Show calendar</string>
+    <string name="back_button">Back button</string>
+    <string name="select_date">Select a date to view the available timeslots.</string>
 </resources>

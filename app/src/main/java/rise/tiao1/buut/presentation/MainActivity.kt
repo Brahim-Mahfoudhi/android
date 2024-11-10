@@ -1,5 +1,6 @@
 package rise.tiao1.buut.presentation
 
+import android.content.pm.ActivityInfo
 import android.content.res.Configuration
 import android.os.Bundle
 import androidx.activity.ComponentActivity
@@ -15,8 +16,8 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.auth0.android.authentication.storage.CredentialsManager
 import dagger.hilt.android.AndroidEntryPoint
-import rise.tiao1.buut.presentation.booking.BookingScreen
-import rise.tiao1.buut.presentation.booking.BookingViewModel
+import rise.tiao1.buut.presentation.booking.createBooking.CreateBookingScreen
+import rise.tiao1.buut.presentation.booking.createBooking.CreateBookingViewModel
 import rise.tiao1.buut.presentation.home.HomeScreen
 import rise.tiao1.buut.presentation.home.HomeViewModel
 import rise.tiao1.buut.presentation.login.LoginScreen
@@ -109,13 +110,18 @@ class MainActivity : ComponentActivity() {
                     }
                 )
             }
-            composable(route = Route.RESERVATION) {
-                val bookingViewModel: BookingViewModel = hiltViewModel()
-                BookingScreen(
-                    state = bookingViewModel.state.value,
-                    onValueChanged = { input: Long? ->
-                        bookingViewModel.update(input)
-                    }
+            composable(route = Route.CREATE_BOOKING) {
+                val createBookingViewModel: CreateBookingViewModel = hiltViewModel()
+                CreateBookingScreen(
+                    state = createBookingViewModel.state.value,
+                    onReadyForUpdate = {
+                        createBookingViewModel.onReadyForUpdate()
+                    },
+                    onMonthChanged = { input: Long ->
+                        createBookingViewModel.getSelectableDates(input)
+                    },
+                    navigateUp = {navController.navigateUp()},
+                    uiLayout = uiLayout
                 )
             }
         }

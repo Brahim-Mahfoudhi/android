@@ -5,6 +5,7 @@ import kotlinx.coroutines.test.StandardTestDispatcher
 import kotlinx.coroutines.test.TestScope
 import kotlinx.coroutines.test.runTest
 import org.junit.Test
+import rise.tiao1.buut.data.DummyContent
 import rise.tiao1.buut.data.repositories.BookingRepository
 import rise.tiao1.buut.domain.booking.Booking
 
@@ -29,7 +30,7 @@ class GetBookingsUseCaseTest {
     @Test
     fun getBookings_IsReturningBookingsSortedByDateWhenUserHasBookings() = scope.runTest {
         val bookings: List<Booking> = useCase(USER_ID_WITH_BOOKINGS)
-        val sortedBookings = bookings.sortedBy { it.date }
+        val sortedBookings = DummyContent.getDummyBookings(USER_ID_WITH_BOOKINGS).sortedBy { it.date }
         assert(bookings == sortedBookings)
     }
 

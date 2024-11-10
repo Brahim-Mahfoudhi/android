@@ -39,6 +39,7 @@ class BookingKtTest{
 
     fun getBooking() : Booking {
         return Booking(
+            id = "1",
             date = LocalDateTime.now().toApiDateString().toLocalDateTimeFromApiString(),
             boat = "TestBoat",
             battery = "TestBattery")
@@ -48,6 +49,7 @@ class BookingKtTest{
 
     fun getBookingDTO() : BookingDTO {
         return BookingDTO(
+            id = "1",
             date = LocalDateTime.now().toApiDateString(),
             boat = getBoatDTO(),
             battery = getBatteryDTO())
@@ -55,6 +57,7 @@ class BookingKtTest{
 
     fun getLocalBooking() : LocalBooking {
         return LocalBooking(
+            id = "1",
             date = LocalDateTime.now().toApiDateString(),
             boat = "TestBoat",
             battery = "TestBattery",

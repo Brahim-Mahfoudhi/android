@@ -1,10 +1,13 @@
 package rise.tiao1.buut.data
 
+import android.util.Log
 import rise.tiao1.buut.data.remote.booking.BatteryDTO
 import rise.tiao1.buut.data.remote.booking.BoatDTO
 import rise.tiao1.buut.data.remote.booking.BookingDTO
+import rise.tiao1.buut.data.remote.booking.TimeSlotDTO
 import rise.tiao1.buut.data.remote.user.RemoteUser
 import rise.tiao1.buut.utils.toApiDateString
+import rise.tiao1.buut.utils.toLocalDateTimeFromApiString
 import java.time.LocalDateTime
 
 const val USER_ID_WITH_BOOKINGS = "auth0|6713adbf2d2a7c11375ac64c"
@@ -70,5 +73,25 @@ object DummyContent {
         val randomDays = (0..(end.dayOfYear - start.dayOfYear)).random()
         return start.plusDays(randomDays.toLong())
     }
+
+    fun getDummyFreeTimeSlots(startDate: String, endDate: String) : List<TimeSlotDTO> {
+        Log.d("startString", "hier komt ie")
+        val start = startDate.toLocalDateTimeFromApiString()
+        Log.d("startString", "$start")
+        val end = endDate.toLocalDateTimeFromApiString()
+        var result = mutableListOf<TimeSlotDTO>()
+
+        var current = start
+        while (current.isBefore(end) || current.isEqual(end)) {
+            result.add(TimeSlotDTO(
+                date = current.toApiDateString(),
+                slot = "Morning",
+                available = true
+            ))
+            current = current.plusDays(1)
+        }
+        return result
+    }
+
 
 }

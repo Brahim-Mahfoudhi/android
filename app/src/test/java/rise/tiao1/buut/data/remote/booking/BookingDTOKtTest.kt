@@ -27,6 +27,7 @@ class BookingDTOKtTest{
 
     fun getBookingDTO() : BookingDTO {
         return BookingDTO(
+            id = "1",
             date = "TestDate",
             boat = getBoatDTO(),
             battery = getBatteryDTO())
@@ -34,6 +35,7 @@ class BookingDTOKtTest{
 
     fun getLocalBooking() : LocalBooking {
         return LocalBooking(
+            id = "1",
             date = "TestDate",
             boat = "TestBoat",
             battery = "TestBattery",
