@@ -31,6 +31,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import rise.tiao1.buut.R
 import rise.tiao1.buut.presentation.components.ActionErrorContainer
 import rise.tiao1.buut.presentation.components.InfoContainer
@@ -43,6 +44,9 @@ import rise.tiao1.buut.utils.UiLayout.LANDSCAPE_SMALL
 import rise.tiao1.buut.utils.UiLayout.PORTRAIT_EXPANDED
 import rise.tiao1.buut.utils.UiLayout.PORTRAIT_MEDIUM
 import rise.tiao1.buut.utils.UiLayout.PORTRAIT_SMALL
+import java.time.Instant
+import java.time.LocalDate
+import java.time.ZoneId
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -51,6 +55,7 @@ fun CreateBookingScreen(
     onReadyForUpdate: () -> Unit,
     onMonthChanged: (input: Long) -> Unit = {},
     navigateUp: () -> Unit = {},
+    onDateSelected: (input: LocalDate?) -> Unit = {},
     uiLayout: UiLayout
 ) {
     Scaffold(
@@ -99,7 +104,7 @@ fun CreateBookingScreen(
                                     .weight(0.7f)
                                     .fillMaxSize()
                             ) {
-                                DatePicker(state, onReadyForUpdate, onMonthChanged)
+                                DatePicker(state, onReadyForUpdate, onMonthChanged, onDateSelected)
                             }
                             Column(
                                 modifier = Modifier
@@ -124,7 +129,7 @@ fun CreateBookingScreen(
                                     .fillMaxSize()
                                     .verticalScroll(rememberScrollState())
                             ) {
-                                DatePicker(state, onReadyForUpdate, onMonthChanged)
+                                DatePicker(state, onReadyForUpdate, onMonthChanged, onDateSelected)
                             }
                             Column(
                                 modifier = Modifier
@@ -151,6 +156,7 @@ fun DatePicker(
     state: CreateBookingScreenState,
     onReadyForUpdate: () -> Unit,
     onMonthChanged: (input: Long) -> Unit,
+    onDateSelected: (Input: LocalDate?) -> Unit = {},
 ) {
 
 
@@ -160,7 +166,10 @@ fun DatePicker(
             title = null,
             headline = null,
             showModeToggle = false,
-            modifier = Modifier.padding(0.dp).testTag(stringResource(R.string.calendar))
+            modifier = Modifier
+                .padding(0.dp)
+                .testTag(stringResource(R.string.calendar)),
+
         )
 
         LaunchedEffect(state.datePickerState.displayedMonthMillis) {
@@ -169,6 +178,17 @@ fun DatePicker(
             else
                 onReadyForUpdate()
         }
+
+    LaunchedEffect(state.datePickerState.selectedDateMillis) {
+        if (state.datePickerState.selectedDateMillis != null) {
+            onDateSelected(
+                Instant.ofEpochMilli(state.datePickerState.selectedDateMillis!!)
+                .atZone(ZoneId.systemDefault())
+                .toLocalDate())
+        } else {
+            onDateSelected(null)
+        }
+    }
 
 }
 

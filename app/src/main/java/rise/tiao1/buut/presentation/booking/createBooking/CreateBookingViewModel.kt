@@ -67,7 +67,10 @@ class CreateBookingViewModel @Inject constructor(
         }
     }
 
-
+    @OptIn(ExperimentalMaterial3Api::class)
+    fun updateSelectedDate(selectedDate: LocalDate?) {
+        state.value.copy(selectedDate = selectedDate)
+    }
 
 
 }

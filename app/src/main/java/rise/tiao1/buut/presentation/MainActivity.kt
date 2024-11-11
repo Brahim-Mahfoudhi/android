@@ -27,6 +27,7 @@ import rise.tiao1.buut.presentation.register.RegistrationViewModel
 import rise.tiao1.buut.ui.theme.AppTheme
 import rise.tiao1.buut.utils.NavigationKeys.Route
 import rise.tiao1.buut.utils.UiLayout
+import java.time.LocalDate
 import javax.inject.Inject
 
 @AndroidEntryPoint
@@ -121,6 +122,9 @@ class MainActivity : ComponentActivity() {
                         createBookingViewModel.getSelectableDates(input)
                     },
                     navigateUp = {navController.navigateUp()},
+                    onDateSelected = { input: LocalDate? ->
+                        createBookingViewModel.updateSelectedDate(input)
+                    },
                     uiLayout = uiLayout
                 )
             }

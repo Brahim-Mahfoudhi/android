@@ -1,6 +1,4 @@
 package rise.tiao1.buut.domain.booking.useCases
-
-import android.util.Log
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.SelectableDates
 import rise.tiao1.buut.data.repositories.BookingRepository

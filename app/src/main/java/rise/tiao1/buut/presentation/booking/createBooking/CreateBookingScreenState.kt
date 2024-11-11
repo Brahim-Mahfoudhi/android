@@ -16,6 +16,7 @@ data class CreateBookingScreenState @OptIn(ExperimentalMaterial3Api::class) cons
     ),
     val isUpdated: Boolean = true,
     val datesAreLoading: Boolean = false,
-    val getFreeDatesError: String? = ""
+    val getFreeDatesError: String? = "",
+    val selectedDate: LocalDate? = null
 )
 
