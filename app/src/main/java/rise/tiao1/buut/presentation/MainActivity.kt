@@ -73,7 +73,7 @@ class MainActivity : ComponentActivity() {
                     onValidate = { input, field: String ->
                         loginViewModel.validate(input, field)
                     },
-                    windowSize = windowSize
+                    uiLayout = uiLayout
                 )
             }
             composable(route = Route.HOME) {
@@ -106,7 +106,8 @@ class MainActivity : ComponentActivity() {
                     onRegistrationSuccessDismissed = {
                         registrationViewModel.onRegistrationSuccessDismissed(
                             navigateToHome = { navController.navigate(Route.HOME) })
-                    }
+                    },
+                    uiLayout = uiLayout
                 )
             }
             composable(route = Route.RESERVATION) {

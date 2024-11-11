@@ -41,6 +41,7 @@ import rise.tiao1.buut.presentation.components.PasswordTextFieldComponent
 import rise.tiao1.buut.ui.theme.AppTheme
 import rise.tiao1.buut.utils.InputKeys
 import rise.tiao1.buut.utils.StreetType
+import rise.tiao1.buut.utils.UiLayout
 
 @Composable
 fun RegistrationScreen(
@@ -50,18 +51,16 @@ fun RegistrationScreen(
     onValidate: (field: String) -> Unit,
     onSubmitClick: () -> Unit = {},
     onRegistrationSuccessDismissed: () -> Unit = {},
-    windowSize: WindowWidthSizeClass = WindowWidthSizeClass.Compact
+    uiLayout: UiLayout = UiLayout.PORTRAIT_SMALL
 ) {
     val scrollState = rememberScrollState()
-    val configuration = LocalConfiguration.current
 
 
     Box(modifier = Modifier.fillMaxSize()) {
         MainBackgroundImage()
 
-        if ((windowSize == WindowWidthSizeClass.Compact || windowSize == WindowWidthSizeClass.Medium)
-            && configuration.orientation == Configuration.ORIENTATION_PORTRAIT
-        ) {
+        if (uiLayout == UiLayout.PORTRAIT_SMALL || uiLayout == UiLayout.PORTRAIT_MEDIUM)
+        {
             Column(
                 modifier = Modifier
                     .fillMaxSize()
@@ -80,9 +79,11 @@ fun RegistrationScreen(
             }
         }
 
-        if ((windowSize == WindowWidthSizeClass.Expanded && configuration.orientation == Configuration.ORIENTATION_PORTRAIT)
-            || configuration.orientation == Configuration.ORIENTATION_LANDSCAPE
-        ) {
+        if (uiLayout == UiLayout.PORTRAIT_EXPANDED
+            || uiLayout == UiLayout.LANDSCAPE_SMALL
+            || uiLayout == UiLayout.LANDSCAPE_MEDIUM
+            || uiLayout == UiLayout.LANDSCAPE_EXPANDED)
+            {
             Row(
                 modifier = Modifier
                     .fillMaxSize()
@@ -326,21 +327,21 @@ fun CheckboxesAndButton(
 
 }
 
-@Preview(showBackground = true, device = "spec:width=411dp,height=891dp")
+@Preview(showBackground = true, device = "spec:width=411dp,height=891dp", uiMode = Configuration.ORIENTATION_PORTRAIT)
 @Composable
-fun DefaultPreview() {
+fun RegisterPortraitSmallPreview() {
     AppTheme {
         RegistrationScreen(
             RegistrationScreenState(),
             { _, _ -> {} },
             { _, _ -> {} },
             { _ -> {} },
-            windowSize = WindowWidthSizeClass.Compact
+            uiLayout = UiLayout.PORTRAIT_SMALL
         )
     }
 }
 
-@Preview(showBackground = true, widthDp = 600, heightDp = 300)
+@Preview(showBackground = true, widthDp = 600, heightDp = 300, uiMode = Configuration.ORIENTATION_LANDSCAPE)
 @Composable
 fun RegisterLandscapeSmallPreview() {
     AppTheme {
@@ -349,21 +350,35 @@ fun RegisterLandscapeSmallPreview() {
             { _, _ -> {} },
             { _, _ -> {} },
             { _ -> {} },
-            windowSize = WindowWidthSizeClass.Compact
+            uiLayout = UiLayout.LANDSCAPE_SMALL
         )
     }
 }
 
-@Preview(showBackground = true, widthDp = 1000, heightDp = 480)
+@Preview(showBackground = true, device = "spec:width=1280dp,height=800dp,dpi=240", uiMode = Configuration.ORIENTATION_PORTRAIT)
 @Composable
-fun RegisterExpandedPreview() {
+fun RegisterExpandedPortraitPreview() {
     AppTheme {
         RegistrationScreen(
             RegistrationScreenState(),
             { _, _ -> {} },
             { _, _ -> {} },
             { _ -> {} },
-            windowSize = WindowWidthSizeClass.Expanded
+            uiLayout = UiLayout.PORTRAIT_EXPANDED
+        )
+    }
+}
+
+@Preview(showBackground = true, device = "spec:width=1280dp,height=800dp,dpi=240", uiMode = Configuration.ORIENTATION_LANDSCAPE)
+@Composable
+fun RegisterExpandedLandscapePreview() {
+    AppTheme {
+        RegistrationScreen(
+            RegistrationScreenState(),
+            { _, _ -> {} },
+            { _, _ -> {} },
+            { _ -> {} },
+            uiLayout = UiLayout.LANDSCAPE_MEDIUM
         )
     }
 }
