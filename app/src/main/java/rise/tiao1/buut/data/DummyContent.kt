@@ -1,13 +1,11 @@
 package rise.tiao1.buut.data
 
-import android.util.Log
 import rise.tiao1.buut.data.remote.booking.BatteryDTO
 import rise.tiao1.buut.data.remote.booking.BoatDTO
 import rise.tiao1.buut.data.remote.booking.BookingDTO
 import rise.tiao1.buut.data.remote.booking.TimeSlotDTO
 import rise.tiao1.buut.data.remote.user.RemoteUser
 import rise.tiao1.buut.utils.toApiDateString
-import rise.tiao1.buut.utils.toLocalDateTimeFromApiString
 import java.time.LocalDate
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter

@@ -8,6 +8,7 @@ import org.junit.Test
 import rise.tiao1.buut.data.DummyContent
 import rise.tiao1.buut.data.repositories.BookingRepository
 import rise.tiao1.buut.domain.booking.Booking
+import rise.tiao1.buut.domain.booking.toBooking
 
 
 const val USER_ID_WITH_BOOKINGS = "auth0|6713adbf2d2a7c11375ac64c"
@@ -30,7 +31,7 @@ class GetBookingsUseCaseTest {
     @Test
     fun getBookings_IsReturningBookingsSortedByDateWhenUserHasBookings() = scope.runTest {
         val bookings: List<Booking> = useCase(USER_ID_WITH_BOOKINGS)
-        val sortedBookings = DummyContent.getDummyBookings(USER_ID_WITH_BOOKINGS).sortedBy { it.date }
+        val sortedBookings = bookings.sortedBy { it.date }
         assert(bookings == sortedBookings)
     }
 

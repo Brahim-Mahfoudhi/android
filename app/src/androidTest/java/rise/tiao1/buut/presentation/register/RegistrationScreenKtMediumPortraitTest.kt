@@ -1,6 +1,5 @@
 package rise.tiao1.buut.presentation.register
 
-import androidx.compose.material3.windowsizeclass.WindowWidthSizeClass
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
@@ -35,6 +34,7 @@ import rise.tiao1.buut.presentation.login.LoginScreenState
 import rise.tiao1.buut.utils.InputKeys
 import rise.tiao1.buut.utils.NavigationKeys
 import rise.tiao1.buut.utils.StreetType
+import rise.tiao1.buut.utils.UiLayout
 import rise.tiao1.buut.utils.UiText
 
 
@@ -42,7 +42,7 @@ class RegistrationScreenKtMediumPortraitTest{
     val startOrientation = ScreenOrientation.PORTRAIT
     val updatedOrientation = ScreenOrientation.LANDSCAPE
 
-    val screenSize = WindowWidthSizeClass.Medium
+    val uiLayout = UiLayout.PORTRAIT_MEDIUM
 
     @get:Rule
     val rule: ComposeContentTestRule =
@@ -84,7 +84,7 @@ class RegistrationScreenKtMediumPortraitTest{
                 onValueChanged = { _, _ -> },
                 onCheckedChanged = { _, _ -> },
                 onValidate = { },
-                windowSize = screenSize
+                uiLayout = uiLayout
             )
         }
 
@@ -113,7 +113,7 @@ class RegistrationScreenKtMediumPortraitTest{
                 onValueChanged = { _, _ -> },
                 onCheckedChanged = { _, _ -> },
                 onValidate = { },
-                windowSize = screenSize
+                uiLayout = uiLayout
             )
         }
         streetInput.performClick()
@@ -134,7 +134,7 @@ class RegistrationScreenKtMediumPortraitTest{
                                  },
                 onCheckedChanged = { _, _ -> },
                 onValidate = { },
-                windowSize = screenSize
+                uiLayout = uiLayout
             )
         }
 
@@ -155,7 +155,7 @@ class RegistrationScreenKtMediumPortraitTest{
                 },
                 onCheckedChanged = { _, _ -> },
                 onValidate = { },
-                windowSize = screenSize
+                uiLayout = uiLayout
             )
         }
 
@@ -178,7 +178,7 @@ class RegistrationScreenKtMediumPortraitTest{
                 },
                 onCheckedChanged = { _, _ -> },
                 onValidate = { },
-                windowSize = screenSize
+                uiLayout = uiLayout
             )
         }
 
@@ -199,7 +199,7 @@ class RegistrationScreenKtMediumPortraitTest{
                 },
                 onCheckedChanged = { _, _ -> },
                 onValidate = { },
-                windowSize = screenSize
+                uiLayout = uiLayout
             )
         }
 
@@ -222,7 +222,7 @@ class RegistrationScreenKtMediumPortraitTest{
                 },
                 onCheckedChanged = { _, _ -> },
                 onValidate = { },
-                windowSize = screenSize
+                uiLayout = uiLayout
             )
         }
         streetInput.performClick()
@@ -243,7 +243,7 @@ class RegistrationScreenKtMediumPortraitTest{
                 },
                 onCheckedChanged = { _, _ -> },
                 onValidate = { },
-                windowSize = screenSize
+                uiLayout = uiLayout
             )
         }
         streetInput.performClick()
@@ -266,7 +266,7 @@ class RegistrationScreenKtMediumPortraitTest{
                 },
                 onCheckedChanged = { _, _ -> },
                 onValidate = { },
-                windowSize = screenSize
+                uiLayout = uiLayout
             )
         }
         houseNumberInput.performTextInput("123")
@@ -286,7 +286,7 @@ class RegistrationScreenKtMediumPortraitTest{
                 },
                 onCheckedChanged = { _, _ -> },
                 onValidate = { },
-                windowSize = screenSize
+                uiLayout = uiLayout
             )
         }
         houseNumberInput.performTextInput("123")
@@ -309,7 +309,7 @@ class RegistrationScreenKtMediumPortraitTest{
                 },
                 onCheckedChanged = { _, _ -> },
                 onValidate = { },
-                windowSize = screenSize
+                uiLayout = uiLayout
             )
         }
         boxLabelInput.performTextInput("4")
@@ -329,7 +329,7 @@ class RegistrationScreenKtMediumPortraitTest{
                 },
                 onCheckedChanged = { _, _ -> },
                 onValidate = { },
-                windowSize = screenSize
+                uiLayout = uiLayout
             )
         }
         boxLabelInput.performTextInput("4")
@@ -351,7 +351,7 @@ class RegistrationScreenKtMediumPortraitTest{
                 },
                 onCheckedChanged = { _, _ -> },
                 onValidate = { },
-                windowSize = screenSize
+                uiLayout = uiLayout
             )
         }
         emailInput.performTextInput("buut@buut.buut")
@@ -371,7 +371,7 @@ class RegistrationScreenKtMediumPortraitTest{
                 },
                 onCheckedChanged = { _, _ -> },
                 onValidate = { },
-                windowSize = screenSize
+                uiLayout = uiLayout
             )
         }
         emailInput.performTextInput("buut@buut.buut")
@@ -393,7 +393,7 @@ class RegistrationScreenKtMediumPortraitTest{
                 },
                 onCheckedChanged = { _, _ -> },
                 onValidate = { },
-                windowSize = screenSize
+                uiLayout = uiLayout
             )
         }
         phoneInput.performTextInput("0612345678")
@@ -413,7 +413,7 @@ class RegistrationScreenKtMediumPortraitTest{
                 },
                 onCheckedChanged = { _, _ -> },
                 onValidate = { },
-                windowSize = screenSize
+                uiLayout = uiLayout
             )
         }
         phoneInput.performTextInput("0612345678")
@@ -435,7 +435,7 @@ class RegistrationScreenKtMediumPortraitTest{
                 },
                 onCheckedChanged = { _, _ -> },
                 onValidate = { },
-                windowSize = screenSize
+                uiLayout = uiLayout
             )
         }
         passwordInput.performTextInput("TestPassword")
@@ -455,7 +455,7 @@ class RegistrationScreenKtMediumPortraitTest{
                 },
                 onCheckedChanged = { _, _ -> },
                 onValidate = { },
-                windowSize = screenSize
+                uiLayout = uiLayout
             )
         }
         passwordInput.performTextInput("TestPassword")
@@ -477,7 +477,7 @@ class RegistrationScreenKtMediumPortraitTest{
                 },
                 onCheckedChanged = { _, _ -> },
                 onValidate = { },
-                windowSize = screenSize)
+                uiLayout = uiLayout)
 
             }
         confirmPasswordInput.performTextInput("TestPassword")
@@ -497,7 +497,7 @@ class RegistrationScreenKtMediumPortraitTest{
                 },
                 onCheckedChanged = { _, _ -> },
                 onValidate = { },
-                windowSize = screenSize)
+                uiLayout = uiLayout)
 
         }
         confirmPasswordInput.performTextInput("TestPassword")
@@ -519,7 +519,7 @@ class RegistrationScreenKtMediumPortraitTest{
                     }
                 },
                 onValidate = { },
-                windowSize = screenSize
+                uiLayout = uiLayout
             )
         }
         termsInput.performClick()
@@ -539,7 +539,7 @@ class RegistrationScreenKtMediumPortraitTest{
                     }
                 },
                 onValidate = { },
-                windowSize = screenSize
+                uiLayout = uiLayout
             )
         }
         termsInput.performClick()
@@ -561,7 +561,7 @@ class RegistrationScreenKtMediumPortraitTest{
                     }
                 },
                 onValidate = {},
-                windowSize = screenSize
+                uiLayout = uiLayout
             )
         }
         privacyInput.performClick()
@@ -581,7 +581,7 @@ class RegistrationScreenKtMediumPortraitTest{
                     }
                 },
                 onValidate = {},
-                windowSize = screenSize
+                uiLayout = uiLayout
             )
         }
         privacyInput.performClick()
@@ -598,7 +598,7 @@ class RegistrationScreenKtMediumPortraitTest{
                 onValueChanged = { _, _ -> },
                 onCheckedChanged = { _, _ -> },
                 onValidate = {},
-                windowSize = screenSize
+                uiLayout = uiLayout
             )
         }
         rule.onNodeWithText(context.getString(R.string.first_name_is_blank_error)).assertIsDisplayed()
@@ -612,7 +612,7 @@ class RegistrationScreenKtMediumPortraitTest{
                 onValueChanged = { _, _ -> },
                 onCheckedChanged = { _, _ -> },
                 onValidate = {},
-                windowSize = screenSize
+                uiLayout = uiLayout
             )
         }
         rule.onNodeWithText(context.getString(R.string.last_name_is_blank_error)).assertIsDisplayed()
@@ -626,7 +626,7 @@ class RegistrationScreenKtMediumPortraitTest{
                 onValueChanged = { _, _ -> },
                 onCheckedChanged = { _, _ -> },
                 onValidate = {},
-                windowSize = screenSize
+                uiLayout = uiLayout
             )
         }
         rule.onNodeWithText(context.getString(R.string.street_is_blank_error)).assertIsDisplayed()
@@ -640,7 +640,7 @@ class RegistrationScreenKtMediumPortraitTest{
                 onValueChanged = { _, _ -> },
                 onCheckedChanged = { _, _ -> },
                 onValidate = {},
-                windowSize = screenSize
+                uiLayout = uiLayout
             )
         }
         rule.onNodeWithText(context.getString(R.string.invalid_house_number_error, LOWEST_POSSIBLE_HOUSE_NUMBER)).assertIsDisplayed()
@@ -655,7 +655,7 @@ class RegistrationScreenKtMediumPortraitTest{
                 onValueChanged = { _, _ -> },
                 onCheckedChanged = { _, _ -> },
                 onValidate = {},
-                windowSize = screenSize
+                uiLayout = uiLayout
             )
         }
         rule.onNodeWithText(context.getString(R.string.email_is_blank_error)).assertIsDisplayed()
@@ -669,7 +669,7 @@ class RegistrationScreenKtMediumPortraitTest{
                 onValueChanged = { _, _ -> },
                 onCheckedChanged = { _, _ -> },
                 onValidate = {},
-                windowSize = screenSize
+                uiLayout = uiLayout
             )
         }
         rule.onNodeWithText(context.getString(R.string.invalid_phone_error)).assertIsDisplayed()
@@ -683,7 +683,7 @@ class RegistrationScreenKtMediumPortraitTest{
                 onValueChanged = { _, _ -> },
                 onCheckedChanged = { _, _ -> },
                 onValidate = {},
-                windowSize = screenSize
+                uiLayout = uiLayout
             )
         }
         rule.onNodeWithText(context.getString(R.string.password_not_valid_error)).assertIsDisplayed()
@@ -697,7 +697,7 @@ class RegistrationScreenKtMediumPortraitTest{
                 onValueChanged = { _, _ -> },
                 onCheckedChanged = { _, _ -> },
                 onValidate = {},
-                windowSize = screenSize
+                uiLayout = uiLayout
             )
         }
         rule.onNodeWithText(context.getString(R.string.repeated_password_error)).assertIsDisplayed()
@@ -711,7 +711,7 @@ class RegistrationScreenKtMediumPortraitTest{
                 onValueChanged = { _, _ -> },
                 onCheckedChanged = { _, _ -> },
                 onValidate = {},
-                windowSize = screenSize
+                uiLayout = uiLayout
             )
         }
         rule.onNodeWithText(context.getString(R.string.terms_not_accepted_error)).assertIsDisplayed()
@@ -725,7 +725,7 @@ class RegistrationScreenKtMediumPortraitTest{
                 onValueChanged = { _, _ -> },
                 onCheckedChanged = { _, _ -> },
                 onValidate = {},
-                windowSize = screenSize
+                uiLayout = uiLayout
             )
         }
 
@@ -740,7 +740,7 @@ class RegistrationScreenKtMediumPortraitTest{
                 onValueChanged = { _, _ -> },
                 onCheckedChanged = { _, _ -> },
                 onValidate = {},
-                windowSize = screenSize
+                uiLayout = uiLayout
             )
         }
         rule.onNodeWithText(context.getString(R.string.minimum_age_error, MINIMUM_AGE)).assertIsDisplayed()
@@ -754,7 +754,7 @@ class RegistrationScreenKtMediumPortraitTest{
                 onValueChanged = { _, _ -> },
                 onCheckedChanged = { _, _ -> },
                 onValidate = {},
-                windowSize = screenSize
+                uiLayout = uiLayout
             )
         }
         errorMessage.assertIsDisplayed()
@@ -768,7 +768,7 @@ class RegistrationScreenKtMediumPortraitTest{
                 onValueChanged = { _, _ -> },
                 onCheckedChanged = { _, _ -> },
                 onValidate = {},
-                windowSize = screenSize,
+                uiLayout = uiLayout,
                 onSubmitClick = {},
                 onRegistrationSuccessDismissed = {  }
             )
@@ -787,7 +787,7 @@ class RegistrationScreenKtMediumPortraitTest{
                     onValueChanged = { _, _ -> },
                     onCheckedChanged = { _, _ -> },
                     onValidate = {},
-                    windowSize = screenSize,
+                    uiLayout = uiLayout,
                     onSubmitClick = {registrationSuccess = true},
                     onRegistrationSuccessDismissed = {  }
                 )
@@ -808,7 +808,7 @@ class RegistrationScreenKtMediumPortraitTest{
                     onValueChanged = { _, _ -> },
                     onCheckedChanged = { _, _ -> },
                     onValidate = {},
-                    windowSize = screenSize,
+                    uiLayout = uiLayout,
                     onSubmitClick = {apiError = "TestError"},
                     onRegistrationSuccessDismissed = {  }
                 )
@@ -834,7 +834,7 @@ class RegistrationScreenKtMediumPortraitTest{
                         login = { },
                         onRegisterClick = { },
                         onValidate = { _, _ -> },
-                        windowSize = WindowWidthSizeClass.Compact
+                        uiLayout = uiLayout
                     ) }
                     composable(NavigationKeys.Route.REGISTER) { RegistrationScreen(
                         state = state,
@@ -842,7 +842,7 @@ class RegistrationScreenKtMediumPortraitTest{
                         onCheckedChanged = { _,_ ->  },
                         onValidate = {_ ->  },
                         onSubmitClick = {},
-                        windowSize = screenSize,
+                        uiLayout = uiLayout,
                         onRegistrationSuccessDismissed = {
                             registrationSuccess = false
                             navController.navigate(NavigationKeys.Route.HOME)}

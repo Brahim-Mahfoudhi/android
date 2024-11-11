@@ -1,8 +1,7 @@
 package rise.tiao1.buut.presentation.login
 
 import android.content.res.Configuration
-import androidx.compose.foundation.gestures.Orientation
-import androidx.compose.foundation.gestures.scrollable
+
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -16,11 +15,9 @@ import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material3.windowsizeclass.WindowWidthSizeClass
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
@@ -45,20 +42,17 @@ fun LoginScreen(
     login: () -> Unit,
     onRegisterClick: () -> Unit,
     onValidate: (input: String, field: String) -> Unit,
-    windowSize: WindowWidthSizeClass = WindowWidthSizeClass.Compact,
+    uiLayout: UiLayout
 ) {
 
-    val configuration = LocalConfiguration.current
     val scrollState = rememberScrollState()
 
     Box()
     {
         MainBackgroundImage()
 
-        if (
-            windowSize == WindowWidthSizeClass.Medium
-            && configuration.orientation == Configuration.ORIENTATION_LANDSCAPE
-        ) {
+        if (uiLayout == UiLayout.LANDSCAPE_SMALL || uiLayout == UiLayout.LANDSCAPE_MEDIUM)
+            {
             Row(
                 modifier = Modifier.fillMaxSize(),
                 horizontalArrangement = Arrangement.Center,
@@ -152,9 +146,9 @@ fun LoginScreenContent(
 }
 
 
-@Preview(showBackground = true)
+@Preview(showBackground = true, device = "spec:width=411dp,height=891dp", uiMode = Configuration.ORIENTATION_PORTRAIT)
 @Composable
-fun DefaultPreview() {
+fun LoginPortraitSmallPreview() {
     AppTheme {
         LoginScreen(
             LoginScreenState(),
@@ -162,12 +156,12 @@ fun DefaultPreview() {
             {},
             {},
             { _, _ -> },
-            windowSize = WindowWidthSizeClass.Compact
+            uiLayout = UiLayout.PORTRAIT_SMALL
         )
     }
 }
 
-@Preview(showBackground = true, widthDp = 600, heightDp = 300)
+@Preview(showBackground = true, device = "spec:width=411dp,height=891dp", uiMode = Configuration.ORIENTATION_LANDSCAPE)
 @Composable
 fun LoginLandscapeSmallPreview() {
     AppTheme {
@@ -177,16 +171,14 @@ fun LoginLandscapeSmallPreview() {
             {},
             {},
             { _, _ -> },
-            windowSize = WindowWidthSizeClass.Medium
+            uiLayout = UiLayout.LANDSCAPE_SMALL
         )
     }
 }
 
-
-
-@Preview(showBackground = true, widthDp = 1000)
+@Preview(showBackground = true, device = "spec:width=1280dp,height=800dp,dpi=240", uiMode = Configuration.ORIENTATION_PORTRAIT)
 @Composable
-fun LoginExpandedPreview() {
+fun LoginExpandedPortraitPreview() {
     AppTheme {
         LoginScreen(
             LoginScreenState(),
@@ -194,15 +186,22 @@ fun LoginExpandedPreview() {
             {},
             {},
             { _, _ -> },
-            windowSize = WindowWidthSizeClass.Expanded
+            uiLayout = UiLayout.PORTRAIT_EXPANDED
         )
     }
 }
 
-
-
-
-
-
-
-
+@Preview(showBackground = true, device = "spec:width=1280dp,height=800dp,dpi=240", uiMode = Configuration.ORIENTATION_LANDSCAPE)
+@Composable
+fun LoginExpandedLandscapePreview() {
+    AppTheme {
+        LoginScreen(
+            LoginScreenState(),
+            { _, _ -> },
+            {},
+            {},
+            { _, _ -> },
+            uiLayout = UiLayout.LANDSCAPE_EXPANDED
+        )
+    }
+}

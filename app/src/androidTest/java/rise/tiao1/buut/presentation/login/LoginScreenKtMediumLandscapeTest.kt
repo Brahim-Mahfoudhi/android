@@ -1,6 +1,6 @@
 package rise.tiao1.buut.presentation.login
 
-import androidx.compose.material3.windowsizeclass.WindowWidthSizeClass
+
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
@@ -8,6 +8,7 @@ import androidx.compose.ui.test.assertIsDisplayed
 import androidx.compose.ui.test.junit4.ComposeContentTestRule
 import androidx.compose.ui.test.junit4.createComposeRule
 import androidx.compose.ui.test.onNodeWithContentDescription
+import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.performClick
 import androidx.compose.ui.test.performTextInput
@@ -29,12 +30,13 @@ import rise.tiao1.buut.presentation.register.RegistrationScreen
 import rise.tiao1.buut.presentation.register.RegistrationScreenState
 import rise.tiao1.buut.utils.InputKeys
 import rise.tiao1.buut.utils.NavigationKeys
+import rise.tiao1.buut.utils.UiLayout
 import rise.tiao1.buut.utils.UiText
 
 class LoginScreenKtMediumLandscapeTest {
     val startOrientation = ScreenOrientation.LANDSCAPE
     val updatedOrientation = ScreenOrientation.PORTRAIT
-    val windowSize = WindowWidthSizeClass.Medium
+    val uiLayout = UiLayout.LANDSCAPE_MEDIUM
 
     @get:Rule
     val rule: ComposeContentTestRule =
@@ -43,7 +45,7 @@ class LoginScreenKtMediumLandscapeTest {
     val screenOrientationRule: ScreenOrientationRule = ScreenOrientationRule(startOrientation)
     val context = InstrumentationRegistry.getInstrumentation().targetContext
     var navControllerState by mutableStateOf<NavController?>(null)
-    val logo = rule.onNodeWithContentDescription("BuutLogo")
+    val logo = rule.onNodeWithTag("BuutLogo")
     val emailInput = rule.onNodeWithText(context.getString(R.string.email_label))
     val passwordInput = rule.onNodeWithText(context.getString(R.string.password))
     val noAccountLabel = rule.onNodeWithText(context.getString(R.string.no_account_yet))
@@ -65,7 +67,7 @@ class LoginScreenKtMediumLandscapeTest {
                 login = { },
                 onRegisterClick = { },
                 onValidate = { _, _ -> },
-                windowSize = windowSize
+                uiLayout = uiLayout
             )
         }
 
@@ -91,7 +93,7 @@ class LoginScreenKtMediumLandscapeTest {
                 login = { },
                 onRegisterClick = { },
                 onValidate = { _, _ -> },
-                windowSize = windowSize
+                uiLayout = uiLayout
             )
         }
 
@@ -114,7 +116,7 @@ class LoginScreenKtMediumLandscapeTest {
                 login = { },
                 onRegisterClick = { },
                 onValidate = { _, _ -> },
-                windowSize = windowSize
+                uiLayout = uiLayout
             )
         }
 
@@ -139,7 +141,7 @@ class LoginScreenKtMediumLandscapeTest {
                 login = { },
                 onRegisterClick = { },
                 onValidate = { _, _ -> },
-                windowSize = windowSize
+                uiLayout = uiLayout
             )
         }
         passwordInput.performTextInput("Password1!")
@@ -160,7 +162,7 @@ class LoginScreenKtMediumLandscapeTest {
                 login = { },
                 onRegisterClick = { },
                 onValidate = { _, _ -> },
-                windowSize = windowSize
+                uiLayout = uiLayout
             )
         }
         passwordInput.performTextInput("Password1!")
@@ -180,7 +182,7 @@ class LoginScreenKtMediumLandscapeTest {
                 login = { loginButtonClicked = true },
                 onRegisterClick = { },
                 onValidate = { _, _ -> },
-                windowSize = windowSize
+                uiLayout = uiLayout
             )
         }
 
@@ -200,7 +202,7 @@ class LoginScreenKtMediumLandscapeTest {
                 login = { },
                 onRegisterClick = { },
                 onValidate = { _, _ -> },
-                windowSize = windowSize
+                uiLayout = uiLayout
             )
         }
 
@@ -216,7 +218,7 @@ class LoginScreenKtMediumLandscapeTest {
                 login = { },
                 onRegisterClick = { },
                 onValidate = { _, _ -> },
-                windowSize = windowSize
+                uiLayout = uiLayout
             )
         }
 
@@ -232,7 +234,7 @@ class LoginScreenKtMediumLandscapeTest {
                 login = { },
                 onRegisterClick = { },
                 onValidate = { _, _ -> },
-                windowSize = windowSize
+                uiLayout = uiLayout
             )
         }
 
@@ -251,7 +253,7 @@ class LoginScreenKtMediumLandscapeTest {
                     login = { },
                     onRegisterClick = {navController.navigate(NavigationKeys.Route.REGISTER) },
                     onValidate = { _, _ -> },
-                    windowSize = windowSize
+                    uiLayout = uiLayout
                 ) }
                 composable(NavigationKeys.Route.REGISTER) { RegistrationScreen(
                     state = RegistrationScreenState(),
@@ -259,7 +261,7 @@ class LoginScreenKtMediumLandscapeTest {
                     onCheckedChanged = { _, _ -> },
                     onValidate = { _ -> },
                     onSubmitClick = {},
-                    windowSize = windowSize,
+                    uiLayout = uiLayout,
                 ) }
             }
         }
