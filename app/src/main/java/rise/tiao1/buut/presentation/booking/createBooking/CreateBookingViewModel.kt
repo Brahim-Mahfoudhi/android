@@ -8,7 +8,9 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.launch
+import rise.tiao1.buut.data.di.MainDispatcher
 import rise.tiao1.buut.domain.booking.useCases.ConfiguredSelectableDates
 import rise.tiao1.buut.domain.booking.useCases.GetSelectableDatesUseCase
 import java.time.LocalDate
@@ -18,7 +20,8 @@ import javax.inject.Inject
 
 @HiltViewModel
 class CreateBookingViewModel @Inject constructor(
-    private val getSelectableDatesUseCase: GetSelectableDatesUseCase
+    private val getSelectableDatesUseCase: GetSelectableDatesUseCase,
+    @MainDispatcher private val dispatcher: CoroutineDispatcher
 ) : ViewModel() {
     @OptIn(ExperimentalMaterial3Api::class)
     private val _state = mutableStateOf(CreateBookingScreenState())
@@ -37,7 +40,7 @@ class CreateBookingViewModel @Inject constructor(
     @OptIn(ExperimentalMaterial3Api::class)
     fun getSelectableDates(input: Long) {
         _state.value = state.value.copy(datesAreLoading = true)
-        viewModelScope.launch {
+        viewModelScope.launch (dispatcher){
             try {
                 val selectableDates =  getSelectableDatesUseCase(input)
 

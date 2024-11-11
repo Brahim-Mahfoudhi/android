@@ -8,7 +8,9 @@ import rise.tiao1.buut.data.remote.booking.TimeSlotDTO
 import rise.tiao1.buut.data.remote.user.RemoteUser
 import rise.tiao1.buut.utils.toApiDateString
 import rise.tiao1.buut.utils.toLocalDateTimeFromApiString
+import java.time.LocalDate
 import java.time.LocalDateTime
+import java.time.format.DateTimeFormatter
 
 const val USER_ID_WITH_BOOKINGS = "auth0|6713adbf2d2a7c11375ac64c"
 
@@ -75,10 +77,8 @@ object DummyContent {
     }
 
     fun getDummyFreeTimeSlots(startDate: String, endDate: String) : List<TimeSlotDTO> {
-        Log.d("startString", "hier komt ie")
-        val start = startDate.toLocalDateTimeFromApiString()
-        Log.d("startString", "$start")
-        val end = endDate.toLocalDateTimeFromApiString()
+        val start = LocalDate.parse(startDate, DateTimeFormatter.ISO_DATE).atStartOfDay()
+        val end = LocalDate.parse(endDate, DateTimeFormatter.ISO_DATE).atStartOfDay()
         var result = mutableListOf<TimeSlotDTO>()
 
         var current = start

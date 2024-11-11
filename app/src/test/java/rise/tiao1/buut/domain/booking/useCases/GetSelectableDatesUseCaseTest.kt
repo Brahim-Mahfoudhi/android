@@ -26,13 +26,12 @@ class GetSelectableDatesUseCaseTest {
         bookingRepository = bookingRepository
     )
 
-    //private val currentMonth = LocalDate.now().atStartOfDay(ZoneId.systemDefault()).toInstant().toEpochMilli()
-    private val testMonth = LocalDate.now().plusMonths(1).atStartOfDay(ZoneId.systemDefault()).toInstant().toEpochMilli()
 
     @OptIn(ExperimentalMaterial3Api::class)
     @Test
-    fun getSelectableDates_IsReturningSelectableDates() =
+    fun getSelectableDates_ReturnsSelectableDates() =
         scope.runTest {
+            val testMonth = LocalDate.now().plusMonths(1).atStartOfDay(ZoneId.systemDefault()).toInstant().toEpochMilli()
             val dateInRange = LocalDate.now().plusDays(3).plusMonths(1).atStartOfDay(ZoneId.systemDefault()).toInstant().toEpochMilli()
             val selectableDates = useCase(testMonth)
             assert(selectableDates.isSelectableDate(dateInRange))

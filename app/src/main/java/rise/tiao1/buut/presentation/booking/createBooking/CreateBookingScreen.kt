@@ -25,12 +25,14 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.scale
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import rise.tiao1.buut.R
+import rise.tiao1.buut.presentation.components.ActionErrorContainer
 import rise.tiao1.buut.presentation.components.InfoContainer
 import rise.tiao1.buut.presentation.components.LoadingIndicator
 import rise.tiao1.buut.ui.theme.AppTheme
@@ -79,52 +81,59 @@ fun CreateBookingScreen(
         },
     ) { innerPadding ->
         Box(modifier = Modifier.padding(innerPadding)) {
-            when (uiLayout) {
-                PORTRAIT_SMALL, PORTRAIT_MEDIUM, PORTRAIT_EXPANDED -> {
-                    Column(
-                        modifier = Modifier
-                            .fillMaxSize()
-                            .padding(dimensionResource(R.dimen.padding_medium))
-                    ) {
+            if (state.datesAreLoading) {
+                LoadingIndicator()
+            } else if (!state.getFreeDatesError.isNullOrBlank()) {
+                ActionErrorContainer(state.getFreeDatesError)
+            } else {
+                when (uiLayout) {
+
+                    PORTRAIT_SMALL, PORTRAIT_MEDIUM, PORTRAIT_EXPANDED -> {
                         Column(
                             modifier = Modifier
-                                .weight(0.7f)
                                 .fillMaxSize()
+                                .padding(dimensionResource(R.dimen.padding_medium))
                         ) {
-                            DatePicker(state, onReadyForUpdate, onMonthChanged)
-                        }
-                        Column(
-                            modifier = Modifier
-                                .weight(0.3f)
-                                .fillMaxSize()
-                        ) {
-                            TimeSlots()
+                            Column(
+                                modifier = Modifier
+                                    .weight(0.7f)
+                                    .fillMaxSize()
+                            ) {
+                                DatePicker(state, onReadyForUpdate, onMonthChanged)
+                            }
+                            Column(
+                                modifier = Modifier
+                                    .weight(0.3f)
+                                    .fillMaxSize()
+                            ) {
+                                TimeSlots()
+                            }
                         }
                     }
-                }
 
-                LANDSCAPE_SMALL, LANDSCAPE_MEDIUM, LANDSCAPE_EXPANDED -> {
-                    Row(
-                        modifier = Modifier
-                            .fillMaxSize()
-                            .padding(dimensionResource(R.dimen.padding_medium))
-
-                    ) {
-                        Column(
+                    LANDSCAPE_SMALL, LANDSCAPE_MEDIUM, LANDSCAPE_EXPANDED -> {
+                        Row(
                             modifier = Modifier
-                                .weight(0.7f)
                                 .fillMaxSize()
-                                .verticalScroll(rememberScrollState())
+                                .padding(dimensionResource(R.dimen.padding_medium))
+
                         ) {
-                            DatePicker(state, onReadyForUpdate, onMonthChanged)
-                        }
-                        Column(
-                            modifier = Modifier
-                                .weight(0.3f)
-                                .fillMaxSize(),
-                            verticalArrangement = Arrangement.Center
-                        ) {
-                            TimeSlots()
+                            Column(
+                                modifier = Modifier
+                                    .weight(0.7f)
+                                    .fillMaxSize()
+                                    .verticalScroll(rememberScrollState())
+                            ) {
+                                DatePicker(state, onReadyForUpdate, onMonthChanged)
+                            }
+                            Column(
+                                modifier = Modifier
+                                    .weight(0.3f)
+                                    .fillMaxSize(),
+                                verticalArrangement = Arrangement.Center
+                            ) {
+                                TimeSlots()
+                            }
                         }
                     }
                 }
@@ -141,19 +150,17 @@ fun CreateBookingScreen(
 fun DatePicker(
     state: CreateBookingScreenState,
     onReadyForUpdate: () -> Unit,
-    onMonthChanged: (input: Long) -> Unit
+    onMonthChanged: (input: Long) -> Unit,
 ) {
 
-    if (state.datesAreLoading) {
-        LoadingIndicator()
-    } else {
+
 
         DatePicker(
             state = state.datePickerState,
             title = null,
             headline = null,
             showModeToggle = false,
-            modifier = Modifier.padding(0.dp)
+            modifier = Modifier.padding(0.dp).testTag(stringResource(R.string.calendar))
         )
 
         LaunchedEffect(state.datePickerState.displayedMonthMillis) {
@@ -162,7 +169,7 @@ fun DatePicker(
             else
                 onReadyForUpdate()
         }
-    }
+
 }
 
 @Composable

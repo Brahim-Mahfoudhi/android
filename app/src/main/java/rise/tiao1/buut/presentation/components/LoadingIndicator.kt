@@ -7,9 +7,10 @@ import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.semantics.semantics
-import androidx.compose.ui.semantics.testTag
+import androidx.compose.ui.platform.testTag
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import rise.tiao1.buut.R
 
 @Composable
 fun LoadingIndicator() {
@@ -21,7 +22,7 @@ fun LoadingIndicator() {
             strokeWidth = 3.dp,
             modifier = Modifier
                 .size(60.dp)
-                .semantics { this.testTag = "LoadingIndicator" }
+                .testTag(stringResource(R.string.loading_indicator) )
         )
     }
 }
