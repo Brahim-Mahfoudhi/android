@@ -3,12 +3,13 @@ package rise.tiao1.buut.presentation.booking.createBooking
 import androidx.compose.material3.DatePickerState
 import androidx.compose.material3.DisplayMode
 import androidx.compose.material3.ExperimentalMaterial3Api
+import rise.tiao1.buut.domain.booking.TimeSlot
 import java.time.LocalDate
 import java.util.Locale
 
 data class CreateBookingScreenState @OptIn(ExperimentalMaterial3Api::class) constructor(
 
-    val datePickerState: DatePickerState =DatePickerState(
+    val datePickerState: DatePickerState = DatePickerState(
         initialDisplayMode = DisplayMode.Picker,
         initialSelectedDateMillis = null,
         yearRange = (LocalDate.now().year..LocalDate.now().plusYears(1L).year),
@@ -17,6 +18,7 @@ data class CreateBookingScreenState @OptIn(ExperimentalMaterial3Api::class) cons
     val isUpdated: Boolean = true,
     val datesAreLoading: Boolean = false,
     val getFreeDatesError: String? = "",
-    val selectedDate: LocalDate? = null
+    val timeslotsAreLoading: Boolean = false,
+    val selectableTimeSlots: List<TimeSlot> = emptyList(),
 )
 

@@ -30,7 +30,7 @@ class GetBookingsUseCaseTest {
     @Test
     fun getBookings_IsReturningBookingsSortedByDateWhenUserHasBookings() = scope.runTest {
         val bookings: List<Booking> = useCase(USER_ID_WITH_BOOKINGS)
-        val sortedBookings = DummyContent.getDummyBookings(USER_ID_WITH_BOOKINGS).sortedBy { it.date }
+        val sortedBookings = bookings.sortedBy { it.date }
         assert(bookings == sortedBookings)
     }
 

@@ -55,7 +55,7 @@ fun CreateBookingScreen(
     onReadyForUpdate: () -> Unit,
     onMonthChanged: (input: Long) -> Unit = {},
     navigateUp: () -> Unit = {},
-    onDateSelected: (input: LocalDate?) -> Unit = {},
+    onDateSelected: (input: Long?) -> Unit = {},
     uiLayout: UiLayout
 ) {
     Scaffold(
@@ -156,7 +156,7 @@ fun DatePicker(
     state: CreateBookingScreenState,
     onReadyForUpdate: () -> Unit,
     onMonthChanged: (input: Long) -> Unit,
-    onDateSelected: (Input: LocalDate?) -> Unit = {},
+    onDateSelected: (Input: Long?) -> Unit = {},
 ) {
 
 
@@ -181,10 +181,7 @@ fun DatePicker(
 
     LaunchedEffect(state.datePickerState.selectedDateMillis) {
         if (state.datePickerState.selectedDateMillis != null) {
-            onDateSelected(
-                Instant.ofEpochMilli(state.datePickerState.selectedDateMillis!!)
-                .atZone(ZoneId.systemDefault())
-                .toLocalDate())
+            onDateSelected(state.datePickerState.selectedDateMillis!!)
         } else {
             onDateSelected(null)
         }

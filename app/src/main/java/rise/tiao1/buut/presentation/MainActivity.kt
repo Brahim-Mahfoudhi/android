@@ -122,7 +122,7 @@ class MainActivity : ComponentActivity() {
                         createBookingViewModel.getSelectableDates(input)
                     },
                     navigateUp = {navController.navigateUp()},
-                    onDateSelected = { input: LocalDate? ->
+                    onDateSelected = { input: Long? ->
                         createBookingViewModel.updateSelectedDate(input)
                     },
                     uiLayout = uiLayout
