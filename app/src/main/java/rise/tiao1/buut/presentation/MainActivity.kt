@@ -126,6 +126,15 @@ class MainActivity : ComponentActivity() {
                     onDateSelected = { input: Long? ->
                         createBookingViewModel.updateSelectedDate(input)
                     },
+                    onConfirmBooking = {
+                        createBookingViewModel.onConfirmBooking()
+                    },
+                    onDismissBooking = {
+                        createBookingViewModel.onDismissBooking()
+                    },
+                    onTimeSlotClicked = { input ->
+                        createBookingViewModel.onTimeSlotClicked(input)
+                    },
                     uiLayout = uiLayout
                 )
             }

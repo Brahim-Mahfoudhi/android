@@ -79,4 +79,8 @@
     <string name="info_container">Info container</string>
     <string name="loading_indicator">Loading indicator</string>
     <string name="calendar">Calendar</string>
+    <string name="confirm_booking_modal_header">Confirm Booking</string>
+    <string name="confirm_booking_prompt">Are you sure you want to book this time slot:</string>
+    <string name="confirm">Confirm</string>
+    <string name="cancel">Cancel</string>
 </resources>

@@ -20,5 +20,7 @@ data class CreateBookingScreenState @OptIn(ExperimentalMaterial3Api::class) cons
     val getFreeDatesError: String? = "",
     val timeslotsAreLoading: Boolean = false,
     val selectableTimeSlots: List<TimeSlot> = emptyList(),
+    val confirmationModalOpen: Boolean = false,
+    val selectedTimeSlot: TimeSlot? = null
 )
 

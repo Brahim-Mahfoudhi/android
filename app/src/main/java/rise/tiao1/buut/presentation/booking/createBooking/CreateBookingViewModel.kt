@@ -11,6 +11,7 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.launch
 import rise.tiao1.buut.data.di.MainDispatcher
+import rise.tiao1.buut.domain.booking.TimeSlot
 import rise.tiao1.buut.domain.booking.useCases.GetSelectableDatesUseCase
 import rise.tiao1.buut.domain.booking.useCases.GetSelectableTimeSlotsUseCase
 import java.time.Instant
@@ -97,4 +98,19 @@ class CreateBookingViewModel @Inject constructor(
         }
     }
 
+    @OptIn(ExperimentalMaterial3Api::class)
+    fun onTimeSlotClicked(input: TimeSlot) {
+        _state.value = state.value.copy(selectedTimeSlot = input, confirmationModalOpen = true)
+    }
+
+    @OptIn(ExperimentalMaterial3Api::class)
+    fun onDismissBooking() {
+        _state.value = state.value.copy(selectedTimeSlot = null, confirmationModalOpen = false)
+    }
+
+    @OptIn(ExperimentalMaterial3Api::class)
+    fun onConfirmBooking() {
+        //TODO: POST BOOKING
+        _state.value = state.value.copy(confirmationModalOpen = false)
+    }
 }

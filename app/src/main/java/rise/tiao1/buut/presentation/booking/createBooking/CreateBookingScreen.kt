@@ -5,10 +5,14 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.lazy.LazyRow
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
@@ -24,18 +28,20 @@ import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.scale
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.lifecycle.viewmodel.compose.viewModel
 import rise.tiao1.buut.R
+import rise.tiao1.buut.domain.booking.TimeSlot
 import rise.tiao1.buut.presentation.components.ActionErrorContainer
+import rise.tiao1.buut.presentation.components.BookingConfirmationModal
+import rise.tiao1.buut.presentation.components.ErrorMessageContainer
 import rise.tiao1.buut.presentation.components.InfoContainer
 import rise.tiao1.buut.presentation.components.LoadingIndicator
+import rise.tiao1.buut.presentation.components.TimeSlotComponent
 import rise.tiao1.buut.ui.theme.AppTheme
 import rise.tiao1.buut.utils.UiLayout
 import rise.tiao1.buut.utils.UiLayout.LANDSCAPE_EXPANDED
@@ -44,9 +50,6 @@ import rise.tiao1.buut.utils.UiLayout.LANDSCAPE_SMALL
 import rise.tiao1.buut.utils.UiLayout.PORTRAIT_EXPANDED
 import rise.tiao1.buut.utils.UiLayout.PORTRAIT_MEDIUM
 import rise.tiao1.buut.utils.UiLayout.PORTRAIT_SMALL
-import java.time.Instant
-import java.time.LocalDate
-import java.time.ZoneId
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -56,36 +59,42 @@ fun CreateBookingScreen(
     onMonthChanged: (input: Long) -> Unit = {},
     navigateUp: () -> Unit = {},
     onDateSelected: (input: Long?) -> Unit = {},
+    onConfirmBooking: () -> Unit = {},
+    onDismissBooking: () -> Unit = {},
+    onTimeSlotClicked: (TimeSlot) -> Unit = {},
     uiLayout: UiLayout
 ) {
     Scaffold(
         topBar = {
-                CenterAlignedTopAppBar(
-                    title = {
-                        Image(
-                            modifier = Modifier
-                                .size(dimensionResource(R.dimen.image_size_standard))
-                                .padding(top = dimensionResource(R.dimen.padding_small)),
-                            painter = painterResource(R.drawable.buut_logo),
-                            contentDescription = stringResource(R.string.buut_logo),
+            CenterAlignedTopAppBar(
+                title = {
+                    Image(
+                        modifier = Modifier
+                            .size(dimensionResource(R.dimen.image_size_standard))
+                            .padding(top = dimensionResource(R.dimen.padding_small)),
+                        painter = painterResource(R.drawable.buut_logo),
+                        contentDescription = stringResource(R.string.buut_logo),
+                    )
+                },
+                colors = TopAppBarDefaults.centerAlignedTopAppBarColors(
+                    containerColor = MaterialTheme.colorScheme.inversePrimary
+                ),
+                navigationIcon = {
+                    IconButton(onClick = navigateUp) {
+                        Icon(
+                            imageVector = Icons.AutoMirrored.Filled.ArrowBack,
+                            contentDescription = stringResource(R.string.back_button)
                         )
-                    },
-                    colors = TopAppBarDefaults.centerAlignedTopAppBarColors(
-                        containerColor = MaterialTheme.colorScheme.inversePrimary
-                    ),
-                    navigationIcon = {
-                        IconButton(onClick = navigateUp) {
-                            Icon(
-                                imageVector = Icons.AutoMirrored.Filled.ArrowBack,
-                                contentDescription = stringResource(R.string.back_button)
-                            )
-                        }
                     }
-                )
+                }
+            )
 
         },
     ) { innerPadding ->
         Box(modifier = Modifier.padding(innerPadding)) {
+            if (state.confirmationModalOpen){
+                BookingConfirmationModal(state.selectedTimeSlot, onConfirmBooking, onDismissBooking)
+            }
             if (state.datesAreLoading) {
                 LoadingIndicator()
             } else if (!state.getFreeDatesError.isNullOrBlank()) {
@@ -111,7 +120,7 @@ fun CreateBookingScreen(
                                     .weight(0.3f)
                                     .fillMaxSize()
                             ) {
-                                TimeSlots()
+                                TimeSlots(state, onTimeSlotClicked)
                             }
                         }
                     }
@@ -137,7 +146,7 @@ fun CreateBookingScreen(
                                     .fillMaxSize(),
                                 verticalArrangement = Arrangement.Center
                             ) {
-                                TimeSlots()
+                                TimeSlots(state, onTimeSlotClicked)
                             }
                         }
                     }
@@ -160,24 +169,23 @@ fun DatePicker(
 ) {
 
 
-
-        DatePicker(
-            state = state.datePickerState,
-            title = null,
-            headline = null,
-            showModeToggle = false,
-            modifier = Modifier
-                .padding(0.dp)
-                .testTag(stringResource(R.string.calendar)),
+    DatePicker(
+        state = state.datePickerState,
+        title = null,
+        headline = null,
+        showModeToggle = false,
+        modifier = Modifier
+            .padding(0.dp)
+            .testTag(stringResource(R.string.calendar)),
 
         )
 
-        LaunchedEffect(state.datePickerState.displayedMonthMillis) {
-            if (!state.isUpdated)
-                onMonthChanged(state.datePickerState.displayedMonthMillis)
-            else
-                onReadyForUpdate()
-        }
+    LaunchedEffect(state.datePickerState.displayedMonthMillis) {
+        if (!state.isUpdated)
+            onMonthChanged(state.datePickerState.displayedMonthMillis)
+        else
+            onReadyForUpdate()
+    }
 
     LaunchedEffect(state.datePickerState.selectedDateMillis) {
         if (state.datePickerState.selectedDateMillis != null) {
@@ -190,8 +198,24 @@ fun DatePicker(
 }
 
 @Composable
-fun TimeSlots() {
-    InfoContainer(stringResource(R.string.select_date))
+fun TimeSlots(state: CreateBookingScreenState, onTimeSlotClicked: (TimeSlot) -> Unit = {}) {
+    if (state.timeslotsAreLoading) {
+        LoadingIndicator()
+    } else if (state.getFreeDatesError?.isNotEmpty() == true) {
+        ErrorMessageContainer(state.getFreeDatesError)
+    } else if (state.selectableTimeSlots.isEmpty()) {
+        InfoContainer(stringResource(R.string.select_date))
+    } else {
+        LazyRow(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.spacedBy(8.dp),
+            contentPadding = PaddingValues(horizontal = 16.dp)
+        ) {
+            items(state.selectableTimeSlots) { timeSlot ->
+                TimeSlotComponent(timeSlot, onTimeSlotClicked)
+            }
+        }
+    }
 }
 
 
