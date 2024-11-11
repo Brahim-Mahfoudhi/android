@@ -67,8 +67,8 @@ fun Navigation(
             selectedIcon = Icons.Filled.AddCircle,
             unselectedIcon = Icons.Outlined.AddCircleOutline,
             text = stringResource(R.string.new_booking),
-            pageName = NavigationKeys.Route.RESERVATION,
-            navigateTo = { navigateTo(NavigationKeys.Route.RESERVATION) },
+            pageName = NavigationKeys.Route.CREATE_BOOKING,
+            navigateTo = { navigateTo(NavigationKeys.Route.CREATE_BOOKING) },
         ),
         NavigationItemContent(
             selectedIcon = Icons.AutoMirrored.Filled.Logout,

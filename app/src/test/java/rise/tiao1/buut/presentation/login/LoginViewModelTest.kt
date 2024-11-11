@@ -1,14 +1,10 @@
 package rise.tiao1.buut.presentation.login
 
-import androidx.lifecycle.viewModelScope
-import io.mockk.core.ValueClassSupport.boxedValue
 import io.mockk.every
 import io.mockk.mockk
 import io.mockk.spyk
 import io.mockk.verify
 import kotlinx.coroutines.Dispatchers
-import rise.tiao1.buut.domain.user.validation.ValidateEmail
-import rise.tiao1.buut.domain.user.validation.ValidatePassword
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.StandardTestDispatcher
 import kotlinx.coroutines.test.TestScope
@@ -19,6 +15,8 @@ import kotlinx.coroutines.test.setMain
 import org.junit.Test
 import rise.tiao1.buut.R
 import rise.tiao1.buut.domain.user.useCases.LoginUseCase
+import rise.tiao1.buut.domain.user.validation.ValidateEmail
+import rise.tiao1.buut.domain.user.validation.ValidatePassword
 import rise.tiao1.buut.utils.InputKeys
 import rise.tiao1.buut.utils.UiText
 

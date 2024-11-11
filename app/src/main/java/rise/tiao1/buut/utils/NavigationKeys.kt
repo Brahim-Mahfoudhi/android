@@ -29,6 +29,6 @@ object NavigationKeys {
          */
         const val REGISTER = "register"
 
-        const val RESERVATION = "reservation"
+        const val CREATE_BOOKING = "create_booking"
     }
 }

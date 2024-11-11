@@ -5,6 +5,7 @@ import retrofit2.Response
 import rise.tiao1.buut.data.DummyContent
 import rise.tiao1.buut.data.remote.booking.BookingApiService
 import rise.tiao1.buut.data.remote.booking.BookingDTO
+import rise.tiao1.buut.data.remote.booking.TimeSlotDTO
 import rise.tiao1.buut.data.remote.user.RemoteUser
 import rise.tiao1.buut.data.remote.user.UserApiService
 import rise.tiao1.buut.data.remote.user.dto.UserDTO
@@ -18,6 +19,13 @@ class FakeApiService: BookingApiService {
     override suspend fun getAllBookingsFromUser(userId: String): List<BookingDTO> {
         delay(1000)
         return DummyContent.getDummyBookings(userId)
+    }
+
+    override suspend fun getFreeTimeSlotsForDateRange(
+        startDate: String,
+        endDate: String
+    ): List<TimeSlotDTO> {
+       return DummyContent.getDummyFreeTimeSlots(startDate, endDate)
     }
 }
 

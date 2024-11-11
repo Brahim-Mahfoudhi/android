@@ -29,7 +29,7 @@ class HomeViewModel @Inject constructor(
     }
 
     fun logout(navigateToLogin: () -> Unit) {
-        viewModelScope.launch {
+        viewModelScope.launch(dispatcher) {
             logoutUseCase.invoke(state.value.user)
             navigateToLogin()
         }

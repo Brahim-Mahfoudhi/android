@@ -12,6 +12,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
@@ -28,7 +29,8 @@ fun InfoContainer(infoMessage: String) {
                 .padding(
                     horizontal = dimensionResource(R.dimen.padding_large),
                     vertical = dimensionResource(R.dimen.padding_large)
-                ),
+                )
+                .testTag(stringResource(R.string.info_container)),
             verticalAlignment = Alignment.CenterVertically,
         ) {
             Icon(

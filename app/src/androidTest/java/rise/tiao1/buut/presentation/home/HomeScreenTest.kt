@@ -37,11 +37,6 @@ class HomeScreenTest {
     val screenOrientationRule: ScreenOrientationRule = ScreenOrientationRule(ScreenOrientation.PORTRAIT)
     private val context = InstrumentationRegistry.getInstrumentation().targetContext
 
-    @Before
-    fun setStartOrientation() {
-        onDevice().setScreenOrientation(ScreenOrientation.PORTRAIT)
-    }
-
     @Test
     fun homeScreen_loadingState_isDisplayedCorrectly(){
         rule.setContent {
@@ -54,7 +49,7 @@ class HomeScreenTest {
         }
 
         rule.onNodeWithTag(context.getString(R.string.booking_list_title)).performClick()
-        rule.onNodeWithTag("LoadingIndicator").assertIsDisplayed()
+        rule.onNodeWithTag(context.getString(R.string.loading_indicator)).assertIsDisplayed()
         rule.onNodeWithTag("BookingItem").assertIsNotDisplayed()
         rule.onNodeWithText(context.getString(R.string.user_has_no_bookings))
     }
