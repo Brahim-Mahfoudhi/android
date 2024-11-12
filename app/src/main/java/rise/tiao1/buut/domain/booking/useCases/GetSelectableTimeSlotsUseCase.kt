@@ -17,6 +17,6 @@ class GetSelectableTimeSlotsUseCase @Inject constructor(
             .toLocalDateTime()
             .format(DateTimeFormatter.ISO_DATE)
         val timeSlots = bookingRepository.getFreeTimeSlotsForDateRange(formattedDate, formattedDate)
-        return timeSlots.filter { it.available }.distinctBy { it.date }
+        return timeSlots
     }
 }
