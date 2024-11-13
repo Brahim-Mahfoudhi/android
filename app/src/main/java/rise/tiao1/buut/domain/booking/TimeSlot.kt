@@ -17,3 +17,21 @@ fun TimeSlotDTO.toTimeSlot() : TimeSlot {
         available = this.available
     )
 }
+
+fun TimeSlot.addTime() : TimeSlot {
+
+    val startTime = TimeSlots.entries.first{it.slot == this.slot}.startTime
+    val date = this.date.withHour(startTime)
+
+    return TimeSlot(
+        date = date,
+        slot= this.slot,
+        available = this.available
+    )
+}
+
+enum class TimeSlots (val slot: String, val startTime: Int, val endTime: Int){
+    MORNING("Morning", 10, 12),
+    AFTERNOON("Afternoon", 14, 16),
+    EVENING("Evening", 17, 19)
+}

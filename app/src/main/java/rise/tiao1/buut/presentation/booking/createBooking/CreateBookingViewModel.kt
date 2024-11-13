@@ -12,11 +12,11 @@ import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.launch
 import rise.tiao1.buut.data.di.MainDispatcher
 import rise.tiao1.buut.domain.booking.TimeSlot
+import rise.tiao1.buut.domain.booking.addTime
+import rise.tiao1.buut.domain.booking.useCases.CreateBookingsUseCase
 import rise.tiao1.buut.domain.booking.useCases.GetSelectableDatesUseCase
 import rise.tiao1.buut.domain.booking.useCases.GetSelectableTimeSlotsUseCase
-import java.time.Instant
 import java.time.LocalDate
-import java.time.LocalDateTime
 import java.time.ZoneId
 import java.util.Locale
 import javax.inject.Inject
@@ -25,6 +25,7 @@ import javax.inject.Inject
 class CreateBookingViewModel @Inject constructor(
     private val getSelectableDatesUseCase: GetSelectableDatesUseCase,
     private val getSelectableTimeSlotsUseCase: GetSelectableTimeSlotsUseCase,
+    private val createBookingsUseCase: CreateBookingsUseCase,
     @MainDispatcher private val dispatcher: CoroutineDispatcher
 ) : ViewModel() {
     @OptIn(ExperimentalMaterial3Api::class)
@@ -33,29 +34,21 @@ class CreateBookingViewModel @Inject constructor(
         get() = _state
 
     init {
-        getSelectableDates(
-            LocalDate.now().atStartOfDay(ZoneId.systemDefault()).toInstant().toEpochMilli()
-        )
+        getSelectableDates()
     }
 
     @OptIn(ExperimentalMaterial3Api::class)
-    fun onReadyForUpdate() {
-        _state.value = state.value.copy(isUpdated = false)
-    }
-
-    @OptIn(ExperimentalMaterial3Api::class)
-    fun getSelectableDates(input: Long) {
+    fun getSelectableDates() {
         _state.value = state.value.copy(datesAreLoading = true)
         viewModelScope.launch(dispatcher) {
             try {
-                val selectableDates = getSelectableDatesUseCase(input)
+                val selectableDates = getSelectableDatesUseCase()
 
                 val updatedDatePickerState = DatePickerState(
                     initialDisplayMode = DisplayMode.Picker,
                     selectableDates = selectableDates,
                     initialSelectedDateMillis = null,
                     yearRange = (LocalDate.now().year..LocalDate.now().plusYears(1L).year),
-                    initialDisplayedMonthMillis = input,
                     locale = Locale.US
                 )
 
@@ -105,12 +98,19 @@ class CreateBookingViewModel @Inject constructor(
 
     @OptIn(ExperimentalMaterial3Api::class)
     fun onDismissBooking() {
-        _state.value = state.value.copy(selectedTimeSlot = null, confirmationModalOpen = false)
+        _state.value = state.value.copy(selectedTimeSlot = null, confirmationModalOpen = false, confirmationError = "")
     }
 
     @OptIn(ExperimentalMaterial3Api::class)
     fun onConfirmBooking() {
-        //TODO: POST BOOKING
-        _state.value = state.value.copy(confirmationModalOpen = false)
+        viewModelScope.launch(dispatcher) {
+            try {
+                state.value.selectedTimeSlot?.let { createBookingsUseCase(it.addTime()) }
+                _state.value = state.value.copy(confirmationModalOpen = false, notificationModalOpen = true)
+            } catch (e : Exception) {
+                _state.value = state.value.copy(confirmationError = e.message)
+
+            }
+        }
     }
 }

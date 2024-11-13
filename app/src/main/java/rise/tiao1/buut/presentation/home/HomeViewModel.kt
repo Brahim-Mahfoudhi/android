@@ -30,7 +30,7 @@ class HomeViewModel @Inject constructor(
 
     fun logout(navigateToLogin: () -> Unit) {
         viewModelScope.launch(dispatcher) {
-            logoutUseCase.invoke(state.value.user)
+            logoutUseCase(state.value.user)
             navigateToLogin()
         }
 
@@ -39,19 +39,16 @@ class HomeViewModel @Inject constructor(
     private fun getUser() {
         _state.value = state.value.copy(isLoading = true)
         viewModelScope.launch(dispatcher) {
-            getUserUseCase.invoke(
-                onSuccess = { user: User ->
-                    _state.value = state.value.copy(isLoading = false, user = user)
-                    getBookings()
-                },
-                onError = { error ->
-                    _state.value = state.value.copy(
-                        isLoading = false,
-                        apiError = error
-                    )
-                }
-            )
-
+            try {
+                val user = getUserUseCase()
+                getBookings()
+                _state.value = state.value.copy(isLoading = false, user = user)
+            } catch (e: Exception) {
+                _state.value = state.value.copy(
+                    isLoading = false,
+                    apiError = e.message
+                )
+            }
         }
     }
 

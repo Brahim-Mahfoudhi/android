@@ -30,7 +30,7 @@
     <string name="last_name">Last Name*</string>
     <string name="street">Street*</string>
     <string name="house_number">Number*</string>
-    <string name="box">Box*</string>
+    <string name="box">Box</string>
     <string name="date_of_birth">Date of Birth*</string>
     <string name="show_password">Show password</string>
     <string name="hide_password">Hide password</string>
@@ -83,4 +83,6 @@
     <string name="confirm_booking_prompt">Are you sure you want to book this time slot:</string>
     <string name="confirm">Confirm</string>
     <string name="cancel">Cancel</string>
+    <string name="unknown_error">Unkown error</string>
+    <string name="booking_info_follows">Thank you for your reservation.\nWe\'ll provide you boat and battery information 2 days in advance of your booking.</string>
 </resources>

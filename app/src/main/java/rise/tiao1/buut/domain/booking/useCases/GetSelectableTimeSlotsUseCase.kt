@@ -16,7 +16,7 @@ class GetSelectableTimeSlotsUseCase @Inject constructor(
             .atZone(ZoneId.systemDefault())
             .toLocalDateTime()
             .format(DateTimeFormatter.ISO_DATE)
-        val timeSlots = bookingRepository.getFreeTimeSlotsForDateRange(formattedDate, formattedDate)
+        val timeSlots = bookingRepository.getFreeTimeSlotsForDateRange(formattedDate)
         return timeSlots
     }
 }

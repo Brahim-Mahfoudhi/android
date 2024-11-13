@@ -15,6 +15,5 @@ class GetBookingsSortedByDateUseCase @Inject constructor (
             bookings.sortedBy { it.date }
         else
             emptyList()
-
     }
 }

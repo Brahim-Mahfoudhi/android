@@ -9,8 +9,6 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.heightIn
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.text.KeyboardOptions
@@ -18,12 +16,11 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.Text
-import androidx.compose.material3.windowsizeclass.WindowWidthSizeClass
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.testTag
+import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
@@ -59,22 +56,17 @@ fun RegistrationScreen(
     Box(modifier = Modifier.fillMaxSize()) {
         MainBackgroundImage()
 
-        if (uiLayout == UiLayout.PORTRAIT_SMALL || uiLayout == UiLayout.PORTRAIT_MEDIUM)
-        {
+        if (uiLayout == UiLayout.PORTRAIT_SMALL || uiLayout == UiLayout.PORTRAIT_MEDIUM) {
             Column(
                 modifier = Modifier
-                    .fillMaxSize()
-                    .padding(horizontal = 30.dp, vertical = 20.dp)
+                    .fillMaxWidth()
                     .verticalScroll(scrollState),
                 horizontalAlignment = Alignment.CenterHorizontally,
-                verticalArrangement = Arrangement.Center
+                verticalArrangement = Arrangement.spacedBy(dimensionResource(R.dimen.padding_tiny))
             ) {
                 UserDetails(state, onValueChanged, onValidate)
-                Spacer(modifier = Modifier.heightIn(5.dp))
                 AddressDetails(state, onValueChanged, onValidate)
-                Spacer(modifier = Modifier.heightIn(5.dp))
                 Passwords(state, onValueChanged, onValidate)
-                Spacer(modifier = Modifier.heightIn(5.dp))
                 CheckboxesAndButton(state, onCheckedChanged, onSubmitClick)
             }
         }
@@ -82,25 +74,26 @@ fun RegistrationScreen(
         if (uiLayout == UiLayout.PORTRAIT_EXPANDED
             || uiLayout == UiLayout.LANDSCAPE_SMALL
             || uiLayout == UiLayout.LANDSCAPE_MEDIUM
-            || uiLayout == UiLayout.LANDSCAPE_EXPANDED)
-            {
+            || uiLayout == UiLayout.LANDSCAPE_EXPANDED
+        ) {
             Row(
                 modifier = Modifier
                     .fillMaxSize()
-                    .padding(horizontal = 30.dp, vertical = 20.dp)
                     .verticalScroll(scrollState),
                 horizontalArrangement = Arrangement.Center,
+                verticalAlignment = Alignment.CenterVertically
             ) {
 
-                Column(
-                    modifier = Modifier.weight(1f)
+                Column( modifier = Modifier.heightIn(450.dp)
                 ) {
                     UserDetails(state, onValueChanged, onValidate)
                     Passwords(state, onValueChanged, onValidate)
                 }
-                Spacer(modifier = Modifier.widthIn(5.dp))
+
+                Spacer(modifier = Modifier.widthIn(dimensionResource(R.dimen.padding_tiny)))
+
                 Column(
-                    modifier = Modifier.weight(1f)
+                    modifier = Modifier.heightIn(450.dp),
                 ) {
                     AddressDetails(state, onValueChanged, onValidate)
                     CheckboxesAndButton(state, onCheckedChanged, onSubmitClick)
@@ -135,7 +128,7 @@ fun UserDetails(
     onValueChanged: (input: String, field: String) -> Unit,
     onValidate: (field: String) -> Unit,
 ) {
-    Column {
+    Column (verticalArrangement = Arrangement.spacedBy(dimensionResource(R.dimen.padding_tiny))) {
         OutlinedTextFieldComponent(
             value = state.firstName,
             onValueChanged = { onValueChanged(it, InputKeys.FIRST_NAME) },
@@ -144,8 +137,6 @@ fun UserDetails(
             errorMessage = state.firstNameError?.asString(),
             label = R.string.firstName,
         )
-
-        Spacer(modifier = Modifier.heightIn(5.dp))
 
         OutlinedTextFieldComponent(
             value = state.lastName,
@@ -156,8 +147,6 @@ fun UserDetails(
             label = R.string.last_name,
         )
 
-        Spacer(modifier = Modifier.heightIn(5.dp))
-
         DatePickerComponent(
             value = state.dateOfBirth,
             onDatePicked = { onValueChanged(it, InputKeys.DATE_OF_BIRTH) },
@@ -166,8 +155,6 @@ fun UserDetails(
             errorMessage = state.dateOfBirthError?.asString(),
             label = R.string.date_of_birth,
         )
-
-        Spacer(modifier = Modifier.heightIn(5.dp))
 
         OutlinedTextFieldComponent(
             value = state.email,
@@ -190,7 +177,7 @@ fun AddressDetails(
     onValueChanged: (input: String, field: String) -> Unit,
     onValidate: (field: String) -> Unit,
 ) {
-    Column  {
+    Column (verticalArrangement = Arrangement.spacedBy(dimensionResource(R.dimen.padding_tiny))) {
         AutoCompleteTextFieldComponent(
             value = state.street,
             onValueChanged = { onValueChanged(it, InputKeys.STREET) },
@@ -201,16 +188,13 @@ fun AddressDetails(
             optionList = StreetType.entries.map { it.streetName },
         )
 
-        Spacer(modifier = Modifier.heightIn(5.dp))
 
         Row(
-            modifier = Modifier.fillMaxWidth(),
-        ) {
-            Column(
-                modifier = Modifier.fillMaxWidth(0.5f),
-            ) {
+            modifier = Modifier.widthIn(max = 280.dp),
+            horizontalArrangement = Arrangement.spacedBy(dimensionResource(R.dimen.padding_tiny))
+        )  {
+            Column(modifier = Modifier.weight(0.6f)){
                 OutlinedTextFieldComponent(
-
                     value = state.houseNumber,
                     onValueChanged = { onValueChanged(it, InputKeys.HOUSE_NUMBER) },
                     onFocusLost = { onValidate(InputKeys.HOUSE_NUMBER) },
@@ -223,12 +207,7 @@ fun AddressDetails(
                     ),
                 )
             }
-
-            Spacer(modifier = Modifier.width(5.dp))
-
-            Column(
-                modifier = Modifier.fillMaxWidth(),
-            ) {
+            Column(modifier = Modifier.weight(0.3f)) {
                 OutlinedTextFieldComponent(
                     value = state.box,
                     onValueChanged = { onValueChanged(it, InputKeys.BOX) },
@@ -237,8 +216,6 @@ fun AddressDetails(
                 )
             }
         }
-
-        Spacer(modifier = Modifier.heightIn(5.dp))
 
         OutlinedTextFieldComponent(
             value = state.phone,
@@ -261,7 +238,7 @@ fun Passwords(
     onValueChanged: (input: String, field: String) -> Unit,
     onValidate: (field: String) -> Unit
 ) {
-    Column {
+    Column (verticalArrangement = Arrangement.spacedBy(dimensionResource(R.dimen.padding_tiny))) {
         PasswordTextFieldComponent(
             value = state.password,
             onValueChanged = { onValueChanged(it, InputKeys.PASSWORD) },
@@ -270,8 +247,6 @@ fun Passwords(
             errorMessage = state.passwordError?.asString(),
             label = R.string.password,
         )
-
-        Spacer(modifier = Modifier.heightIn(5.dp))
 
         PasswordTextFieldComponent(
             value = state.repeatedPassword,
@@ -295,89 +270,109 @@ fun CheckboxesAndButton(
     onCheckedChanged: (input: Boolean, field: String) -> Unit,
     onSubmitClick: () -> Unit
 ) {
-    Column {
-        CheckboxComponent(
-            value = state.acceptedTermsOfUsage,
-            onChecked = { onCheckedChanged(it, InputKeys.TERMS) },
-            errorMessage = state.termsError?.asString(),
-            leadingText = R.string.accept,
-            label = R.string.terms_of_usage,
-            url = R.string.tos_url
-        )
+    Column (verticalArrangement = Arrangement.spacedBy(dimensionResource(R.dimen.padding_tiny))) {
+       Column {
+           CheckboxComponent(
+               value = state.acceptedTermsOfUsage,
+               onChecked = { onCheckedChanged(it, InputKeys.TERMS) },
+               errorMessage = state.termsError?.asString(),
+               leadingText = R.string.accept,
+               label = R.string.terms_of_usage,
+               url = R.string.tos_url,
+               modifier = Modifier.widthIn(dimensionResource(R.dimen.button_width))
+           )
 
-        CheckboxComponent(
-            value = state.acceptedPrivacyConditions,
-            onChecked = { onCheckedChanged(it, InputKeys.PRIVACY) },
-            errorMessage = state.privacyError?.asString(),
-            leadingText = R.string.accept,
-            label = R.string.privacy_policy,
-            url = R.string.privacy_url
-        )
+           CheckboxComponent(
+               value = state.acceptedPrivacyConditions,
+               onChecked = { onCheckedChanged(it, InputKeys.PRIVACY) },
+               errorMessage = state.privacyError?.asString(),
+               leadingText = R.string.accept,
+               label = R.string.privacy_policy,
+               url = R.string.privacy_url,
+               modifier = Modifier.widthIn(dimensionResource(R.dimen.button_width))
+           )
+       }
 
-        Spacer(modifier = Modifier.heightIn(5.dp))
         ErrorMessageContainer(errorMessage = state.apiError)
-        Spacer(modifier = Modifier.heightIn(5.dp))
 
         ButtonComponent(
             isLoading = state.isLoading,
             label = R.string.register_button,
-            onClick = onSubmitClick
+            onClick = onSubmitClick,
+            modifier = Modifier.widthIn(dimensionResource(R.dimen.button_width))
         )
     }
 
 }
 
-@Preview(showBackground = true, device = "spec:width=411dp,height=891dp", uiMode = Configuration.ORIENTATION_PORTRAIT)
+@Preview(
+    showBackground = true,
+    device = "spec:width=411dp,height=891dp",
+    uiMode = Configuration.ORIENTATION_PORTRAIT
+)
 @Composable
 fun RegisterPortraitSmallPreview() {
     AppTheme {
         RegistrationScreen(
             RegistrationScreenState(),
-            { _, _ -> {} },
-            { _, _ -> {} },
-            { _ -> {} },
+            { _, _ -> },
+            { _, _ -> },
+            { _ ->  },
             uiLayout = UiLayout.PORTRAIT_SMALL
         )
     }
 }
 
-@Preview(showBackground = true, widthDp = 600, heightDp = 300, uiMode = Configuration.ORIENTATION_LANDSCAPE)
+@Preview(
+    showBackground = true,
+    widthDp = 600,
+    heightDp = 300,
+    uiMode = Configuration.ORIENTATION_LANDSCAPE
+)
 @Composable
 fun RegisterLandscapeSmallPreview() {
     AppTheme {
         RegistrationScreen(
             RegistrationScreenState(),
-            { _, _ -> {} },
-            { _, _ -> {} },
-            { _ -> {} },
+            { _, _ ->  },
+            { _, _ ->  },
+            { _ -> },
             uiLayout = UiLayout.LANDSCAPE_SMALL
         )
     }
 }
 
-@Preview(showBackground = true, device = "spec:width=1280dp,height=800dp,dpi=240", uiMode = Configuration.ORIENTATION_PORTRAIT)
+@Preview(
+    showBackground = true,
+    device = "spec:width=1280dp,height=800dp,dpi=240",
+    uiMode = Configuration.ORIENTATION_PORTRAIT
+)
 @Composable
 fun RegisterExpandedPortraitPreview() {
     AppTheme {
         RegistrationScreen(
             RegistrationScreenState(),
-            { _, _ -> {} },
-            { _, _ -> {} },
-            { _ -> {} },
+            { _, _ -> },
+            { _, _ -> },
+            { _ -> },
             uiLayout = UiLayout.PORTRAIT_EXPANDED
         )
     }
 }
 
-@Preview(showBackground = true, device = "spec:width=1280dp,height=800dp,dpi=240", uiMode = Configuration.ORIENTATION_LANDSCAPE)
+@Preview(
+    showBackground = true,
+    device = "spec:width=1280dp,height=800dp,dpi=240",
+    uiMode = Configuration.ORIENTATION_LANDSCAPE
+)
 @Composable
 fun RegisterExpandedLandscapePreview() {
     AppTheme {
         RegistrationScreen(
             RegistrationScreenState(),
-            { _, _ -> {} },
-            { _, _ -> {} },
-            { _ -> {} },
+            { _, _ -> },
+            { _, _ -> },
+            { _ -> },
             uiLayout = UiLayout.LANDSCAPE_MEDIUM
         )
     }

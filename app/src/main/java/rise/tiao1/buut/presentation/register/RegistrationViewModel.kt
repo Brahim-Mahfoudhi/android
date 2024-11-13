@@ -126,7 +126,7 @@ class RegistrationViewModel @Inject constructor(
                 )
 
             viewModelScope.launch {
-                registerUserUseCase.invoke(
+                registerUserUseCase(
                         newUser,
                         onSuccess = {
                             _state.value = state.value.copy(isLoading = false, registrationSuccess = true)

@@ -125,7 +125,9 @@ fun LoginScreenContent(
                 ),
                 modifier = Modifier.fillMaxWidth()
             )
-            ErrorMessageContainer(errorMessage = state.apiError)
+            ErrorMessageContainer(
+                errorMessage = state.apiError,
+            )
         }
         Column(
         ) {

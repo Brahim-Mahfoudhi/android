@@ -2,6 +2,7 @@ package rise.tiao1.buut.presentation.components
 
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.res.stringResource
@@ -9,19 +10,36 @@ import rise.tiao1.buut.R
 import rise.tiao1.buut.domain.booking.TimeSlot
 
 @Composable
-fun BookingConfirmationModal(timeSlot: TimeSlot?, onConfirm: () -> Unit, onDismiss: () -> Unit) {
+fun BookingConfirmationModal(
+    timeSlot: TimeSlot?,
+    error: String?,
+    onConfirm: () -> Unit,
+    onDismiss: () -> Unit
+) {
     AlertDialog(
         onDismissRequest = onDismiss,
-        title = { Text(stringResource(R.string.confirm_booking_modal_header)) },
-        text = { Text(stringResource(R.string.confirm_booking_prompt) + " ${timeSlot?.slot}?") },
+        title = {
+            if (error.isNullOrBlank()) {
+                Text(text = stringResource(R.string.confirm_booking_modal_header))
+            }
+        },
+        text = {
+            if (error.isNullOrBlank()) {
+                Text(text = stringResource(R.string.confirm_booking_prompt) + " ${timeSlot?.slot}?")
+            } else {
+                ActionErrorContainer(error)
+            }
+        },
         confirmButton = {
-            Button(onClick = onConfirm) {
-                Text(stringResource(R.string.confirm))
+            if (error.isNullOrBlank()) {
+                Button(onClick = onConfirm) {
+                    Text(text = stringResource(R.string.confirm))
+                }
             }
         },
         dismissButton = {
             Button(onClick = onDismiss) {
-                Text(stringResource(R.string.cancel))
+                Text(text = stringResource(R.string.cancel))
             }
         }
     )

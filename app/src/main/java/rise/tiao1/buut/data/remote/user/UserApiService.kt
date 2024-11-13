@@ -10,7 +10,7 @@ import rise.tiao1.buut.data.remote.user.dto.UserDTO
 
 interface UserApiService {
     @POST("api/User")
-    suspend fun registerUser(@Body data: UserDTO): Response<Boolean>
+    suspend fun registerUser(@Body data: UserDTO)
 
     @GET("api/User/{id}")
     suspend fun getUserById(@Path("id", encoded = false) id: String): RemoteUser

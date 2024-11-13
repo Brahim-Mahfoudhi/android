@@ -38,7 +38,9 @@ import rise.tiao1.buut.domain.booking.TimeSlot
 import rise.tiao1.buut.presentation.components.ActionErrorContainer
 import rise.tiao1.buut.presentation.components.BookingConfirmationModal
 import rise.tiao1.buut.presentation.components.ErrorMessageContainer
+import rise.tiao1.buut.presentation.components.InfoContainer
 import rise.tiao1.buut.presentation.components.LoadingIndicator
+import rise.tiao1.buut.presentation.components.NotificationModal
 import rise.tiao1.buut.presentation.components.TimeSlotComponent
 import rise.tiao1.buut.ui.theme.AppTheme
 import rise.tiao1.buut.utils.UiLayout
@@ -54,13 +56,12 @@ import java.time.LocalDateTime
 @Composable
 fun CreateBookingScreen(
     state: CreateBookingScreenState,
-    onReadyForUpdate: () -> Unit,
-    onMonthChanged: (input: Long) -> Unit = {},
     navigateUp: () -> Unit = {},
     onDateSelected: (input: Long?) -> Unit = {},
     onConfirmBooking: () -> Unit = {},
     onDismissBooking: () -> Unit = {},
     onTimeSlotClicked: (TimeSlot) -> Unit = {},
+    toBookingsOverview: () -> Unit = {},
     uiLayout: UiLayout
 ) {
     Scaffold(
@@ -92,7 +93,10 @@ fun CreateBookingScreen(
     ) { innerPadding ->
         Box(modifier = Modifier.padding(innerPadding)) {
             if (state.confirmationModalOpen) {
-                BookingConfirmationModal(state.selectedTimeSlot, onConfirmBooking, onDismissBooking)
+                BookingConfirmationModal(state.selectedTimeSlot, state.confirmationError, onConfirmBooking, onDismissBooking)
+            }
+            if (state.notificationModalOpen) {
+                NotificationModal(stringResource(R.string.booking_info_follows), onConfirm = toBookingsOverview)
             }
             if (state.datesAreLoading) {
                 LoadingIndicator()
@@ -112,7 +116,7 @@ fun CreateBookingScreen(
                                     .weight(0.6f)
                                     .fillMaxSize()
                             ) {
-                                DatePicker(state, onReadyForUpdate, onMonthChanged, onDateSelected)
+                                DatePicker(state, onDateSelected)
                             }
                             Column(
                                 modifier = Modifier
@@ -137,7 +141,7 @@ fun CreateBookingScreen(
                                     .fillMaxSize()
                                     .verticalScroll(rememberScrollState())
                             ) {
-                                DatePicker(state, onReadyForUpdate, onMonthChanged, onDateSelected)
+                                DatePicker(state, onDateSelected)
                             }
                             Column(
                                 modifier = Modifier
@@ -162,8 +166,6 @@ fun CreateBookingScreen(
 @Composable
 fun DatePicker(
     state: CreateBookingScreenState,
-    onReadyForUpdate: () -> Unit,
-    onMonthChanged: (input: Long) -> Unit,
     onDateSelected: (input: Long?) -> Unit = {},
 ) {
 
@@ -174,17 +176,9 @@ fun DatePicker(
         headline = null,
         showModeToggle = false,
         modifier = Modifier
-            .padding(0.dp)
             .testTag(stringResource(R.string.calendar)),
 
         )
-
-    LaunchedEffect(state.datePickerState.displayedMonthMillis) {
-        if (!state.isUpdated)
-            onMonthChanged(state.datePickerState.displayedMonthMillis)
-        else
-            onReadyForUpdate()
-    }
 
     LaunchedEffect(state.datePickerState.selectedDateMillis) {
         if (state.datePickerState.selectedDateMillis != null) {
@@ -203,8 +197,8 @@ fun TimeSlots(state: CreateBookingScreenState, onTimeSlotClicked: (TimeSlot) -> 
         LoadingIndicator()
     } else if (state.getFreeDatesError?.isNotEmpty() == true) {
         ErrorMessageContainer(state.getFreeDatesError)
-        /* } else if (state.datePickerState.selectedDateMillis == null) {
-             InfoContainer(stringResource(R.string.select_date)) */
+    } else if (state.datePickerState.selectedDateMillis == null) {
+             InfoContainer(stringResource(R.string.select_date))
     } else {
         Column(
             modifier = Modifier
