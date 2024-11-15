@@ -3,11 +3,13 @@ package rise.tiao1.buut.data.di
 import UnsafeOkHttpClient
 import android.content.Context
 import android.content.SharedPreferences
+import android.util.Log
 import androidx.room.Room
 import com.auth0.android.Auth0
 import com.auth0.android.authentication.AuthenticationAPIClient
 import com.auth0.android.authentication.storage.CredentialsManager
 import com.auth0.android.authentication.storage.SharedPreferencesStorage
+import com.google.rpc.context.AttributeContext.Auth
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -24,6 +26,7 @@ import rise.tiao1.buut.data.local.user.UserDao
 import rise.tiao1.buut.data.remote.booking.BookingApiService
 import rise.tiao1.buut.data.remote.user.UserApiService
 import rise.tiao1.buut.utils.SharedPreferencesKeys
+import javax.inject.Inject
 import javax.inject.Singleton
 
 
@@ -70,10 +73,7 @@ object BuutModule {
      */
     @Provides
     @Singleton
-    fun provideRetrofit(sharedPreferences: SharedPreferences): Retrofit {
-        val accessToken = sharedPreferences.getString(SharedPreferencesKeys.ACCESSTOKEN, null)
-
-
+    fun provideRetrofit(authInterceptor: AuthInterceptor): Retrofit {
         // Logger aanmaken
         val loggingInterceptor = HttpLoggingInterceptor().apply {
             setLevel(HttpLoggingInterceptor.Level.BODY)
@@ -83,7 +83,7 @@ object BuutModule {
         // unsafe wordt gebruikt voor interactie emulator - lokale db
         val httpClient = UnsafeOkHttpClient().getUnsafeOkHttpClient().newBuilder()
             .addInterceptor(loggingInterceptor)
-            .addInterceptor(AuthInterceptor(accessToken))
+            .addInterceptor(authInterceptor)
             .build()
 
         return Retrofit.Builder()
@@ -132,18 +132,23 @@ object BuutModule {
     fun provideSharedPreferences(@ApplicationContext appContext: Context): SharedPreferences {
         return appContext.getSharedPreferences(SharedPreferencesKeys.PREFERENCES_NAME, Context.MODE_PRIVATE)
     }
+
+    @Provides
+    fun provideAuthInterceptor(sharedPreferences: SharedPreferences): AuthInterceptor {
+        return AuthInterceptor(sharedPreferences)
+    }
 }
 
 
-class AuthInterceptor(private val accessToken: String?) : Interceptor {
+class AuthInterceptor @Inject constructor(private val sharedPreferences: SharedPreferences) : Interceptor {
 
     override fun intercept(chain: Interceptor.Chain): Response {
+        val accessToken = sharedPreferences.getString(SharedPreferencesKeys.ACCESSTOKEN, null)
         val request= chain.request()
         val requestWithHeader = request.newBuilder()
             .addHeader("Accept", "application/json")
             .addHeader("Authorization", "Bearer $accessToken")
             .build()
-        val response =  chain.proceed(requestWithHeader)
-        return response
+        return chain.proceed(requestWithHeader)
     }
 }

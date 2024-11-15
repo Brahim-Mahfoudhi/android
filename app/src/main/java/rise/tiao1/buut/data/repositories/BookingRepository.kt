@@ -1,8 +1,8 @@
 package rise.tiao1.buut.data.repositories
 
-import android.util.Log
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.withContext
+import retrofit2.HttpException
 import rise.tiao1.buut.data.di.IoDispatcher
 import rise.tiao1.buut.data.local.booking.BookingDao
 import rise.tiao1.buut.data.remote.booking.BookingApiService
@@ -12,6 +12,7 @@ import rise.tiao1.buut.domain.booking.Booking
 import rise.tiao1.buut.domain.booking.TimeSlot
 import rise.tiao1.buut.domain.booking.toBooking
 import rise.tiao1.buut.domain.booking.toTimeSlot
+import rise.tiao1.buut.utils.toApiErrorMessage
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -27,7 +28,10 @@ class BookingRepository @Inject constructor(
             try {
                 refreshCache(userId)
             } catch (e: Exception) {
-                throw Exception("We can not load the bookings at this moment in time.")
+                when (e) {
+                    is HttpException -> { throw Exception(e.toApiErrorMessage())}
+                    else -> throw Exception(e.message)
+                }
             }
 
             return@withContext  bookingDao.getBookingsByUserId(userId).map { it.toBooking() }
@@ -41,13 +45,43 @@ class BookingRepository @Inject constructor(
         })
     }
 
-    suspend fun getFreeTimeSlotsForDateRange(startDate: String, endDate: String): List<TimeSlot> =
+    suspend fun getAvailableDays(): List<TimeSlot> =
+        withContext(dispatcher) {
+            try {
+                val remoteAvailableDays = apiService.getAvailableDays()
+                return@withContext remoteAvailableDays.map{it.toTimeSlot()}
+            } catch (e: Exception) {
+                when (e) {
+                    is HttpException -> { throw Exception(e.toApiErrorMessage())}
+                    else -> throw Exception(e.message)
+                }
+            }
+        }
+
+    suspend fun getFreeTimeSlotsForDateRange(date: String): List<TimeSlot> =
         withContext(dispatcher) {
         try {
-            val remoteTimeSlots = apiService.getFreeTimeSlotsForDateRange(startDate, endDate)
+            val remoteTimeSlots = apiService.getFreeTimeSlotsForDateRange(date, date)
             return@withContext remoteTimeSlots.map { it.toTimeSlot() }
         } catch (e: Exception) {
-            throw Exception(e)
+            when (e) {
+                is HttpException -> { throw Exception(e.toApiErrorMessage())}
+                else -> throw Exception(e.message)
+            }
+        }
+    }
+
+    suspend fun createBooking(bookingDto: BookingDTO) {
+        withContext(dispatcher) {
+            try {
+                apiService.createBooking(bookingDto)
+                refreshCache(bookingDto.userId ?: "")
+            } catch (e: Exception) {
+                when (e) {
+                    is HttpException -> { throw Exception(e.toApiErrorMessage())}
+                    else -> throw Exception(e.message)
+                }
+            }
         }
     }
 }

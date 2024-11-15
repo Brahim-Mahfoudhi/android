@@ -3,6 +3,7 @@ package rise.tiao1.buut.presentation
 import android.content.pm.ActivityInfo
 import android.content.res.Configuration
 import android.os.Bundle
+import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.material3.windowsizeclass.ExperimentalMaterial3WindowSizeClassApi
@@ -11,9 +12,11 @@ import androidx.compose.material3.windowsizeclass.calculateWindowSizeClass
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import androidx.navigation.navArgument
 import com.auth0.android.authentication.storage.CredentialsManager
 import dagger.hilt.android.AndroidEntryPoint
 import rise.tiao1.buut.presentation.booking.createBooking.CreateBookingScreen
@@ -26,7 +29,9 @@ import rise.tiao1.buut.presentation.register.RegistrationScreen
 import rise.tiao1.buut.presentation.register.RegistrationViewModel
 import rise.tiao1.buut.ui.theme.AppTheme
 import rise.tiao1.buut.utils.NavigationKeys.Route
+import rise.tiao1.buut.utils.SharedPreferencesKeys
 import rise.tiao1.buut.utils.UiLayout
+import java.time.LocalDate
 import javax.inject.Inject
 
 @AndroidEntryPoint
@@ -65,7 +70,10 @@ class MainActivity : ComponentActivity() {
                     },
                     login = {
                         loginViewModel.login {
-                            navController.navigate(Route.HOME)
+                            navController.navigate(Route.HOME) {
+                                navController.popBackStack()
+                            }
+
                         }
                     },
                     onRegisterClick = {
@@ -83,7 +91,9 @@ class MainActivity : ComponentActivity() {
                     state = viewModel.state.value,
                     logout = {
                         viewModel.logout {
-                            navController.navigate(Route.LOGIN)
+                            navController.navigate(Route.LOGIN) {
+                                navController.popBackStack()
+                            }
                         }
                     },
                     navigateTo =  { route:String -> navController.navigate(route)} ,
@@ -106,7 +116,7 @@ class MainActivity : ComponentActivity() {
                     onSubmitClick = { registrationViewModel.onRegisterClick() },
                     onRegistrationSuccessDismissed = {
                         registrationViewModel.onRegistrationSuccessDismissed(
-                            navigateToHome = { navController.navigate(Route.HOME) })
+                            navigateToHome = { navController.navigate(Route.LOGIN) })
                     },
                     uiLayout = uiLayout
                 )
@@ -115,13 +125,22 @@ class MainActivity : ComponentActivity() {
                 val createBookingViewModel: CreateBookingViewModel = hiltViewModel()
                 CreateBookingScreen(
                     state = createBookingViewModel.state.value,
-                    onReadyForUpdate = {
-                        createBookingViewModel.onReadyForUpdate()
-                    },
-                    onMonthChanged = { input: Long ->
-                        createBookingViewModel.getSelectableDates(input)
-                    },
                     navigateUp = {navController.navigateUp()},
+                    onDateSelected = { input: Long? ->
+                        createBookingViewModel.updateSelectedDate(input)
+                    },
+                    onConfirmBooking = {
+                        createBookingViewModel.onConfirmBooking()
+                    },
+                    onDismissBooking = {
+                        createBookingViewModel.onDismissBooking()
+                    },
+                    onTimeSlotClicked = { input ->
+                        createBookingViewModel.onTimeSlotClicked(input)
+                    },
+                    toBookingsOverview = {
+                        navController.navigate(Route.HOME)
+                    },
                     uiLayout = uiLayout
                 )
             }
@@ -129,10 +148,10 @@ class MainActivity : ComponentActivity() {
     }
 
     private fun setStartingPage(): String {
-        if (!credentialsManager.hasValidCredentials())
-            return Route.LOGIN
-        else
+        if (credentialsManager.hasValidCredentials())
             return Route.HOME
+        else
+            return Route.LOGIN
     }
 
     private fun setUiLayout(

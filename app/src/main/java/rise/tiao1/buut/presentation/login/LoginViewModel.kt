@@ -52,7 +52,7 @@ class LoginViewModel @Inject constructor(
     fun login(navigateToHome: ()->Unit) {
         _state.value = state.value.copy(isLoading = true)
         viewModelScope.launch {
-                login.invoke(
+                login(
                     state.value.email,
                     state.value.password,
                     onSuccess = {

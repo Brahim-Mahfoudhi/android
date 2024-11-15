@@ -10,13 +10,11 @@ import rise.tiao1.buut.data.remote.booking.BatteryDTO
 import rise.tiao1.buut.data.remote.booking.BoatDTO
 import rise.tiao1.buut.data.remote.booking.BookingDTO
 import rise.tiao1.buut.utils.toApiDateString
-import rise.tiao1.buut.utils.toDateString
 import rise.tiao1.buut.utils.toLocalDateTimeFromApiString
-import rise.tiao1.buut.utils.toTestDateString
 import java.time.LocalDateTime
 
 @ExperimentalCoroutinesApi
-class BookingKtTest{
+class BookingTest{
     private val dispatcher = StandardTestDispatcher()
     private val scope = TestScope(dispatcher)
 

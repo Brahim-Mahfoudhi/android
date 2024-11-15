@@ -21,7 +21,7 @@ class RegisterUserUseCaseTest {
 
     @Test
     fun registerUser_returnsSuccess(): Unit = scope.runTest{
-        coEvery { repository.registerUser(any()) } returns true
+        coEvery { repository.registerUser(any()) } returns Unit
         val user = getUser()
         val registerUserUseCase = RegisterUserUseCase(repository)
         var result = false

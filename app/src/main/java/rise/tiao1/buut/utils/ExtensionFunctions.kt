@@ -1,6 +1,6 @@
 package rise.tiao1.buut.utils
 
-import androidx.compose.material3.Text
+import retrofit2.HttpException
 import rise.tiao1.buut.data.local.user.LocalUser
 import rise.tiao1.buut.data.remote.user.RemoteUser
 import rise.tiao1.buut.domain.user.User
@@ -80,7 +80,13 @@ fun String.toLocalDateTime(): LocalDateTime {
 }
 
 fun String.toLocalDateTimeFromApiString(): LocalDateTime {
+    val date = this.substring(0,19)
     val formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss")
-    return LocalDateTime.parse(this, formatter)
+    return LocalDateTime.parse(date, formatter)
+}
+
+fun HttpException.toApiErrorMessage(): String {
+    val apiError = this.response()?.errorBody()?.string()
+    return apiError ?: "Unkown error"
 }
 

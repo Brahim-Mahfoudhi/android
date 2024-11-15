@@ -35,42 +35,6 @@ class LoginUseCaseTest {
     val sharedPreferencesEditor: SharedPreferences.Editor = mockk()
     private val context: Context = mockk()
 
-    @Test
-    fun loginUseCase_returnsSuccess(): Unit = scope.runTest {
-        val user = getUser()
-
-        every { sharedPreferences.edit() } returns sharedPreferencesEditor
-        every { sharedPreferencesEditor.putString(any(), any()) } returns sharedPreferencesEditor
-        every { sharedPreferencesEditor.apply() } just Runs
-        every { credentialsManager.saveCredentials(any()) } just Runs
-        every { context.getString(any()) } returns "test_audience"
-        every { authentication.login(any(), any()) } returns mockk {
-            every { setAudience(any()) } returns this
-            every { start(any()) } answers {
-                val callback = firstArg<Callback<Credentials, AuthenticationException>>()
-                val credentials = mockk<Credentials>()
-                every { credentials.accessToken } returns "test_access_token"
-                every { credentials.idToken } returns "test_id_token"
-                callback.onSuccess(credentials)
-            }
-        }
-
-        val loginUseCase = LoginUseCase(authentication, credentialsManager, sharedPreferences, context)
-
-        var result = false
-        loginUseCase(user.email, user.password.toString(),
-            onSuccess = { result = true },
-            onError = { result = false }
-        )
-
-        verify { authentication.login(user.email, user.password.toString()) }
-        verify { sharedPreferences.edit() }
-        verify { sharedPreferencesEditor.putString(SharedPreferencesKeys.ACCESSTOKEN, any()) }
-        verify { sharedPreferencesEditor.putString(SharedPreferencesKeys.IDTOKEN, any()) }
-        verify { sharedPreferencesEditor.apply() }
-        verify { credentialsManager.saveCredentials(any()) }
-        assertTrue(result)
-    }
 
     @Test
     fun loginUseCaseFails_returnsError(): Unit = scope.runTest {

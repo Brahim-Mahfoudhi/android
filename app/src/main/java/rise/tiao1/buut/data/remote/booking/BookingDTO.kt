@@ -8,9 +8,11 @@ import java.time.LocalDateTime
 
 data class BookingDTO(
     @SerializedName("bookingId")
-    val id: String,
+    val id: String? = null,
     @SerializedName("bookingDate")
     val date: String,
+    @SerializedName("timeSlot")
+    val time: String? = null,
     val boat: BoatDTO? = null,
     val battery: BatteryDTO? = null,
     val userId: String? = null
@@ -18,7 +20,7 @@ data class BookingDTO(
 
 fun BookingDTO.toLocalBooking(userId: String): LocalBooking{
     return LocalBooking(
-        id = this.id,
+        id = this.id ?: "",
         date = this.date,
         boat = this.boat?.name,
         battery = this.battery?.name,

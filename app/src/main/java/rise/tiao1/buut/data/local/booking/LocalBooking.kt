@@ -14,11 +14,13 @@ data class LocalBooking (
     @ColumnInfo
     val date: String,
     @ColumnInfo
+    val time: String? = null,
+    @ColumnInfo
     val boat: String? = null,
     @ColumnInfo
     val battery: String? = null,
     @ColumnInfo
-    val userId: String
+    val userId: String? = null
 )
 
 

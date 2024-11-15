@@ -36,7 +36,8 @@ class LogoutUseCaseTest {
         val user = getUser()
         every { sharedPreferences.edit() } returns sharedPreferencesEditor
         every { sharedPreferencesEditor.clear() } returns sharedPreferencesEditor
-        every { sharedPreferencesEditor.apply() } just runs // or returns Unit
+        every { sharedPreferencesEditor.apply() } just runs
+        every { credentialsManager.hasValidCredentials() } returns true
         coEvery { userRepository.deleteUser(any()) } just runs
         every { credentialsManager.clearCredentials() } just runs
         val logoutUseCase = LogoutUseCase(userRepository, credentialsManager, sharedPreferences)

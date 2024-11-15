@@ -119,7 +119,7 @@ fun Content(state: HomeScreenState) {
         TabItem(title= stringResource(R.string.notifications_title)),
         TabItem(title= stringResource(R.string.booking_list_title))
     )
-    var selectedTabIndex by rememberSaveable { mutableIntStateOf(0) }
+    var selectedTabIndex by rememberSaveable { mutableIntStateOf( 0) }
     val pagerState = rememberPagerState {
         tabItems.size
     }
@@ -219,7 +219,7 @@ private fun getPreviewHomeScreenState(emptyList: Boolean = false): HomeScreenSta
 fun PortraitPreview() {
     AppTheme {
         HomeScreen(
-            getPreviewHomeScreenState(true), {}, {}, PORTRAIT_SMALL
+            getPreviewHomeScreenState(true), {}, {},  PORTRAIT_SMALL
         )
     }
 }
@@ -234,7 +234,7 @@ fun PortraitPreview() {
 fun LandscapePreview() {
     AppTheme {
         HomeScreen(
-            getPreviewHomeScreenState(), {}, {}, LANDSCAPE_SMALL
+            getPreviewHomeScreenState(), {}, {},  LANDSCAPE_SMALL
         )
     }
 }
@@ -250,7 +250,7 @@ fun LandscapePreview() {
 fun PortraitMediumPreview() {
     AppTheme {
         HomeScreen(
-            getPreviewHomeScreenState(), {}, {}, PORTRAIT_MEDIUM
+            getPreviewHomeScreenState(), {}, {},  PORTRAIT_MEDIUM
         )
     }
 }
@@ -265,7 +265,7 @@ fun PortraitMediumPreview() {
 fun LandscapeMediumPreview() {
     AppTheme {
         HomeScreen(
-            getPreviewHomeScreenState(), {}, {}, LANDSCAPE_MEDIUM
+            getPreviewHomeScreenState(), {}, {},  LANDSCAPE_MEDIUM
         )
     }
 }
@@ -281,7 +281,7 @@ fun LandscapeMediumPreview() {
 fun PortraitExpandedPreview() {
     AppTheme {
         HomeScreen(
-            getPreviewHomeScreenState(), {}, {}, PORTRAIT_EXPANDED
+            getPreviewHomeScreenState(), {}, {},  PORTRAIT_EXPANDED
         )
     }
 }
@@ -296,7 +296,7 @@ fun PortraitExpandedPreview() {
 fun LandscapeExpandedPreview() {
     AppTheme {
         HomeScreen(
-            getPreviewHomeScreenState(), {}, {}, LANDSCAPE_EXPANDED
+            getPreviewHomeScreenState(), {}, {},  LANDSCAPE_EXPANDED
         )
     }
 }

@@ -9,6 +9,7 @@ import com.auth0.android.authentication.AuthenticationAPIClient
 import com.auth0.android.authentication.AuthenticationException
 import com.auth0.android.authentication.storage.CredentialsManager
 import com.auth0.android.callback.Callback
+import com.auth0.android.jwt.JWT
 import com.auth0.android.result.Credentials
 import dagger.hilt.android.qualifiers.ApplicationContext
 import rise.tiao1.buut.R
@@ -35,12 +36,18 @@ class LoginUseCase @Inject constructor(
                 }
 
                 override fun onSuccess(result: Credentials) {
-                    credentialsManager.saveCredentials(result)
-                    sharedPreferences.edit()
-                        .putString(SharedPreferencesKeys.ACCESSTOKEN, result.accessToken)
-                        .putString(SharedPreferencesKeys.IDTOKEN, result.idToken)
-                        .apply()
-                    onSuccess()
+                    val jwt = JWT(result.accessToken)
+                    val userRoles = jwt.getClaim("http://schemas.microsoft.com/ws/2008/06/identity/claims/role").asArray(String::class.java)
+                    if (userRoles != null && userRoles.contains("User")) {
+                        credentialsManager.saveCredentials(result)
+                        sharedPreferences.edit()
+                            .putString(SharedPreferencesKeys.ACCESSTOKEN, result.accessToken)
+                            .putString(SharedPreferencesKeys.IDTOKEN, result.idToken)
+                            .apply()
+                        onSuccess()
+                    }
+                    else
+                        onError("You do not have the required roles.")
 
                 }
             })

@@ -14,7 +14,7 @@ data class Booking(
 
 fun BookingDTO.toBooking(): Booking{
     return Booking(
-        id = this.id,
+        id = this.id ?: "",
         date = this.date.toLocalDateTimeFromApiString(),
         boat = this.boat?.name,
         battery = this.battery?.name,
