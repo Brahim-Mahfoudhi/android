@@ -13,17 +13,11 @@ class LogoutUseCase @Inject constructor(
     private val credentialsManager: CredentialsManager,
     private val sharedPreferences: SharedPreferences
 ) {
-
-
-
     suspend operator fun invoke(user: User?){
         if (user != null) {
             userRepository.deleteUser(user)
             sharedPreferences.edit().clear().apply()
             credentialsManager.clearCredentials()
-            Log.d("LogoutUseCase", "Credentials cleared: ${credentialsManager.hasValidCredentials()}")
-            Log.d("LogoutUseCase", "sharedPreferences cleared: ${sharedPreferences.getString(
-                SharedPreferencesKeys.ACCESSTOKEN, "none")}")
         }
     }
 }

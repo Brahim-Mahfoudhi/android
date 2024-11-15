@@ -87,20 +87,19 @@ class UserRepositoryTest {
     @Test
     fun registerUser_succesful_returnsTrue() = scope.runTest {
         val userDto = getUserDto()
-        val response = Response.success(true)
-        coEvery { apiService.registerUser(userDto) } returns response
-        val result = userRepository.registerUser(userDto)
-        assert(result == true)
+        coEvery { apiService.registerUser(userDto) } returns Unit
+        userRepository.registerUser(userDto)
         coVerify { apiService.registerUser(userDto) }
     }
 
     @Test
     fun registerUser_unsuccesful_returnsFalse() = scope.runTest {
         val userDto = getUserDto()
-        val response = Response.error<Boolean>(400, ResponseBody.create(null, "Error"))
-        coEvery { apiService.registerUser(userDto) } returns response
-        val result = userRepository.registerUser(userDto)
-        assert(result == false)
+        coEvery { apiService.registerUser(userDto) } throws Exception()
+        val result = runCatching { userRepository.registerUser(userDto) }
+        assert(result.isFailure)
+        assert(result.exceptionOrNull() != null)
+        assert(result.exceptionOrNull() is Exception)
         coVerify { apiService.registerUser(userDto) }
     }
 

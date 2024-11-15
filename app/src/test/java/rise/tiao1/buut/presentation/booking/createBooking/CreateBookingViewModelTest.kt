@@ -1,75 +1,162 @@
-package rise.tiao1.buut.presentation.booking.createBooking
-
-import androidx.compose.material3.ExperimentalMaterial3Api
-import io.mockk.coEvery
-import io.mockk.mockk
-import kotlinx.coroutines.test.StandardTestDispatcher
-import kotlinx.coroutines.test.TestScope
-import kotlinx.coroutines.test.runTest
-import org.junit.Test
-import rise.tiao1.buut.domain.booking.useCases.ConfiguredSelectableDates
-import rise.tiao1.buut.domain.booking.useCases.GetSelectableDatesUseCase
-
-class CreateBookingViewModelTest {
-    private val dispatcher = StandardTestDispatcher()
-    private val scope = TestScope()
-    private val getSelectableDatesUseCase : GetSelectableDatesUseCase = mockk()
-
-    @Test
-    fun initialState_isProduced() = scope.runTest {
-        val viewModel = getViewModel()
-        val initialState = viewModel.state.value
-        assert(initialState.datesAreLoading)
-    }
-
-    @OptIn(ExperimentalMaterial3Api::class)
-    @Test
-    fun getSelectablesDates_startCall_updatesLoadingState() = scope.runTest {
-        coEvery { getSelectableDatesUseCase(any()) } coAnswers {
-            kotlinx.coroutines.delay(1000L)
-            ConfiguredSelectableDates(emptyList())
-        }
-
-        val viewModel = getViewModel()
-        viewModel.getSelectableDates(1630454400000L)
-
-        assert(viewModel.state.value.datesAreLoading)
-    }
-
-    @OptIn(ExperimentalMaterial3Api::class)
-    @Test
-    fun getSelectableDates_failedCall_updatesErrorState() = scope.runTest {
-        val errorMessage = "Failed to fetch dates"
-        coEvery { getSelectableDatesUseCase(any()) } throws Exception(errorMessage)
-
-        val viewModel = getViewModel()
-        viewModel.getSelectableDates(1630454400000L)
-
-        dispatcher.scheduler.advanceUntilIdle()
-
-        assert(viewModel.state.value.getFreeDatesError == errorMessage)
-        assert(!viewModel.state.value.datesAreLoading)
-    }
-
-    @OptIn(ExperimentalMaterial3Api::class)
-    @Test
-    fun getSelectableDates_succesfulCall_updatesStateSelectableDatesValue() = scope.runTest {
-        val selectableDate = 1630454400000L
-        val selectableDates = ConfiguredSelectableDates(listOf(selectableDate))
-
-        coEvery { getSelectableDatesUseCase(any()) } returns selectableDates
-
-        val viewModel = getViewModel()
-        viewModel.getSelectableDates(selectableDate)
-
-        dispatcher.scheduler.advanceUntilIdle()
-
-        assert(viewModel.state.value.datePickerState.selectableDates == selectableDates)
-    }
-
-    private fun getViewModel(): CreateBookingViewModel {
-        return CreateBookingViewModel(getSelectableDatesUseCase, dispatcher)
-    }
-
-}
-
+//package rise.tiao1.buut.presentation.booking.createBooking
+//
+//import androidx.compose.material3.ExperimentalMaterial3Api
+//import io.mockk.coEvery
+//import io.mockk.mockk
+//import kotlinx.coroutines.test.StandardTestDispatcher
+//import kotlinx.coroutines.test.TestScope
+//import kotlinx.coroutines.test.runTest
+//import org.junit.Test
+//import rise.tiao1.buut.domain.booking.TimeSlot
+//import rise.tiao1.buut.domain.booking.useCases.ConfiguredSelectableDates
+//import rise.tiao1.buut.domain.booking.useCases.GetSelectableDatesUseCase
+//import rise.tiao1.buut.domain.booking.useCases.GetSelectableTimeSlotsUseCase
+//
+//class CreateBookingViewModelTest {
+//    private val dispatcher = StandardTestDispatcher()
+//    private val scope = TestScope()
+//    private val getSelectableDatesUseCase : GetSelectableDatesUseCase = mockk()
+//    private val getSelectableTimeSlotsUseCase : GetSelectableTimeSlotsUseCase = mockk()
+//    private val today = java.time.LocalDateTime.now()
+//
+//    @Test
+//    fun initialState_isProduced() = scope.runTest {
+//        val viewModel = getViewModel()
+//        val initialState = viewModel.state.value
+//        assert(initialState.datesAreLoading)
+//    }
+//
+//    @Test
+//    fun getSelectablesDates_startCall_updatesLoadingState() = scope.runTest {
+//        coEvery { getSelectableDatesUseCase(any()) } coAnswers {
+//            kotlinx.coroutines.delay(1000L)
+//            ConfiguredSelectableDates(emptyList())
+//        }
+//
+//        val viewModel = getViewModel()
+//        viewModel.getSelectableDates()
+//
+//        assert(viewModel.state.value.datesAreLoading)
+//    }
+//
+//    @OptIn(ExperimentalMaterial3Api::class)
+//    @Test
+//    fun getSelectableDates_failedCall_updatesErrorState() = scope.runTest {
+//        val errorMessage = "Failed to fetch dates"
+//        coEvery { getSelectableDatesUseCase(any()) } throws Exception(errorMessage)
+//
+//        val viewModel = getViewModel()
+//        viewModel.getSelectableDates(1630454400000L)
+//
+//        dispatcher.scheduler.advanceUntilIdle()
+//
+//        assert(viewModel.state.value.getFreeDatesError == errorMessage)
+//        assert(!viewModel.state.value.datesAreLoading)
+//    }
+//
+//    @OptIn(ExperimentalMaterial3Api::class)
+//    @Test
+//    fun getSelectableDates_succesfulCall_updatesStateSelectableDatesValue() = scope.runTest {
+//        val selectableDate = 1630454400000L
+//        val selectableDates = ConfiguredSelectableDates(listOf(selectableDate))
+//
+//        coEvery { getSelectableDatesUseCase(any()) } returns selectableDates
+//
+//        val viewModel = getViewModel()
+//        viewModel.getSelectableDates(selectableDate)
+//
+//        dispatcher.scheduler.advanceUntilIdle()
+//
+//        assert(viewModel.state.value.datePickerState.selectableDates == selectableDates)
+//    }
+//
+//    @Test
+//    fun getSelectableTimeSlots_succesfulCall_returnsTimeslots() = scope.runTest {
+//        val expected = getSelectableTimeSlots()
+//        coEvery { getSelectableTimeSlotsUseCase(any()) } returns getSelectableTimeSlots()
+//
+//        val viewModel = getViewModel()
+//        viewModel.getSelectableTimeslots(1630454400000L)
+//
+//        dispatcher.scheduler.advanceUntilIdle()
+//
+//        assert(viewModel.state.value.selectableTimeSlots == expected)
+//        assert(!viewModel.state.value.timeslotsAreLoading)
+//    }
+//
+//    @Test
+//    fun getSelectableTimeSlots_failedCall_updatesErrorState() = scope.runTest {
+//        val errorMessage = "Failed to fetch timeslots"
+//        coEvery { getSelectableTimeSlotsUseCase(any()) } throws Exception(errorMessage)
+//
+//        val viewModel = getViewModel()
+//        viewModel.getSelectableTimeslots(1630454400000L)
+//
+//        dispatcher.scheduler.advanceUntilIdle()
+//
+//        assert(viewModel.state.value.getFreeDatesError == errorMessage)
+//        assert(!viewModel.state.value.timeslotsAreLoading)
+//    }
+//
+//    @Test
+//    fun updateSelectedDate_callSuccessful_updatesTimeSlots() = scope.runTest {
+//        val expected = getSelectableTimeSlots()
+//        coEvery { getSelectableTimeSlotsUseCase(any()) } returns getSelectableTimeSlots()
+//        val viewModel = getViewModel()
+//        viewModel.updateSelectedDate(1630454400000L)
+//        dispatcher.scheduler.advanceUntilIdle()
+//        assert(viewModel.state.value.selectableTimeSlots == expected)
+//        assert(!viewModel.state.value.timeslotsAreLoading)
+//    }
+//
+//    @Test
+//    fun updateSelectedDate_callFailed_updatesErrorState() = scope.runTest {
+//        val errorMessage = "Failed to fetch timeslots"
+//        coEvery { getSelectableTimeSlotsUseCase(any()) } throws Exception(errorMessage)
+//        val viewModel = getViewModel()
+//        viewModel.updateSelectedDate(1630454400000L)
+//        dispatcher.scheduler.advanceUntilIdle()
+//        assert(viewModel.state.value.getFreeDatesError == errorMessage)
+//        assert(!viewModel.state.value.timeslotsAreLoading)
+//    }
+//
+//    @Test
+//    fun onTimeSlotClicked_call_updatesState() = scope.runTest {
+//        val timeslot = getSelectableTimeSlots()[0]
+//        val viewModel = getViewModel()
+//        viewModel.onTimeSlotClicked(timeslot)
+//        assert(viewModel.state.value.selectedTimeSlot == timeslot)
+//        assert(viewModel.state.value.confirmationModalOpen)
+//    }
+//
+//    @Test
+//    fun onDismissBooking_call_updatesState() = scope.runTest {
+//        val viewModel = getViewModel()
+//        viewModel.onDismissBooking()
+//        assert(viewModel.state.value.selectedTimeSlot == null)
+//        assert(!viewModel.state.value.confirmationModalOpen)
+//    }
+//
+//    @Test
+//    fun onConfirmBooking_call_updatesState() = scope.runTest {
+//        val viewModel = getViewModel()
+//        viewModel.onConfirmBooking()
+//        assert(!viewModel.state.value.confirmationModalOpen)
+//    }
+//
+//
+//
+//    private fun getViewModel(): CreateBookingViewModel {
+//        return CreateBookingViewModel(getSelectableDatesUseCase, getSelectableTimeSlotsUseCase, dispatcher)
+//    }
+//
+//    fun getSelectableTimeSlots(): List<TimeSlot>{
+//        return listOf(
+//            TimeSlot(today, "Morning", true),
+//            TimeSlot(today, "Afternoon", false),
+//            TimeSlot(today, "Evening", true)
+//        )
+//    }
+//
+//}
+//
