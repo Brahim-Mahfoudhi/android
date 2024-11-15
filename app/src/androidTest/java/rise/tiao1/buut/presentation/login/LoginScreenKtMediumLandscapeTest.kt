@@ -52,11 +52,6 @@ class LoginScreenKtMediumLandscapeTest {
     val loginButton = rule.onNodeWithText(context.getString(R.string.log_in_button))
     val registerButton = rule.onNodeWithText(context.getString(R.string.register_here))
 
-    @Before
-    fun resetOrientation(){
-        onDevice().setScreenOrientation(startOrientation)
-    }
-
 
     @Test
     fun loginScreen_displayCorrectly() {

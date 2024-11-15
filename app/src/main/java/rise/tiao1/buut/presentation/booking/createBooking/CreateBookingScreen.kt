@@ -86,7 +86,8 @@ fun CreateBookingScreen(
                             contentDescription = stringResource(R.string.back_button)
                         )
                     }
-                }
+                },
+                modifier = Modifier.testTag("navigation")
             )
 
         },
@@ -197,7 +198,7 @@ fun TimeSlots(state: CreateBookingScreenState, onTimeSlotClicked: (TimeSlot) -> 
         LoadingIndicator()
     } else if (state.getFreeDatesError?.isNotEmpty() == true) {
         ErrorMessageContainer(state.getFreeDatesError)
-    } else if (state.datePickerState.selectedDateMillis == null) {
+    } else if (state.selectableTimeSlots.isEmpty()) {
              InfoContainer(stringResource(R.string.select_date))
     } else {
         Column(

@@ -5,6 +5,8 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.stringResource
 import rise.tiao1.buut.R
 import rise.tiao1.buut.domain.booking.TimeSlot
@@ -18,6 +20,7 @@ fun BookingConfirmationModal(
 ) {
     AlertDialog(
         onDismissRequest = onDismiss,
+        modifier = Modifier.testTag("bookingConfirmationModal"),
         title = {
             if (error.isNullOrBlank()) {
                 Text(text = stringResource(R.string.confirm_booking_modal_header))

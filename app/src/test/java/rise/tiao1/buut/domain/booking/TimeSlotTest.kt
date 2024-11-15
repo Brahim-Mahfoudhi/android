@@ -22,7 +22,7 @@ class TimeSlotTest {
         val result = receivedTimeSlotFromApi.toTimeSlot()
         assertEquals(result, expected)
     }
-    
+
 
     private fun getTimeSlotDTO(): TimeSlotDTO {
         return TimeSlotDTO(
