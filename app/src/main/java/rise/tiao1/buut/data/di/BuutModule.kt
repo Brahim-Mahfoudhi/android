@@ -145,8 +145,6 @@ class AuthInterceptor @Inject constructor(private val sharedPreferences: SharedP
     override fun intercept(chain: Interceptor.Chain): Response {
         val accessToken = sharedPreferences.getString(SharedPreferencesKeys.ACCESSTOKEN, null)
         val request= chain.request()
-
-        Log.d("token", "$accessToken")
         val requestWithHeader = request.newBuilder()
             .addHeader("Accept", "application/json")
             .addHeader("Authorization", "Bearer $accessToken")
