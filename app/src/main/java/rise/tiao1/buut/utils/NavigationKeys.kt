@@ -15,12 +15,12 @@ object NavigationKeys {
         const val AUTH = "auth"
 
         /**
-         * Route for the home screen.
+         * Route for the login screen.
          */
         const val LOGIN = "login"
 
         /**
-         * Route for the user profile screen.
+         * Route for the home screen.
          */
         const val HOME = "home"
 
@@ -29,6 +29,16 @@ object NavigationKeys {
          */
         const val REGISTER = "register"
 
+        /**
+         * Route for the create booking screen.
+         */
+
         const val CREATE_BOOKING = "create_booking"
+
+        /**
+         * Route for the profile screen.
+         */
+
+        const val PROFILE = "profile"
     }
 }
