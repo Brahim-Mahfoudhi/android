@@ -18,7 +18,6 @@ import javax.inject.Inject
 class HomeViewModel @Inject constructor(
     private val getUserUseCase: GetUserUseCase,
     private val getBookingsSortedByDateUseCase: GetBookingsSortedByDateUseCase,
-    private val logoutUseCase: LogoutUseCase,
     @MainDispatcher private val dispatcher: CoroutineDispatcher
 ) : ViewModel() {
     private val _state = mutableStateOf(HomeScreenState())
@@ -26,14 +25,6 @@ class HomeViewModel @Inject constructor(
 
     init {
         getUser()
-    }
-
-    fun logout(navigateToLogin: () -> Unit) {
-        viewModelScope.launch(dispatcher) {
-            logoutUseCase(state.value.user)
-            navigateToLogin()
-        }
-
     }
 
     private fun getUser() {

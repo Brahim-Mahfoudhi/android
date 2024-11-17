@@ -42,7 +42,6 @@ class HomeScreenTest {
         rule.setContent {
             HomeScreen(
                 state = getState(isLoading = true),
-                logout = {},
                 navigateTo = {},
                 uiLayout = PORTRAIT_SMALL
             )
@@ -61,7 +60,6 @@ class HomeScreenTest {
         rule.setContent {
             HomeScreen(
                 state = getState(apiError = errorMessage),
-                logout = {},
                 navigateTo = {},
                 uiLayout = PORTRAIT_SMALL
             )
@@ -76,7 +74,6 @@ class HomeScreenTest {
         rule.setContent {
             HomeScreen(
                 state = HomeScreenState(bookings = emptyList(), isLoading = false),
-                logout = {},
                 navigateTo = {},
                 uiLayout = PORTRAIT_SMALL
             )
@@ -97,7 +94,6 @@ class HomeScreenTest {
         rule.setContent {
             HomeScreen(
                 state = getState(bookings = bookings),
-                logout = {},
                 navigateTo = {},
                 uiLayout = PORTRAIT_SMALL
             )
@@ -120,7 +116,6 @@ class HomeScreenTest {
         rule.setContent {
             HomeScreen(
                 state = getState(bookings = bookings),
-                logout = {},
                 navigateTo = {},
                 uiLayout = PORTRAIT_SMALL
             )
@@ -140,7 +135,6 @@ class HomeScreenTest {
         rule.setContent {
             HomeScreen(
                 state = getState(bookings = listOf(pastBooking)),
-                logout = {},
                 navigateTo = {},
                 uiLayout = PORTRAIT_SMALL
             )
@@ -159,7 +153,6 @@ class HomeScreenTest {
         rule.setContent {
             HomeScreen(
                 state = getState(bookings = listOf(booking)),
-                logout = {},
                 navigateTo = {},
                 uiLayout = PORTRAIT_SMALL
             )
@@ -177,7 +170,6 @@ class HomeScreenTest {
         rule.setContent {
             HomeScreen(
                 state = getState(bookings = listOf(booking)),
-                logout = {},
                 navigateTo = {},
                 uiLayout = PORTRAIT_SMALL
             )
@@ -196,7 +188,6 @@ class HomeScreenTest {
         rule.setContent {
             HomeScreen(
                 state = getState(bookings = listOf(booking)),
-                logout = {},
                 navigateTo = {},
                 uiLayout = PORTRAIT_SMALL
             )
@@ -213,7 +204,6 @@ class HomeScreenTest {
         rule.setContent {
             HomeScreen(
                 state = HomeScreenState(bookings = listOf(booking), isLoading = false),
-                logout = {},
                 navigateTo = {},
                 uiLayout = PORTRAIT_SMALL
             )
@@ -231,7 +221,6 @@ class HomeScreenTest {
         rule.setContent {
             HomeScreen(
                 state = getState(),
-                logout = {},
                 navigateTo = {},
                 uiLayout = PORTRAIT_SMALL
             )
@@ -247,7 +236,6 @@ class HomeScreenTest {
         rule.setContent {
             HomeScreen(
                 state = getState(),
-                logout = {},
                 navigateTo = {},
                 uiLayout = LANDSCAPE_SMALL
             )
@@ -263,7 +251,6 @@ class HomeScreenTest {
         rule.setContent {
             HomeScreen(
                 state = getState(),
-                logout = {},
                 navigateTo = {},
                 uiLayout = PORTRAIT_MEDIUM
             )
@@ -279,7 +266,6 @@ class HomeScreenTest {
         rule.setContent {
             HomeScreen(
                 state = getState(),
-                logout = {},
                 navigateTo = {},
                 uiLayout = LANDSCAPE_MEDIUM
             )
@@ -295,7 +281,6 @@ class HomeScreenTest {
         rule.setContent {
             HomeScreen(
                 state = getState(),
-                logout = {},
                 navigateTo = {},
                 uiLayout = PORTRAIT_EXPANDED
             )
@@ -311,7 +296,6 @@ class HomeScreenTest {
         rule.setContent {
             HomeScreen(
                 state = getState(),
-                logout = {},
                 navigateTo = {},
                 uiLayout = LANDSCAPE_EXPANDED
             )

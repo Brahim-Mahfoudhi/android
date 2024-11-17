@@ -40,5 +40,11 @@ object NavigationKeys {
          */
 
         const val PROFILE = "profile"
+
+        /**
+         * Route for the edit profile screen.
+         */
+
+        const val EDIT_PROFILE = "edit_profile"
     }
 }

@@ -5,7 +5,9 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.Help
 import androidx.compose.material.icons.automirrored.filled.Logout
+import androidx.compose.material.icons.automirrored.outlined.Help
 import androidx.compose.material.icons.automirrored.outlined.Logout
 import androidx.compose.material.icons.filled.AddCircle
 import androidx.compose.material.icons.filled.Home
@@ -51,7 +53,6 @@ import rise.tiao1.buut.utils.UiLayout.PORTRAIT_SMALL
 fun Navigation(
     uiLayout: UiLayout,
     navigateTo: (String) -> Unit,
-    logout: () -> Unit,
     currentPage: String,
     content: @Composable () -> Unit = {}
 ) {
@@ -71,11 +72,11 @@ fun Navigation(
             navigateTo = { navigateTo(NavigationKeys.Route.CREATE_BOOKING) },
         ),
         NavigationItemContent(
-            selectedIcon = Icons.AutoMirrored.Filled.Logout,
-            unselectedIcon = Icons.AutoMirrored.Outlined.Logout,
-            text = stringResource(R.string.log_out_button),
-            pageName = NavigationKeys.Route.LOGIN,
-            navigateTo = { logout() }
+            selectedIcon = Icons.AutoMirrored.Filled.Help,
+            unselectedIcon = Icons.AutoMirrored.Outlined.Help,
+            text = stringResource(R.string.profile_button),
+            pageName = NavigationKeys.Route.PROFILE,
+            navigateTo = { navigateTo(NavigationKeys.Route.PROFILE) }
         )
     )
 

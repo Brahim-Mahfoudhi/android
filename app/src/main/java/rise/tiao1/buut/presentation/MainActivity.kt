@@ -91,13 +91,6 @@ class MainActivity : ComponentActivity() {
                 val viewModel: HomeViewModel = hiltViewModel()
                 HomeScreen(
                     state = viewModel.state.value,
-                    logout = {
-                        viewModel.logout {
-                            navController.navigate(Route.LOGIN) {
-                                navController.popBackStack()
-                            }
-                        }
-                    },
                     navigateTo =  { route:String -> navController.navigate(route)} ,
                     uiLayout = uiLayout
                 )
@@ -150,7 +143,13 @@ class MainActivity : ComponentActivity() {
                 val profileViewModel: ProfileViewModel = hiltViewModel()
                 ProfileScreen(
                     state = profileViewModel.state.value,
-                    logout = {},
+                    logout = {
+                        profileViewModel.onLogoutClicked {
+                            navController.navigate(Route.LOGIN) {
+                                navController.popBackStack()
+                            }
+                        }
+                    },
                     navigateTo = { route:String -> navController.navigate(route)},
                     uiLayout = uiLayout
                 )
