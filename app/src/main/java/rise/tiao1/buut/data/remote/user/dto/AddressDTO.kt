@@ -4,10 +4,10 @@ import com.google.gson.annotations.SerializedName
 import rise.tiao1.buut.utils.StreetType
 
 data class AddressDTO(
-    @SerializedName("Street")
+    @SerializedName("street")
     val street: StreetType?,
-    @SerializedName("HouseNumber")
+    @SerializedName("houseNumber")
     val houseNumber: String,
-    @SerializedName("Bus")
+    @SerializedName("bus")
     val box: String,
 )
