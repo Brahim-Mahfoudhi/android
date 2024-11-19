@@ -14,6 +14,8 @@ import rise.tiao1.buut.domain.user.User
 import rise.tiao1.buut.domain.user.useCases.GetUserUseCase
 import rise.tiao1.buut.domain.user.useCases.LogoutUseCase
 import rise.tiao1.buut.utils.StreetType
+import java.time.LocalDateTime
+import kotlin.math.exp
 
 @ExperimentalCoroutinesApi
 class ProfileViewModelTest {
@@ -58,7 +60,7 @@ class ProfileViewModelTest {
             email = "Test@Test.be",
             password = "TestPassword",
             phone = "TestPhoneNumber",
-            dateOfBirth = "TestDateOfBirth",
+            dateOfBirth = LocalDateTime.of(1996, 8, 19, 0, 0),
             address = Address(StreetType.AFRIKALAAN, "TestHouseNumber", "TestBox")
         )
 

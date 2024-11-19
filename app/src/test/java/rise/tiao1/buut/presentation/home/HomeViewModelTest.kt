@@ -26,6 +26,6 @@ class HomeViewModelTest {
 
 
     private fun getViewModel(): HomeViewModel {
-        return HomeViewModel(getUser, getBookings, logout, dispatcher)
+        return HomeViewModel(getUser, getBookings, dispatcher)
     }
 }

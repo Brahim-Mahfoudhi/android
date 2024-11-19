@@ -9,6 +9,7 @@ import rise.tiao1.buut.data.local.user.LocalUser
 import rise.tiao1.buut.data.remote.user.dto.AddressDTO
 import rise.tiao1.buut.data.remote.user.dto.UserDTO
 import rise.tiao1.buut.utils.StreetType
+import java.time.LocalDateTime
 
 @ExperimentalCoroutinesApi
 class UserKtTest {
@@ -41,13 +42,13 @@ class UserKtTest {
 
     fun getUser() : User {
         return User(
-            id = "TestId",
+            id = "fg",
             firstName = "TestFirstName",
             lastName = "TestLastName",
             email = "TestEmail",
             password = "TestPassword",
             phone = "TestPhone",
-            dateOfBirth = "TestDateOfBirth",
+            dateOfBirth = LocalDateTime.of(1996, 8, 19, 0, 0,1),
             address = getAddress()
         )
     }
@@ -59,7 +60,7 @@ class UserKtTest {
             email = "TestEmail",
             password = "TestPassword",
             phone = "TestPhone",
-            dateOfBirth = "TestDateOfBirth",
+            dateOfBirth = LocalDateTime.of(1996, 8, 19, 0, 0,1).toString(),
             address = getAddressDto()
         )
     }
@@ -69,6 +70,10 @@ class UserKtTest {
             id = "fg",
             firstName = "TestFirstName",
             lastName = "TestLastName",
-            email = "TestEmail")
+            email = "TestEmail",
+            phone = "TestPhone",
+            dateOfBirth = LocalDateTime.of(1996, 8, 19, 0, 0,1).toString(),
+            address = getAddress()
+        )
     }
 }
