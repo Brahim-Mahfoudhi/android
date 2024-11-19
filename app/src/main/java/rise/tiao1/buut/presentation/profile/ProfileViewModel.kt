@@ -1,5 +1,6 @@
 package rise.tiao1.buut.presentation.profile
 
+import android.util.Log
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel

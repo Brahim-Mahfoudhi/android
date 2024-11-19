@@ -1,6 +1,8 @@
 package rise.tiao1.buut.presentation.profile
 
 import android.content.res.Configuration
+import android.icu.text.DateFormat
+import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.ScrollState
 import androidx.compose.foundation.layout.Arrangement
@@ -53,6 +55,11 @@ import rise.tiao1.buut.utils.UiLayout.LANDSCAPE_SMALL
 import rise.tiao1.buut.utils.UiLayout.PORTRAIT_EXPANDED
 import rise.tiao1.buut.utils.UiLayout.PORTRAIT_MEDIUM
 import rise.tiao1.buut.utils.UiLayout.PORTRAIT_SMALL
+import rise.tiao1.buut.utils.formatToSystemLocale
+import rise.tiao1.buut.utils.toDateString
+import java.time.LocalDateTime
+import java.time.format.DateTimeFormatter
+import java.time.format.FormatStyle
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -140,7 +147,6 @@ fun ProfileContent(state: ProfileScreenState, uiLayout: UiLayout) {
     if (uiLayout != LANDSCAPE_SMALL) {
         HeaderOne(stringResource(R.string.profile_button))
     }
-
     Column(
         modifier = Modifier
             .fillMaxWidth()
@@ -176,13 +182,14 @@ fun ProfileContent(state: ProfileScreenState, uiLayout: UiLayout) {
                     )
                     Spacer(modifier = Modifier.height(8.dp))
                     Text(
-                        text = "${state.user?.dateOfBirth}",
+                        text = "${state.user?.dateOfBirth?.toLocalDate()?.format(DateTimeFormatter.ofLocalizedDate(
+                            FormatStyle.SHORT))}",
                         modifier = Modifier.testTag("dob")
                     )
                     Spacer(modifier = Modifier.height(8.dp))
 
                     Text(
-                        text = "${state.user?.address?.street?.streetName} ${state.user?.address?.houseNumber} ${state.user?.address?.box}",
+                        text = "${state.user?.address?.street?.streetName} ${state.user?.address?.houseNumber} ${state.user?.address?.box ?: ""}",
                         modifier = Modifier.testTag("address")
                     )
                     Spacer(modifier = Modifier.height(8.dp))
@@ -379,7 +386,7 @@ fun getUser(): User {
         email = "Test@Test.be",
         password = "TestPassword",
         phone = "TestPhoneNumber",
-        dateOfBirth = "TestDateOfBirth",
+        dateOfBirth = LocalDateTime.now(),
         address = Address(StreetType.AFRIKALAAN, "TestHouseNumber", "TestBox")
     )
 }
