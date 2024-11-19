@@ -22,7 +22,7 @@ object DummyContent {
             "TestVoornaam1",
             "TestAchternaam1",
             "TestEmail1@hogent.be",
-            phone = "Testphone",
+            phoneNumber = "Testphone",
             birthDate = LocalDateTime.of(1996, 8, 19, 0, 0).toString(),
             address = AddressDTO(StreetType.AFRIKALAAN, "TestHouseNumber", "TestBox")
         ),
@@ -31,7 +31,7 @@ object DummyContent {
             "TestVoornaam2",
             "TestAchternaam2",
             "TestEmail2@hogent.be",
-            phone = "Testphone",
+            phoneNumber = "Testphone",
             birthDate = LocalDateTime.of(1996, 8, 19, 0, 0).toString(),
             address = AddressDTO(StreetType.AFRIKALAAN, "TestHouseNumber", "TestBox")
         ),
@@ -40,7 +40,7 @@ object DummyContent {
             "TestVoornaam3",
             "TestAchternaam3",
             "TestEmail3@hogent.be",
-            phone = "Testphone",
+            phoneNumber = "Testphone",
             birthDate = LocalDateTime.of(1996, 8, 19, 0, 0).toString(),
             address = AddressDTO(StreetType.AFRIKALAAN, "TestHouseNumber", "TestBox")
         )

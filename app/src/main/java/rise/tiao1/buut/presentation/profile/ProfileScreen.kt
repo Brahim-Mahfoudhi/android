@@ -55,7 +55,6 @@ import rise.tiao1.buut.utils.UiLayout.LANDSCAPE_SMALL
 import rise.tiao1.buut.utils.UiLayout.PORTRAIT_EXPANDED
 import rise.tiao1.buut.utils.UiLayout.PORTRAIT_MEDIUM
 import rise.tiao1.buut.utils.UiLayout.PORTRAIT_SMALL
-import rise.tiao1.buut.utils.formatToSystemLocale
 import rise.tiao1.buut.utils.toDateString
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter

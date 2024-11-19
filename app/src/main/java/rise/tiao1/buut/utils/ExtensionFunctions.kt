@@ -23,7 +23,7 @@ fun RemoteUser.toLocalUser(): LocalUser {
         lastName = this.lastName,
         email = this.email,
         address = Address(this.address.street, this.address.houseNumber, this.address.box),
-        phone = this.phone,
+        phone = this.phoneNumber,
         dateOfBirth = this.birthDate
     )
 }
