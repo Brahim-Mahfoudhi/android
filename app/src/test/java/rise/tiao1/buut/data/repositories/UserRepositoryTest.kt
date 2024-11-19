@@ -1,5 +1,6 @@
 package rise.tiao1.buut.data.repositories
 
+import android.util.Log
 import io.mockk.coEvery
 import io.mockk.coVerify
 import io.mockk.mockk
@@ -7,7 +8,6 @@ import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.StandardTestDispatcher
 import kotlinx.coroutines.test.TestScope
 import kotlinx.coroutines.test.runTest
-import okhttp3.ResponseBody
 import org.junit.Test
 import rise.tiao1.buut.data.local.user.LocalUser
 import rise.tiao1.buut.data.local.user.UserDao
@@ -19,9 +19,10 @@ import rise.tiao1.buut.domain.user.toLocalUser
 import rise.tiao1.buut.utils.StreetType
 import rise.tiao1.buut.utils.toLocalUser
 import rise.tiao1.buut.utils.toUser
-import retrofit2.Response
 import rise.tiao1.buut.data.remote.user.dto.AddressDTO
 import rise.tiao1.buut.data.remote.user.dto.UserDTO
+import rise.tiao1.buut.utils.toDateString
+import java.time.LocalDateTime
 
 @ExperimentalCoroutinesApi
 class UserRepositoryTest {
@@ -63,7 +64,15 @@ class UserRepositoryTest {
     @Test
     fun getUser_userDoesNotExistInRoomAndBackend_returnsEmptyUser() = scope.runTest {
         val userFromDao = null
-        val userFromApi = RemoteUser(null.toString(), null.toString(), null.toString(), null.toString())
+        val userFromApi = RemoteUser(
+            null.toString(),
+            null.toString(),
+            null.toString(),
+            null.toString(),
+            null.toString(),
+            birthDate = LocalDateTime.of(1996, 8, 19,0,0,1).toString(),
+            address = getAddressDto()
+        )
         val userToInsert = userFromApi.toLocalUser()
         val expected = userFromApi.toLocalUser().toUser()
         coEvery { dao.getUserById(expected.id.toString()) } returns userFromDao
@@ -111,8 +120,8 @@ class UserRepositoryTest {
             email = "TestEmail",
             password = "TestPassword",
             phone = "TestPhone",
-            dateOfBirth = "TestDateOfBirth",
-            address = Address(StreetType.AFRIKALAAN, "TestHouseNumber", "TestBox")
+            dateOfBirth = LocalDateTime.of(1996, 8, 19, 0, 0,1),
+            address = getAddress()
         )
     }
 
@@ -121,7 +130,11 @@ class UserRepositoryTest {
             id = "fg",
             firstName = "TestFirstName",
             lastName = "TestLastName",
-            email = "TestEmail")
+            email = "TestEmail",
+            phone = "TestPhone",
+            dateOfBirth = LocalDateTime.of(1996, 8, 19, 0, 0 ,1).toString(),
+            address = getAddress()
+        )
     }
 
     fun getRemoteUser(): RemoteUser{
@@ -129,7 +142,11 @@ class UserRepositoryTest {
             id = "fg",
             firstName = "TestFirstName",
             lastName = "TestLastName",
-            email = "TestEmail")
+            email = "TestEmail",
+            phone = "TestPhone",
+            birthDate = LocalDateTime.of(1996, 8, 19, 0, 0,1).toString(),
+            address = getAddressDto()
+        )
     }
 
     fun getUserDto() : UserDTO {
@@ -139,7 +156,7 @@ class UserRepositoryTest {
             email = "TestEmail",
             password = "TestPassword",
             phone = "TestPhone",
-            dateOfBirth = "TestDateOfBirth",
+            dateOfBirth = LocalDateTime.of(1996, 8, 19, 0, 0,1).toString(),
             address = getAddressDto()
         )
 
@@ -147,6 +164,10 @@ class UserRepositoryTest {
 
     fun getAddressDto() : AddressDTO {
         return AddressDTO(StreetType.AFRIKALAAN, "TestHuisnummer", "TestBox")
+    }
+
+    fun getAddress() : Address {
+        return Address(StreetType.AFRIKALAAN, "TestHuisnummer", "TestBox")
     }
 
 }
