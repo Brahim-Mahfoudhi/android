@@ -12,7 +12,7 @@ interface UserApiService {
     @POST("api/User")
     suspend fun registerUser(@Body data: UserDTO)
 
-    @GET("api/User/{id}")
+    @GET("api/User/{id}/details")
     suspend fun getUserById(@Path("id", encoded = false) id: String): RemoteUser
 
 }
