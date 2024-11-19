@@ -143,7 +143,7 @@ class UserRepositoryTest {
             firstName = "TestFirstName",
             lastName = "TestLastName",
             email = "TestEmail",
-            phone = "TestPhone",
+            phoneNumber = "TestPhone",
             birthDate = LocalDateTime.of(1996, 8, 19, 0, 0,1).toString(),
             address = getAddressDto()
         )
