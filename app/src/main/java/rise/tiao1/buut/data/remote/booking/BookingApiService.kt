@@ -14,7 +14,7 @@ interface BookingApiService {
     @POST("api/Booking")
     suspend fun createBooking(@Body bookingDTO: BookingDTO)
 
-    @GET("api/User/{userId}/bookings")
+    @GET("api/Booking/User/{userId}")
     suspend fun getAllBookingsFromUser(@Path("userId") userId: String): List<BookingDTO>
 
     @GET("api/Booking/free")

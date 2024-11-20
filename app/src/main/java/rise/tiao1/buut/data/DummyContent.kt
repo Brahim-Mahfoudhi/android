@@ -5,6 +5,9 @@ import rise.tiao1.buut.data.remote.booking.BoatDTO
 import rise.tiao1.buut.data.remote.booking.BookingDTO
 import rise.tiao1.buut.data.remote.booking.TimeSlotDTO
 import rise.tiao1.buut.data.remote.user.RemoteUser
+import rise.tiao1.buut.data.remote.user.dto.AddressDTO
+import rise.tiao1.buut.domain.user.Address
+import rise.tiao1.buut.utils.StreetType
 import rise.tiao1.buut.utils.toApiDateString
 import java.time.LocalDate
 import java.time.LocalDateTime
@@ -18,19 +21,28 @@ object DummyContent {
             "auth0|6713adbf2d2a7c11375ac64c",
             "TestVoornaam1",
             "TestAchternaam1",
-            "TestEmail1@hogent.be"
+            "TestEmail1@hogent.be",
+            phoneNumber = "Testphone",
+            birthDate = LocalDateTime.of(1996, 8, 19, 0, 0).toString(),
+            address = AddressDTO(StreetType.AFRIKALAAN, "TestHouseNumber", "TestBox")
         ),
         RemoteUser(
             "auth0|6713ad614fda04f4b9ae2156",
             "TestVoornaam2",
             "TestAchternaam2",
-            "TestEmail2@hogent.be"
+            "TestEmail2@hogent.be",
+            phoneNumber = "Testphone",
+            birthDate = LocalDateTime.of(1996, 8, 19, 0, 0).toString(),
+            address = AddressDTO(StreetType.AFRIKALAAN, "TestHouseNumber", "TestBox")
         ),
         RemoteUser(
             "auth0|6713ad524e8a8907fbf0d57f",
             "TestVoornaam3",
             "TestAchternaam3",
-            "TestEmail3@hogent.be"
+            "TestEmail3@hogent.be",
+            phoneNumber = "Testphone",
+            birthDate = LocalDateTime.of(1996, 8, 19, 0, 0).toString(),
+            address = AddressDTO(StreetType.AFRIKALAAN, "TestHouseNumber", "TestBox")
         )
     )
 

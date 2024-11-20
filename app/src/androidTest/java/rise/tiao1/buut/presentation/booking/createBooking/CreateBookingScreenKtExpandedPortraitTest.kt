@@ -297,7 +297,6 @@ class CreateBookingScreenKtExpandedPortraitTest {
                 composable(route = NavigationKeys.Route.HOME) {
                     HomeScreen(
                         state = HomeScreenState(),
-                        logout = { },
                         navigateTo = { },
                         uiLayout = uiLayout,
                     )

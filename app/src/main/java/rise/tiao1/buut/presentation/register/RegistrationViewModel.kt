@@ -25,6 +25,7 @@ import rise.tiao1.buut.domain.user.validation.ValidateStreet
 import rise.tiao1.buut.domain.user.validation.ValidateTerms
 import rise.tiao1.buut.utils.InputKeys
 import rise.tiao1.buut.utils.toApiDateString
+import rise.tiao1.buut.utils.toLocalDateTime
 import javax.inject.Inject
 
 @HiltViewModel
@@ -121,7 +122,7 @@ class RegistrationViewModel @Inject constructor(
                     email = _state.value.email,
                     password = _state.value.password,
                     phone = _state.value.phone,
-                    dateOfBirth = _state.value.dateOfBirth.toApiDateString(),
+                    dateOfBirth = _state.value.dateOfBirth.toLocalDateTime(),
                     address = address
                 )
 

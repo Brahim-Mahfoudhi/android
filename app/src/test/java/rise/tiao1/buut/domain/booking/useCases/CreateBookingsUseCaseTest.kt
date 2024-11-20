@@ -16,6 +16,7 @@ import rise.tiao1.buut.domain.user.useCases.GetUserUseCase
 import rise.tiao1.buut.utils.StreetType
 import rise.tiao1.buut.utils.toApiDateString
 import rise.tiao1.buut.utils.toLocalDateTimeFromApiString
+import java.time.LocalDateTime
 
 @ExperimentalCoroutinesApi
 class CreateBookingsUseCaseTest {
@@ -53,7 +54,7 @@ class CreateBookingsUseCaseTest {
             email = "TestEmail",
             password = "TestPassword",
             phone = "TestPhone",
-            dateOfBirth = "TestDateOfBirth",
+            dateOfBirth = LocalDateTime.of(1996, 8, 19, 0, 0),
             address = Address(StreetType.AFRIKALAAN, "TestHouseNumber", "TestBox")
         )
     }

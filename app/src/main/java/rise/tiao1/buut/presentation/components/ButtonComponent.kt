@@ -8,6 +8,7 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonColors
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -21,6 +22,7 @@ import androidx.compose.ui.unit.sp
 @Composable
 fun ButtonComponent(
     modifier: Modifier = Modifier,
+    colors: ButtonColors = ButtonDefaults.buttonColors(),
     @StringRes label: Int,
     onClick: () -> Unit,
     isLoading: Boolean = false
@@ -31,7 +33,8 @@ fun ButtonComponent(
             .heightIn(48.dp),
 
         shape = RoundedCornerShape(8.dp),
-        enabled = !isLoading
+        enabled = !isLoading,
+        colors = colors
     ) {
         if (isLoading) {
             CircularProgressIndicator(

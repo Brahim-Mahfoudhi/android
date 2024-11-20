@@ -25,6 +25,8 @@ import rise.tiao1.buut.presentation.home.HomeScreen
 import rise.tiao1.buut.presentation.home.HomeViewModel
 import rise.tiao1.buut.presentation.login.LoginScreen
 import rise.tiao1.buut.presentation.login.LoginViewModel
+import rise.tiao1.buut.presentation.profile.ProfileScreen
+import rise.tiao1.buut.presentation.profile.ProfileViewModel
 import rise.tiao1.buut.presentation.register.RegistrationScreen
 import rise.tiao1.buut.presentation.register.RegistrationViewModel
 import rise.tiao1.buut.ui.theme.AppTheme
@@ -89,13 +91,6 @@ class MainActivity : ComponentActivity() {
                 val viewModel: HomeViewModel = hiltViewModel()
                 HomeScreen(
                     state = viewModel.state.value,
-                    logout = {
-                        viewModel.logout {
-                            navController.navigate(Route.LOGIN) {
-                                navController.popBackStack()
-                            }
-                        }
-                    },
                     navigateTo =  { route:String -> navController.navigate(route)} ,
                     uiLayout = uiLayout
                 )
@@ -141,6 +136,21 @@ class MainActivity : ComponentActivity() {
                     toBookingsOverview = {
                         navController.navigate(Route.HOME)
                     },
+                    uiLayout = uiLayout
+                )
+            }
+            composable(route = Route.PROFILE){
+                val profileViewModel: ProfileViewModel = hiltViewModel()
+                ProfileScreen(
+                    state = profileViewModel.state.value,
+                    logout = {
+                        profileViewModel.onLogoutClicked {
+                            navController.navigate(Route.LOGIN) {
+                                navController.popBackStack()
+                            }
+                        }
+                    },
+                    navigateTo = { route:String -> navController.navigate(route)},
                     uiLayout = uiLayout
                 )
             }

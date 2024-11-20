@@ -55,7 +55,6 @@ import java.time.LocalDateTime
 @Composable
 fun HomeScreen(
     state: HomeScreenState,
-    logout: () -> Unit,
     navigateTo: (String) -> Unit,
     uiLayout: UiLayout
 ) {
@@ -83,7 +82,6 @@ fun HomeScreen(
         bottomBar = {
             if (uiLayout == PORTRAIT_SMALL || uiLayout == PORTRAIT_MEDIUM) {
                 Navigation(
-                    logout = logout,
                     navigateTo = navigateTo,
                     uiLayout = uiLayout,
                     currentPage = NavigationKeys.Route.HOME
@@ -101,7 +99,6 @@ fun HomeScreen(
                     Navigation(
                         uiLayout = uiLayout,
                         navigateTo = navigateTo,
-                        logout = logout,
                         currentPage = NavigationKeys.Route.HOME,
                         content = {Content(state)}
                     )
@@ -219,7 +216,7 @@ private fun getPreviewHomeScreenState(emptyList: Boolean = false): HomeScreenSta
 fun PortraitPreview() {
     AppTheme {
         HomeScreen(
-            getPreviewHomeScreenState(true), {}, {},  PORTRAIT_SMALL
+            getPreviewHomeScreenState(true), {},  PORTRAIT_SMALL
         )
     }
 }
@@ -234,7 +231,7 @@ fun PortraitPreview() {
 fun LandscapePreview() {
     AppTheme {
         HomeScreen(
-            getPreviewHomeScreenState(), {}, {},  LANDSCAPE_SMALL
+            getPreviewHomeScreenState(), {},  LANDSCAPE_SMALL
         )
     }
 }
@@ -250,7 +247,7 @@ fun LandscapePreview() {
 fun PortraitMediumPreview() {
     AppTheme {
         HomeScreen(
-            getPreviewHomeScreenState(), {}, {},  PORTRAIT_MEDIUM
+            getPreviewHomeScreenState(), {},  PORTRAIT_MEDIUM
         )
     }
 }
@@ -265,7 +262,7 @@ fun PortraitMediumPreview() {
 fun LandscapeMediumPreview() {
     AppTheme {
         HomeScreen(
-            getPreviewHomeScreenState(), {}, {},  LANDSCAPE_MEDIUM
+            getPreviewHomeScreenState(), {},  LANDSCAPE_MEDIUM
         )
     }
 }
@@ -281,7 +278,7 @@ fun LandscapeMediumPreview() {
 fun PortraitExpandedPreview() {
     AppTheme {
         HomeScreen(
-            getPreviewHomeScreenState(), {}, {},  PORTRAIT_EXPANDED
+            getPreviewHomeScreenState(), {},  PORTRAIT_EXPANDED
         )
     }
 }
@@ -296,7 +293,7 @@ fun PortraitExpandedPreview() {
 fun LandscapeExpandedPreview() {
     AppTheme {
         HomeScreen(
-            getPreviewHomeScreenState(), {}, {},  LANDSCAPE_EXPANDED
+            getPreviewHomeScreenState(), {},  LANDSCAPE_EXPANDED
         )
     }
 }

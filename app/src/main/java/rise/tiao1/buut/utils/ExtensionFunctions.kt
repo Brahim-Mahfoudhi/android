@@ -1,9 +1,12 @@
 package rise.tiao1.buut.utils
 
+import android.util.Log
 import retrofit2.HttpException
 import rise.tiao1.buut.data.local.user.LocalUser
 import rise.tiao1.buut.data.remote.user.RemoteUser
+import rise.tiao1.buut.domain.user.Address
 import rise.tiao1.buut.domain.user.User
+import java.text.DateFormat
 import java.time.Instant
 import java.time.LocalDate
 import java.time.LocalDateTime
@@ -18,16 +21,24 @@ fun RemoteUser.toLocalUser(): LocalUser {
         id = this.id,
         firstName = this.firstName,
         lastName = this.lastName,
-        email = this.email
+        email = this.email,
+        address = Address(this.address.street, this.address.houseNumber, this.address.box),
+        phone = this.phoneNumber,
+        dateOfBirth = this.birthDate
     )
 }
+
+
 
 fun LocalUser.toUser(): User {
     return User(
         id = this.id,
         firstName = this.firstName,
         lastName = this.lastName,
-        email = this.email
+        email = this.email,
+        address = this.address,
+        phone = this.phone,
+        dateOfBirth = this.dateOfBirth?.toLocalDateTimeFromApiString()
     )
 }
 
@@ -76,11 +87,12 @@ fun LocalDateTime.toTimeString():String {
 
 fun String.toLocalDateTime(): LocalDateTime {
     val formatter = DateTimeFormatter.ofPattern("d/M/yyyy")
-    return LocalDateTime.parse(this, formatter)
+    val localDate = LocalDate.parse(this, formatter)
+    return localDate.atStartOfDay()
 }
 
 fun String.toLocalDateTimeFromApiString(): LocalDateTime {
-    val date = this.substring(0,19)
+    val date = if (this.length < 19) this.padEnd(19, '0') else this.substring(0, 19)
     val formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss")
     return LocalDateTime.parse(date, formatter)
 }
