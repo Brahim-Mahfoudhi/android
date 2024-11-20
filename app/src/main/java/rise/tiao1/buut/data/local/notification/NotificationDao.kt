@@ -17,6 +17,9 @@ interface NotificationDao {
     @Query("SELECT * FROM notification WHERE userId = :userId")
     suspend fun getNotificationsByUserId(userId: String): List<LocalNotification>
 
+    @Query("SELECT * FROM notification WHERE id = :id")
+    suspend fun getNotificationById(id: String): LocalNotification
+
     @Query("SELECT * FROM notification WHERE relatedEntityId = :relatedEntityId")
     suspend fun getNotificationsByRelatedEntityId(relatedEntityId: String): List<LocalNotification>
 }

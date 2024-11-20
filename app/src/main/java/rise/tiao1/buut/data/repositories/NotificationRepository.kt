@@ -84,10 +84,14 @@ class NotificationRepository @Inject constructor(
             return@withContext  notificationDao.getNotificationsByUserId(userId).map { it.toNotification(userId) }
         }
 
-    suspend fun markNotificationAsRead(notificationId: String)  =
+    suspend fun toggleNotificationReadStatus(notificationId: String)  =
         withContext(dispatcher) {
             try {
                 apiService.markNotificationAsRead(notificationId)
+                var notificationToUpdate = notificationDao.getNotificationById(notificationId)
+                notificationToUpdate = notificationToUpdate.copy(isRead = !notificationToUpdate.isRead!!)
+                notificationDao.insertNotification(notificationToUpdate)
+
             } catch (e: Exception) {
                 when (e) {
                     is HttpException -> { throw Exception(e.toApiErrorMessage())}

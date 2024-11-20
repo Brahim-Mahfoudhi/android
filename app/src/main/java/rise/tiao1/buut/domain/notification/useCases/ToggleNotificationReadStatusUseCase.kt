@@ -6,6 +6,6 @@ import javax.inject.Inject
 class ToggleNotificationReadStatusUseCase @Inject constructor(
         private val notificationRepository: NotificationRepository) {
             suspend operator fun invoke(notificationId: String) {
-                notificationRepository.markNotificationAsRead(notificationId)
+                notificationRepository.toggleNotificationReadStatus(notificationId)
             }
 }
