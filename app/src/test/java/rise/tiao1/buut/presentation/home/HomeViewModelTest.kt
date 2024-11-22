@@ -12,18 +12,19 @@ import rise.tiao1.buut.domain.booking.Booking
 import rise.tiao1.buut.domain.booking.useCases.GetBookingsSortedByDateUseCase
 import rise.tiao1.buut.domain.notification.Notification
 import rise.tiao1.buut.domain.notification.useCases.GetNotificationsUseCase
+import rise.tiao1.buut.domain.notification.useCases.ToggleNotificationReadStatusUseCase
 import rise.tiao1.buut.domain.user.User
 import rise.tiao1.buut.domain.user.useCases.GetUserUseCase
-import rise.tiao1.buut.domain.user.useCases.LogoutUseCase
 import rise.tiao1.buut.utils.NotificationType
 import java.time.LocalDateTime
 
 class HomeViewModelTest {
     private val dispatcher = StandardTestDispatcher()
-    private val scope = TestScope()
+    private val scope = TestScope(dispatcher)
     private val getUserUseCase : GetUserUseCase = mockk()
     private val getBookingsUseCase: GetBookingsSortedByDateUseCase = mockk()
     private val getNotificationsUseCase: GetNotificationsUseCase = mockk()
+    private val toggleNotificationReadStatusUseCase: ToggleNotificationReadStatusUseCase = mockk()
     private val today: LocalDateTime = LocalDateTime.now()
     private val testId = "TestId"
 
@@ -42,16 +43,18 @@ class HomeViewModelTest {
         val viewModel = getViewModel()
         dispatcher.scheduler.advanceUntilIdle()
         val initialState = viewModel.state.value
+        dispatcher.scheduler.advanceUntilIdle()
         assertEquals(initialState.user, getUser())
         assertEquals(initialState.bookings, getBookings())
         assertEquals(initialState.notifications, getNotifications())
+        assertEquals(initialState.unReadNotifications, getNotifications().count())
         coVerify { getUserUseCase.invoke() }
         coVerify { getBookingsUseCase.invoke(testId) }
         coVerify { getNotificationsUseCase.invoke(testId)}
     }
 
     private fun getViewModel(): HomeViewModel {
-        return HomeViewModel(getUserUseCase, getBookingsUseCase, getNotificationsUseCase, dispatcher)
+        return HomeViewModel(getUserUseCase, getBookingsUseCase, getNotificationsUseCase, toggleNotificationReadStatusUseCase, dispatcher)
     }
 
     private fun getUser(): User {
@@ -63,7 +66,7 @@ class HomeViewModelTest {
     }
 
     private fun getNotifications(): List<Notification> {
-        return listOf(Notification(testId, "TestUserId", "TestTitle", "TestMessage", true, NotificationType.GENERAL, today, "TestRelatedEntityId"))
+        return listOf(Notification(testId, "TestUserId", "TestTitle", "TestMessage", false, NotificationType.GENERAL, today, "TestRelatedEntityId"))
 
     }
 }
