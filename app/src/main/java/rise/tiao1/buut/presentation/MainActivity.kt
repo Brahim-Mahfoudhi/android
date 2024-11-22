@@ -86,7 +86,8 @@ class MainActivity : ComponentActivity() {
                 HomeScreen(
                     state = viewModel.state.value,
                     navigateTo =  { route:String -> navController.navigate(route)} ,
-                    uiLayout = uiLayout
+                    uiLayout = uiLayout,
+                    onNotificationClick = { notificationId -> viewModel.onNotificationClick(notificationId) }
                 )
             }
             composable(route = Route.REGISTER) {

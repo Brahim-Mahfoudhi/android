@@ -9,13 +9,15 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.res.stringResource
 import rise.tiao1.buut.R
+import rise.tiao1.buut.domain.notification.Notification
 import rise.tiao1.buut.presentation.components.ActionErrorContainer
 import rise.tiao1.buut.presentation.components.InfoContainer
 import rise.tiao1.buut.presentation.components.LoadingIndicator
+import rise.tiao1.buut.presentation.components.NotificationCard
 import rise.tiao1.buut.presentation.home.HomeScreenState
 
 @Composable
-fun NotificationList(state: HomeScreenState) {
+fun NotificationList(state: HomeScreenState, onNotificationClick: (String) -> Unit) {
 
     when {
         state.isLoading -> {
@@ -35,8 +37,8 @@ fun NotificationList(state: HomeScreenState) {
 
             LazyColumn(state = lazyListState) {
                 itemsIndexed(state.notifications) {index, notification ->
-                    Card {
-                        Text(notification.toString())
+                    if (notification is Notification) {
+                        NotificationCard(notification, onNotificationClick)
                     }
                 }
             }

@@ -10,9 +10,8 @@ import kotlinx.coroutines.launch
 import rise.tiao1.buut.data.di.MainDispatcher
 import rise.tiao1.buut.domain.booking.useCases.GetBookingsSortedByDateUseCase
 import rise.tiao1.buut.domain.notification.useCases.GetNotificationsUseCase
-import rise.tiao1.buut.domain.user.User
+import rise.tiao1.buut.domain.notification.useCases.ToggleNotificationReadStatusUseCase
 import rise.tiao1.buut.domain.user.useCases.GetUserUseCase
-import rise.tiao1.buut.domain.user.useCases.LogoutUseCase
 import javax.inject.Inject
 
 @HiltViewModel
@@ -20,6 +19,7 @@ class HomeViewModel @Inject constructor(
     private val getUserUseCase: GetUserUseCase,
     private val getBookingsSortedByDateUseCase: GetBookingsSortedByDateUseCase,
     private val getNotificationsUseCase: GetNotificationsUseCase,
+    private val toggleNotificationUseCase: ToggleNotificationReadStatusUseCase,
     @MainDispatcher private val dispatcher: CoroutineDispatcher
 ) : ViewModel() {
     private val _state = mutableStateOf(HomeScreenState())
@@ -64,6 +64,13 @@ class HomeViewModel @Inject constructor(
                 userId = state.value.user?.id ?: ""
             )
             _state.value = state.value.copy(notifications = notifications)
+        }
+    }
+
+    fun onNotificationClick(notificationId: String) {
+        viewModelScope.launch(dispatcher) {
+            toggleNotificationUseCase(notificationId)
+            getNotifications()
         }
     }
 }

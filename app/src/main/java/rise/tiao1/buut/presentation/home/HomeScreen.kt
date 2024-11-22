@@ -37,11 +37,13 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import rise.tiao1.buut.R
 import rise.tiao1.buut.domain.booking.Booking
+import rise.tiao1.buut.domain.notification.Notification
 import rise.tiao1.buut.presentation.booking.bookingList.BookingList
 import rise.tiao1.buut.presentation.components.Navigation
 import rise.tiao1.buut.presentation.notification.notificationList.NotificationList
 import rise.tiao1.buut.ui.theme.AppTheme
 import rise.tiao1.buut.utils.NavigationKeys
+import rise.tiao1.buut.utils.NotificationType
 import rise.tiao1.buut.utils.UiLayout
 import rise.tiao1.buut.utils.UiLayout.LANDSCAPE_EXPANDED
 import rise.tiao1.buut.utils.UiLayout.LANDSCAPE_MEDIUM
@@ -56,7 +58,8 @@ import java.time.LocalDateTime
 fun HomeScreen(
     state: HomeScreenState,
     navigateTo: (String) -> Unit,
-    uiLayout: UiLayout
+    uiLayout: UiLayout,
+    onNotificationClick: (String) -> Unit
 ) {
     Scaffold(
         topBar = {
@@ -92,7 +95,7 @@ fun HomeScreen(
         Box(modifier = Modifier.padding(innerPadding)) {
             if (uiLayout == PORTRAIT_SMALL || uiLayout == PORTRAIT_MEDIUM) {
                 Column {
-                    Content(state)
+                    Content(state, onNotificationClick)
                 }
             } else {
                 Row {
@@ -100,9 +103,9 @@ fun HomeScreen(
                         uiLayout = uiLayout,
                         navigateTo = navigateTo,
                         currentPage = NavigationKeys.Route.HOME,
-                        content = {Content(state)}
+                        content = {Content(state, onNotificationClick)}
                     )
-                    Content(state)
+                    Content(state, onNotificationClick)
                 }
             }
         }
@@ -111,7 +114,7 @@ fun HomeScreen(
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
-fun Content(state: HomeScreenState) {
+fun Content(state: HomeScreenState, onNotificationClick: (String) -> Unit) {
     val tabItems = listOf(
         TabItem(title= stringResource(R.string.notifications_title)),
         TabItem(title= stringResource(R.string.booking_list_title))
@@ -168,7 +171,7 @@ fun Content(state: HomeScreenState) {
                         BookingList(state)
                     }
                     stringResource(R.string.notifications_title) -> {
-                        NotificationList(state)
+                        NotificationList(state, onNotificationClick)
                     }
                 }
             }
@@ -207,7 +210,52 @@ private fun getPreviewHomeScreenState(emptyList: Boolean = false): HomeScreenSta
                 boat = "Boat 3",
                 battery = "Battery C"
             )
-        ), isLoading = false
+        ),
+
+        if (emptyList) emptyList() else listOf(
+            Notification(
+                notificationId = "0",
+                userId = "0",
+                title = "Notification 0",
+                message = "Notification message 0",
+                isRead = false,
+                type = NotificationType.GENERAL,
+                createdAt = LocalDateTime.now().minusDays(2),
+                relatedEntityId = "0"
+            ),
+            Notification(
+                notificationId = "1",
+                userId = "0",
+                title = "Notification 1",
+                message = "Notification message 1",
+                isRead = false,
+                type = NotificationType.ALERT,
+                createdAt = LocalDateTime.now(),
+                relatedEntityId = "1"
+            ),
+            Notification(
+                notificationId = "1",
+                userId = "0",
+                title = "Notification 1",
+                message = "Notification message 1",
+                isRead = true,
+                type = NotificationType.REMINDER,
+                createdAt = LocalDateTime.now(),
+                relatedEntityId = "1"
+            ),
+            Notification(
+                notificationId = "1",
+                userId = "0",
+                title = "Notification 1",
+                message = "Notification message 1",
+                isRead = false,
+                type = NotificationType.BOOKING,
+                createdAt = LocalDateTime.now(),
+                relatedEntityId = "1"
+            )
+        ),
+
+        isLoading = false
     )
 }
 
@@ -216,7 +264,7 @@ private fun getPreviewHomeScreenState(emptyList: Boolean = false): HomeScreenSta
 fun PortraitPreview() {
     AppTheme {
         HomeScreen(
-            getPreviewHomeScreenState(true), {},  PORTRAIT_SMALL
+            getPreviewHomeScreenState(true), {},  PORTRAIT_SMALL, {}
         )
     }
 }
@@ -231,7 +279,7 @@ fun PortraitPreview() {
 fun LandscapePreview() {
     AppTheme {
         HomeScreen(
-            getPreviewHomeScreenState(), {},  LANDSCAPE_SMALL
+            getPreviewHomeScreenState(), {},  LANDSCAPE_SMALL, {}
         )
     }
 }
@@ -247,7 +295,7 @@ fun LandscapePreview() {
 fun PortraitMediumPreview() {
     AppTheme {
         HomeScreen(
-            getPreviewHomeScreenState(), {},  PORTRAIT_MEDIUM
+            getPreviewHomeScreenState(), {},  PORTRAIT_MEDIUM, {}
         )
     }
 }
@@ -262,7 +310,7 @@ fun PortraitMediumPreview() {
 fun LandscapeMediumPreview() {
     AppTheme {
         HomeScreen(
-            getPreviewHomeScreenState(), {},  LANDSCAPE_MEDIUM
+            getPreviewHomeScreenState(), {},  LANDSCAPE_MEDIUM, {}
         )
     }
 }
@@ -278,7 +326,7 @@ fun LandscapeMediumPreview() {
 fun PortraitExpandedPreview() {
     AppTheme {
         HomeScreen(
-            getPreviewHomeScreenState(), {},  PORTRAIT_EXPANDED
+            getPreviewHomeScreenState(), {},  PORTRAIT_EXPANDED, {}
         )
     }
 }
@@ -293,7 +341,7 @@ fun PortraitExpandedPreview() {
 fun LandscapeExpandedPreview() {
     AppTheme {
         HomeScreen(
-            getPreviewHomeScreenState(), {},  LANDSCAPE_EXPANDED
+            getPreviewHomeScreenState(), {},  LANDSCAPE_EXPANDED, {}
         )
     }
 }
