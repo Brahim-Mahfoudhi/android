@@ -40,6 +40,7 @@ import rise.tiao1.buut.domain.booking.Booking
 import rise.tiao1.buut.domain.notification.Notification
 import rise.tiao1.buut.presentation.booking.bookingList.BookingList
 import rise.tiao1.buut.presentation.components.Navigation
+import rise.tiao1.buut.presentation.components.NotificationBadge
 import rise.tiao1.buut.presentation.notification.notificationList.NotificationList
 import rise.tiao1.buut.ui.theme.AppTheme
 import rise.tiao1.buut.utils.NavigationKeys
@@ -152,18 +153,22 @@ fun Content(state: HomeScreenState, onNotificationClick: (String) -> Unit) {
                             text = item.title,
                             style = MaterialTheme.typography.labelMedium
                         )
+
                     },
-                    modifier = Modifier.testTag(item.title)
+                    modifier = Modifier.testTag(item.title),
+                    icon = {if (index == 0) NotificationBadge(state.unReadNotifications)}
                 )
             }
         }
         HorizontalPager(
             state= pagerState,
-            modifier = Modifier.fillMaxWidth()
+            modifier = Modifier
+                .fillMaxWidth()
                 .weight(1f)
         ) { index ->
             Box (
-                modifier = Modifier.fillMaxSize()
+                modifier = Modifier
+                    .fillMaxSize()
                     .padding(dimensionResource(R.dimen.padding_medium))
             ) {
                 when (tabItems[index].title){
@@ -254,8 +259,8 @@ private fun getPreviewHomeScreenState(emptyList: Boolean = false): HomeScreenSta
                 relatedEntityId = "1"
             )
         ),
-
-        isLoading = false
+        isLoading = false,
+        unReadNotifications = 3
     )
 }
 

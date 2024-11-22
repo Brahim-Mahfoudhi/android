@@ -63,7 +63,7 @@ class HomeViewModel @Inject constructor(
             val notifications = getNotificationsUseCase(
                 userId = state.value.user?.id ?: ""
             )
-            _state.value = state.value.copy(notifications = notifications)
+            _state.value = state.value.copy(notifications = notifications, unReadNotifications = notifications.count { !it.isRead })
         }
     }
 
