@@ -11,7 +11,7 @@ data class Notification(
     val userId : String,
     val title : String,
     val message: String,
-    val isRead : Boolean,
+    var isRead : Boolean,
     val type : NotificationType,
     val createdAt : LocalDateTime,
     val relatedEntityId: String

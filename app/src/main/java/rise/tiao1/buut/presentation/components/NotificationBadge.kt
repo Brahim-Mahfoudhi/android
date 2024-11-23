@@ -11,6 +11,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.unit.dp
 
 @Composable
@@ -21,10 +22,12 @@ fun NotificationBadge(count: Int) {
                 .background(MaterialTheme.colorScheme.error, shape = CircleShape)
                 .size(20.dp) // Adjust size as needed
                 .wrapContentSize(Alignment.Center)
+                .testTag("notificationBadge")
         ) {
             Text(
                 text = count.toString(),
-                color = Color.White
+                color = Color.White,
+                modifier = Modifier.testTag("notificationBadgeText")
             )
         }
     }

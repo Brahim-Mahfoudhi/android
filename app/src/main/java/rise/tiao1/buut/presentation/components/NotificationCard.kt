@@ -19,6 +19,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.unit.dp
 import rise.tiao1.buut.domain.notification.Notification
 import rise.tiao1.buut.utils.NotificationType
@@ -28,7 +29,8 @@ fun NotificationCard(notification: Notification, onClick: (String) -> Unit) {
     Card(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(8.dp),
+            .padding(8.dp)
+            .testTag("notificationCard"),
         elevation = CardDefaults.cardElevation(2.dp),
         colors = if (notification.isRead) {CardDefaults.cardColors(containerColor = Color.LightGray)} else {CardDefaults.cardColors(containerColor = Color.White)},
         onClick = { onClick(notification.notificationId) }

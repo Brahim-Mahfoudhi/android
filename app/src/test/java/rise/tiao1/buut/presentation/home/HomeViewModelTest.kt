@@ -43,7 +43,6 @@ class HomeViewModelTest {
         val viewModel = getViewModel()
         dispatcher.scheduler.advanceUntilIdle()
         val initialState = viewModel.state.value
-        dispatcher.scheduler.advanceUntilIdle()
         assertEquals(initialState.user, getUser())
         assertEquals(initialState.bookings, getBookings())
         assertEquals(initialState.notifications, getNotifications())
