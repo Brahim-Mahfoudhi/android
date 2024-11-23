@@ -14,6 +14,7 @@ import rise.tiao1.buut.data.local.notification.LocalNotification
 import rise.tiao1.buut.data.local.notification.NotificationDao
 import rise.tiao1.buut.data.remote.notification.NotificationApiService
 import rise.tiao1.buut.data.remote.notification.NotificationDTO
+import rise.tiao1.buut.data.remote.notification.NotificationIsReadDTO
 import rise.tiao1.buut.domain.notification.Notification
 import rise.tiao1.buut.utils.NotificationType
 import rise.tiao1.buut.utils.toApiDateString
@@ -72,35 +73,36 @@ class NotificationRepositoryTest {
     @Test
     fun toggleNotificationReadStatus_setsCorrectly() = scope.runTest {
         var expected = getLocalNotifications()[0].copy(isRead = false)
-        coEvery { apiService.markNotificationAsRead(testId) } returns Unit
+
+        coEvery { apiService.markNotificationAsRead(getNotificatioIsReadDto()) } returns Unit
         coEvery { notificationDao.getNotificationById(testId) } returns getLocalNotifications()[0]
         coEvery { notificationDao.insertNotification(expected) } returns Unit
-        repository.toggleNotificationReadStatus(testId)
-        coVerify { apiService.markNotificationAsRead(testId) }
+        repository.toggleNotificationReadStatus(testId, false)
+        coVerify { apiService.markNotificationAsRead(getNotificatioIsReadDto()) }
         coVerify { notificationDao.getNotificationById(testId) }
         coVerify { notificationDao.insertNotification(expected) }
     }
 
     @Test
     fun toggleNotificationReadStatus_ApiError_HandlesCorrectly() = scope.runTest {
-        coEvery { apiService.markNotificationAsRead(testId) } throws Exception(testError)
-        val actual = runCatching { repository.toggleNotificationReadStatus(testId) }
+        coEvery { apiService.markNotificationAsRead(getNotificatioIsReadDto()) } throws Exception(testError)
+        val actual = runCatching { repository.toggleNotificationReadStatus(testId, false) }
         assertEquals(actual.isFailure, true)
         assertEquals(actual.exceptionOrNull()?.message, testError)
-        coVerify { apiService.markNotificationAsRead(testId) }
+        coVerify { apiService.markNotificationAsRead(getNotificatioIsReadDto()) }
         coVerify (exactly = 0) { notificationDao.getNotificationById(testId) }
         coVerify (exactly = 0) { notificationDao.insertNotification(any()) }
     }
 
     @Test
     fun toggleNotificationReadStatus_RoomError_HandlesCorrectly() = scope.runTest {
-        coEvery { apiService.markNotificationAsRead(testId) } returns Unit
+        coEvery { apiService.markNotificationAsRead(getNotificatioIsReadDto()) } returns Unit
         coEvery { notificationDao.getNotificationById(testId) } returns getLocalNotifications()[0]
         coEvery { notificationDao.insertNotification(any()) } throws Exception(testError)
-        val actual = runCatching { repository.toggleNotificationReadStatus(testId) }
+        val actual = runCatching { repository.toggleNotificationReadStatus(testId, false) }
         assertEquals(actual.isFailure, true)
         assertEquals(actual.exceptionOrNull()?.message, testError)
-        coVerify { apiService.markNotificationAsRead(testId) }
+        coVerify { apiService.markNotificationAsRead(getNotificatioIsReadDto()) }
         coVerify { notificationDao.getNotificationById(testId) }
     }
 
@@ -142,5 +144,11 @@ class NotificationRepositoryTest {
         createdAt = today.toApiDateString(),
         relatedEntityId = ""
     ))
+
+    private fun getNotificatioIsReadDto() =
+        NotificationIsReadDTO(
+            notificationId = testId,
+            isRead = true
+        )
 
 }

@@ -60,7 +60,7 @@ class HomeScreenKtExpandedPortraitTest {
                 state = getState(isLoading = true),
                 navigateTo = {},
                 uiLayout = uiLayout,
-                onNotificationClick = {}
+                onNotificationClick = { _,_ -> }
             )
         }
 
@@ -85,7 +85,7 @@ class HomeScreenKtExpandedPortraitTest {
                 state = getState(apiError = testError),
                 navigateTo = {},
                 uiLayout = uiLayout,
-                onNotificationClick = {}
+                onNotificationClick = { _,_ -> }
             )
         }
 
@@ -112,7 +112,7 @@ class HomeScreenKtExpandedPortraitTest {
                 state = getState(notifications = emptyList(), unReadNotifications = 0),
                 navigateTo = {},
                 uiLayout = uiLayout,
-                onNotificationClick = {}
+                onNotificationClick = { _,_ -> }
             )
         }
 
@@ -134,7 +134,7 @@ class HomeScreenKtExpandedPortraitTest {
                 state = getState(bookings = emptyList()),
                 navigateTo = {},
                 uiLayout = uiLayout,
-                onNotificationClick = {}
+                onNotificationClick = { _,_ -> }
             )
         }
         
@@ -186,7 +186,7 @@ class HomeScreenKtExpandedPortraitTest {
                 state = getState(notifications = notifications, unReadNotifications = notifications.size),
                 navigateTo = {},
                 uiLayout = uiLayout,
-                onNotificationClick = {}
+                onNotificationClick = { _,_ -> }
             )
         }
 
@@ -216,7 +216,7 @@ class HomeScreenKtExpandedPortraitTest {
             ),
         )
         var clickedNotificationId: String? = null
-        val onNotificationClick: (String) -> Unit = { notificationId ->
+        val onNotificationClick: (String, Boolean) -> Unit = { notificationId,_ ->
             clickedNotificationId = notificationId
             notifications.first { it.notificationId == notificationId }.isRead = true
         }
@@ -251,7 +251,7 @@ class HomeScreenKtExpandedPortraitTest {
                 state = getState(bookings = bookings),
                 navigateTo = {},
                 uiLayout = uiLayout,
-                onNotificationClick = {}
+                onNotificationClick = { _,_ -> }
             )
         }
 
@@ -275,7 +275,7 @@ class HomeScreenKtExpandedPortraitTest {
                 state = getState(bookings = bookings),
                 navigateTo = {},
                 uiLayout = uiLayout,
-                onNotificationClick = {}
+                onNotificationClick = { _,_ -> }
             )
         }
 
@@ -295,7 +295,7 @@ class HomeScreenKtExpandedPortraitTest {
                 state = getState(bookings = listOf(pastBooking)),
                 navigateTo = {},
                 uiLayout = uiLayout,
-                onNotificationClick = {}
+                onNotificationClick = { _,_ -> }
             )
         }
 
@@ -313,7 +313,7 @@ class HomeScreenKtExpandedPortraitTest {
                 state = getState(bookings = listOf(booking)),
                 navigateTo = {},
                 uiLayout = uiLayout,
-                onNotificationClick = {}
+                onNotificationClick = { _,_ -> }
             )
         }
 
@@ -331,7 +331,7 @@ class HomeScreenKtExpandedPortraitTest {
                 state = getState(bookings = listOf(booking)),
                 navigateTo = {},
                 uiLayout = uiLayout,
-                onNotificationClick = {}
+                onNotificationClick = { _,_ -> }
             )
         }
 
@@ -351,7 +351,7 @@ class HomeScreenKtExpandedPortraitTest {
                 state = getState(bookings = listOf(booking)),
                 navigateTo = {},
                 uiLayout = uiLayout,
-                onNotificationClick = {}
+                onNotificationClick = { _,_ -> }
             )
         }
 
@@ -368,7 +368,7 @@ class HomeScreenKtExpandedPortraitTest {
                 state = HomeScreenState(bookings = listOf(booking), isLoading = false),
                 navigateTo = {},
                 uiLayout = uiLayout,
-                onNotificationClick = {}
+                onNotificationClick = { _,_ -> }
             )
         }
 

@@ -14,7 +14,7 @@ interface NotificationApiService {
     @GET("api/Notification/user/{userId}")
     suspend fun getAllNotificationsFromUser(@Path("userId") userId: String, @Query("language") language: String = "en"): List<NotificationDTO>
 
-    @PATCH("api/Notification/{notificationId}/read")
-    suspend fun markNotificationAsRead(@Path("notificationId") notificationId: String)
+    @PUT("api/Notification")
+    suspend fun markNotificationAsRead(@Body notificationIsReadDTO: NotificationIsReadDTO)
 }
 

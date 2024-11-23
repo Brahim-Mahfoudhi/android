@@ -17,7 +17,7 @@ import rise.tiao1.buut.presentation.components.NotificationCard
 import rise.tiao1.buut.presentation.home.HomeScreenState
 
 @Composable
-fun NotificationList(state: HomeScreenState, onNotificationClick: (String) -> Unit) {
+fun NotificationList(state: HomeScreenState, onNotificationClick: (String, Boolean) -> Unit) {
 
     when {
         state.isLoading -> {

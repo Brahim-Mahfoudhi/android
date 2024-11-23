@@ -87,7 +87,7 @@ class MainActivity : ComponentActivity() {
                     state = viewModel.state.value,
                     navigateTo =  { route:String -> navController.navigate(route)} ,
                     uiLayout = uiLayout,
-                    onNotificationClick = { notificationId -> viewModel.onNotificationClick(notificationId) }
+                    onNotificationClick =  { notificationId:String, Boolean: Boolean -> viewModel.onNotificationClick(notificationId, Boolean) }
                 )
             }
             composable(route = Route.REGISTER) {

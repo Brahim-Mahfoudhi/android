@@ -25,7 +25,7 @@ import rise.tiao1.buut.domain.notification.Notification
 import rise.tiao1.buut.utils.NotificationType
 
 @Composable
-fun NotificationCard(notification: Notification, onClick: (String) -> Unit) {
+fun NotificationCard(notification: Notification, onClick: (String, Boolean) -> Unit) {
     Card(
         modifier = Modifier
             .fillMaxWidth()
@@ -33,7 +33,7 @@ fun NotificationCard(notification: Notification, onClick: (String) -> Unit) {
             .testTag("notificationCard"),
         elevation = CardDefaults.cardElevation(2.dp),
         colors = if (notification.isRead) {CardDefaults.cardColors(containerColor = Color.LightGray)} else {CardDefaults.cardColors(containerColor = Color.White)},
-        onClick = { onClick(notification.notificationId) }
+        onClick = { onClick(notification.notificationId, notification.isRead) }
     ) {
         Row(
             modifier = Modifier

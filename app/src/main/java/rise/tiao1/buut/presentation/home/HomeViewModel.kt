@@ -67,9 +67,9 @@ class HomeViewModel @Inject constructor(
         }
     }
 
-    fun onNotificationClick(notificationId: String) {
+    fun onNotificationClick(notificationId: String, currentStatus: Boolean) {
         viewModelScope.launch(dispatcher) {
-            toggleNotificationUseCase(notificationId)
+            toggleNotificationUseCase(notificationId, currentStatus)
             getNotifications()
         }
     }

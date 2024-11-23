@@ -60,7 +60,7 @@ fun HomeScreen(
     state: HomeScreenState,
     navigateTo: (String) -> Unit,
     uiLayout: UiLayout,
-    onNotificationClick: (String) -> Unit
+    onNotificationClick: (String, Boolean) -> Unit
 ) {
     Scaffold(
         topBar = {
@@ -115,7 +115,7 @@ fun HomeScreen(
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
-fun Content(state: HomeScreenState, onNotificationClick: (String) -> Unit) {
+fun Content(state: HomeScreenState, onNotificationClick: (String, Boolean) -> Unit) {
     val tabItems = listOf(
         TabItem(title= stringResource(R.string.notifications_title)),
         TabItem(title= stringResource(R.string.booking_list_title))
@@ -269,7 +269,7 @@ private fun getPreviewHomeScreenState(emptyList: Boolean = false): HomeScreenSta
 fun PortraitPreview() {
     AppTheme {
         HomeScreen(
-            getPreviewHomeScreenState(true), {},  PORTRAIT_SMALL, {}
+            getPreviewHomeScreenState(true), {},  PORTRAIT_SMALL, {_,_->}
         )
     }
 }
@@ -284,7 +284,7 @@ fun PortraitPreview() {
 fun LandscapePreview() {
     AppTheme {
         HomeScreen(
-            getPreviewHomeScreenState(), {},  LANDSCAPE_SMALL, {}
+            getPreviewHomeScreenState(), {},  LANDSCAPE_SMALL, {_,_->}
         )
     }
 }
@@ -300,7 +300,7 @@ fun LandscapePreview() {
 fun PortraitMediumPreview() {
     AppTheme {
         HomeScreen(
-            getPreviewHomeScreenState(), {},  PORTRAIT_MEDIUM, {}
+            getPreviewHomeScreenState(), {},  PORTRAIT_MEDIUM, {_,_->}
         )
     }
 }
@@ -315,7 +315,7 @@ fun PortraitMediumPreview() {
 fun LandscapeMediumPreview() {
     AppTheme {
         HomeScreen(
-            getPreviewHomeScreenState(), {},  LANDSCAPE_MEDIUM, {}
+            getPreviewHomeScreenState(), {},  LANDSCAPE_MEDIUM, {_,_->}
         )
     }
 }
@@ -331,7 +331,7 @@ fun LandscapeMediumPreview() {
 fun PortraitExpandedPreview() {
     AppTheme {
         HomeScreen(
-            getPreviewHomeScreenState(), {},  PORTRAIT_EXPANDED, {}
+            getPreviewHomeScreenState(), {},  PORTRAIT_EXPANDED, {_,_->}
         )
     }
 }
@@ -346,7 +346,7 @@ fun PortraitExpandedPreview() {
 fun LandscapeExpandedPreview() {
     AppTheme {
         HomeScreen(
-            getPreviewHomeScreenState(), {},  LANDSCAPE_EXPANDED, {}
+            getPreviewHomeScreenState(), {},  LANDSCAPE_EXPANDED, {_,_->}
         )
     }
 }
