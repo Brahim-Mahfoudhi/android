@@ -1,79 +1,30 @@
 pipeline {
-    agent any
+    agent { label 'App' }
 
     environment {
-        APP_ARCHIVE_NAME = 'app'
-        APP_MODULE_NAME = 'android-template'
+        APP_ARCHIVE_NAME = 'app' 
+        APP_MODULE_NAME = 'android-template' // NEEDS TO CHANGE
         CHANGELOG_CMD = 'git log --date=format:"%Y-%m-%d" --pretty="format: * %s% b (%an, %cd)" | head -n 10 > commit-changelog.txt'
-//        FIREBASE_GROUPS = 'mobile-dev-team, mobile-qa-team'
-//        FIREBASE_APP_DIST_CMD = "firebase appdistribution:distribute app/build/outputs/apk/\$APP_BUILD_TYPE/app-\$APP_BUILD_TYPE.apk --app \$FIREBASE_ID --release-notes-file commit-changelog.txt --groups \"\$FIREBASE_GROUPS\""
-//        GOOGLE_APPLICATION_CREDENTIALS = "${HOME}/google-service-accounts/${APP_MODULE_NAME}.json"
+        DISCORD_WEBHOOK_URL = "https://discord.com/api/webhooks/1301160382307766292/kROxjtgZ-XVOibckTMri2fy5-nNOEjzjPLbT9jEpr_R0UH9JG0ZXb2XzUsYGE0d3yk6I" // NEEDS TO BE CHANGED
+        JENKINS_CREDENTIALS_ID = "jenkins-master-key"
+        SSH_KEY_FILE = '/var/lib/jenkins/.ssh/id_rsa'
     }
 
     tools {
-        jdk "Java 11"
+        jdk "Java 17"
     }
 
     options {
-        // prevent multiple builds from running concurrently, that come from the same git branch
-        disableConcurrentBuilds()
+        disableConcurrentBuilds() 
     }
 
     stages {
-        stage("PR") {
+        stage("Build and Publish to Play Store") {
             when {
-                changeRequest target: 'master'
+                anyOf { branch 'master'; branch 'release' }
             }
             stages {
-                stage("Build") {
-                    steps {
-                        sh './gradlew clean assembleAlpha'
-                    }
-                }
-                stage("Test") {
-                    steps {
-                        sh './gradlew testAlphaUnitTest'
-                    }
-                    post {
-                        always {
-                            junit '**/build/test-results/**/TEST-*.xml'
-                        }
-                    }
-                }
-                stage("Lint") {
-                    steps {
-                        sh './gradlew lintAlpha'
-                    }
-                    post {
-                        always {
-                            archiveArtifacts 'app/build/reports/*.html'
-                        }
-                    }
-                }
-                stage("Detekt") {
-                    steps {
-                        sh './gradlew downloadDetektConfig detektAlpha'
-                    }
-                    post {
-                        always {
-                            archiveArtifacts '*/build/reports/detekt/*.html'
-                        }
-                    }
-                }
-            }
-        }
-        stage("Alpha") {
-            environment {
-                APP_BUILD_TYPE = "alpha"
-                FIREBASE_ID = '1:292666345594:android:21903887d2d5200065d3c3' // from your project google-services.json client_info
-            }
-
-            when {
-                branch 'master'
-            }
-
-            stages {
-                stage("License") {
+                stage("Generate License Report") {
                     steps {
                         sh './gradlew createLicenseReport'
                     }
@@ -83,164 +34,17 @@ pipeline {
                         }
                     }
                 }
-                stage("Build") {
+                stage("Build and Bundle") {
                     steps {
-                        sh './gradlew clean assembleAlpha bundleAlpha'
-                    }
-                }
-                stage("Test") {
-                    steps {
-                        sh './gradlew testAlphaUnitTest'
+                        sh './gradlew clean assembleRelease bundleRelease'
                     }
                     post {
                         always {
-                            junit '**/build/test-results/**/TEST-*.xml'
+                            archiveArtifacts "app/build/outputs/bundle/release/${APP_ARCHIVE_NAME}-release.aab"
                         }
                     }
                 }
-                stage("Lint") {
-                    steps {
-                        sh './gradlew lintAlpha'
-                    }
-                    post {
-                        always {
-                            archiveArtifacts 'app/build/reports/*.html'
-                        }
-                    }
-                }
-                stage("Detekt") {
-                    steps {
-                        sh './gradlew downloadDetektConfig detektAlpha'
-                    }
-                    post {
-                        always {
-                            archiveArtifacts '*/build/reports/detekt/*.html'
-                        }
-                    }
-                }
-                stage("App Distribution") {
-                    steps {
-                        sh "${CHANGELOG_CMD}"
-                        sh './gradlew appDistributionUploadAlpha'
-//                        sh "${FIREBASE_APP_DIST_CMD}"
-                    }
-                }
-                stage("Deploy to Play Store Alpha") {
-                    steps {
-                        sh './gradlew publishAlphaBundle --artifact-dir app/build/outputs/bundle/alpha'
-                    }
-                }
-            }
-        }
-        stage("Beta") {
-            environment {
-                APP_BUILD_TYPE = "beta"
-                FIREBASE_ID = '1:292666345594:android:79471cfe9138c223' // from your project google-services.json client_info
-            }
-            when {
-                branch 'beta'
-            }
-            stages {
-                stage("License") {
-                    steps {
-                        sh './gradlew createLicenseReport'
-                    }
-                    post {
-                        always {
-                            archiveArtifacts "**/build/licenses/*.html"
-                        }
-                    }
-                }
-                stage("Build") {
-                    steps {
-                        sh './gradlew clean assembleBeta bundleBeta'
-                    }
-                    post {
-                        always {
-                            archiveArtifacts "app/build/outputs/apk/beta/${APP_ARCHIVE_NAME}-beta.apk"
-                        }
-                    }
-                }
-                stage("Test") {
-                    steps {
-                        sh './gradlew testBetaUnitTest'
-                    }
-                    post {
-                        always {
-                            junit '**/build/test-results/**/TEST-*.xml'
-                        }
-                    }
-                }
-                stage("Lint") {
-                    steps {
-                        sh './gradlew lintBeta'
-                    }
-                    post {
-                        always {
-                            archiveArtifacts 'app/build/reports/*.html'
-                        }
-                    }
-                }
-                stage("Detekt") {
-                    steps {
-                        sh './gradlew detektBeta'
-                    }
-                    post {
-                        always {
-                            archiveArtifacts '*/build/reports/detekt/*.html'
-                        }
-                    }
-                }
-                stage("App Distribution") {
-                    steps {
-                        sh "${CHANGELOG_CMD}"
-                        sh './gradlew appDistributionUploadAlpha'
-//                        sh "${FIREBASE_APP_DIST_CMD}"
-                    }
-                }
-                stage("Deploy to Play Store") {
-                    steps {
-                        sh "./gradlew publishBetaBundle --artifact-dir app/build/outputs/bundle/beta"
-                    }
-                    post {
-                        always {
-                            archiveArtifacts "app/build/outputs/bundle/beta/${APP_ARCHIVE_NAME}-beta.aab"
-                        }
-                    }
-                }
-            }
-        }
-        stage("Release") {
-            environment {
-                APP_BUILD_TYPE = "release"
-                FIREBASE_ID = '1:292666345594:android:79471cfe9138c223' // from your project google-services.json client_info
-            }
-            when {
-                branch 'release'
-            }
-            stages {
-                stage("License") {
-                    steps {
-                        sh './gradlew createLicenseReport'
-                    }
-                    post {
-                        always {
-                            archiveArtifacts "**/build/licenses/*.html"
-                        }
-                    }
-                }
-                stage("Build") {
-                    steps {
-                        sh "${CHANGELOG_CMD}"
-                        sh './gradlew clean assembleRelease bundleRelease appDistributionUploadRelease'
-                    }
-                    post {
-                        always {
-                            archiveArtifacts "app/build/outputs/apk/release/${APP_ARCHIVE_NAME}-release.apk"
-                        }
-                    }
-                }
-                stage("Test") {
+                stage("Run Tests") {
                     steps {
                         sh './gradlew testReleaseUnitTest'
                     }
@@ -250,7 +54,7 @@ pipeline {
                         }
                     }
                 }
-                stage("Lint") {
+                stage("Lint Check") {
                     steps {
                         sh './gradlew lintRelease'
                     }
@@ -260,7 +64,7 @@ pipeline {
                         }
                     }
                 }
-                stage("Detekt") {
+                stage("Static Analysis with Detekt") {
                     steps {
                         sh './gradlew downloadDetektConfig detektRelease'
                     }
@@ -270,43 +74,58 @@ pipeline {
                         }
                     }
                 }
-                stage("App Distribution") {
+                stage("Publish to Play Store") {
                     steps {
-                        sh "${CHANGELOG_CMD}"
-                        sh './gradlew appDistributionUploadAlpha'
-//                        sh "${FIREBASE_APP_DIST_CMD}"
+                        sh './gradlew publishReleaseBundle --artifact-dir app/build/outputs/bundle/release'
                     }
                 }
-                stage("Deploy to Play Store") {
-                    steps {
-                        sh "./gradlew publishReleaseBundle --artifact-dir app/build/outputs/bundle/release"
-                    }
-                    post {
-                        always {
-                            archiveArtifacts "app/build/outputs/bundle/release/${APP_ARCHIVE_NAME}-release.aab"
-                        }
-                    }
-                }
-            }
-        }
-        stage("Increment Version Code") {
-            when {
-                anyOf { branch 'master'; branch 'beta'; branch 'release' }
-            }
-            steps {
-                sh './gradlew incrementVersionCode'
             }
         }
     }
 
     post {
-        failure {
-            mail(to: 'jeffdcamp@gmail.com',
-                    subject: "Job '${env.JOB_NAME}' (${env.BUILD_NUMBER}) has failed",
-                    body: "Please go to ${env.BUILD_URL}.")
-
-            // Notify build breaker
-            step([$class: 'Mailer', notifyEveryUnstableBuild: true, recipients: emailextrecipients([[$class: 'CulpritsRecipientProvider'], [$class: 'RequesterRecipientProvider']])])
+        success {
+            echo 'Build and deployment completed successfully!'
+            archiveArtifacts artifacts: '**/*.dll', fingerprint: true
+            archiveArtifacts artifacts: "${TRX_FILE_PATH}", fingerprint: true
+            script {
+                sendDiscordNotification("Build Success")
+            }
         }
+        failure {
+            echo 'Build or deployment has failed.'
+            script {
+                sendDiscordNotification("Build Failed")
+            }
+        }
+        always {
+            echo 'Build process has completed.'
+            echo 'Generate Test report...'
+            sh "/home/jenkins/.dotnet/tools/trx2junit --output ${TEST_RESULT_PATH} ${TRX_FILE_PATH}"
+            junit "${TRX_TO_XML_PATH}"
+        }
+    }
+}
+
+def sendDiscordNotification(status) {
+    script {
+        discordSend(
+            title: "${env.JOB_NAME} - ${status}",
+            description: """
+                Build #${env.BUILD_NUMBER} ${status == "Build Success" ? 'completed successfully!' : 'has failed!'}
+                **Commit**: ${env.GIT_COMMIT}
+                **Author**: ${env.GIT_AUTHOR_NAME} <${env.GIT_AUTHOR_EMAIL}>
+                **Branch**: ${env.GIT_BRANCH}
+                **Message**: ${env.GIT_COMMIT_MESSAGE}
+                
+                [**Build output**](${JENKINS_SERVER}/job/${env.JOB_NAME}/${env.BUILD_NUMBER}/console)
+                [**Test result**](${JENKINS_SERVER}/job/${env.JOB_NAME}/lastBuild/testReport/)
+                [**Coverage report**](${JENKINS_SERVER}/job/${env.JOB_NAME}/lastBuild/Coverage_20Report/)
+                [**History**](${JENKINS_SERVER}/job/${env.JOB_NAME}/${env.BUILD_NUMBER}/testReport/history/)
+            """,
+            footer: "Build Duration: ${currentBuild.durationString.replace(' and counting', '')}",
+            webhookURL: DISCORD_WEBHOOK_URL,
+            result: status == "Build Success" ? 'SUCCESS' : 'FAILURE'
+        )
     }
 }
