@@ -17,7 +17,7 @@ pipeline {
     stages {
         stage("Build and Publish to Play Store") {
             when {
-                anyOf { branch 'master'; branch 'release' }
+                anyOf { branch 'main'; branch 'release' }
             }
             stages {
                 stage("Generate License Report") {
