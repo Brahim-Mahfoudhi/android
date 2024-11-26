@@ -19,7 +19,7 @@ pipeline {
     }
 
     stages {
-        stage("Build and Publish to Play Store") {
+        stage("Build Application") {
             when {
                 anyOf { branch 'main'; branch 'release' }
             }
@@ -74,11 +74,15 @@ pipeline {
                         }
                     }
                 }
-                stage("Publish to Play Store") {
-                    steps {
-                        sh './gradlew publishReleaseBundle --artifact-dir app/build/outputs/bundle/release'
-                    }
-                }
+            }
+        }
+
+        stage("Publish to Play Store") {
+            when {
+                anyOf { branch 'main'; branch 'release' }
+            }
+            steps {
+                sh './gradlew publishReleaseBundle --artifact-dir app/build/outputs/bundle/release'
             }
         }
     }
@@ -120,7 +124,7 @@ def sendDiscordNotification(status) {
                 
                 [**Build output**](${JENKINS_SERVER}/job/${env.JOB_NAME}/${env.BUILD_NUMBER}/console)
                 [**Test result**](${JENKINS_SERVER}/job/${env.JOB_NAME}/lastBuild/testReport/)
-                [**Coverage report**](${JENKINS_SERVER}/job/${env.JOB_NAME}/lastBuild/Coverage_20Report/)
+                [**Coverage report**](${JENKINS_SERVER}/job/${env.JOB_NAME}/lastBuild/Coverage_20Report/))
                 [**History**](${JENKINS_SERVER}/job/${env.JOB_NAME}/${env.BUILD_NUMBER}/testReport/history/)
             """,
             footer: "Build Duration: ${currentBuild.durationString.replace(' and counting', '')}",
