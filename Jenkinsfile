@@ -10,7 +10,6 @@ pipeline {
         SSH_KEY_FILE = '/var/lib/jenkins/.ssh/id_rsa'
         TEST_RESULT_PATH = '/var/lib/jenkins/agent/workspace/android_pipeline/app/src/androidTest/TestResults/'
         TRX_FILE_PATH = '/var/lib/jenkins/agent/workspace/android_pipeline/app/src/androidTest/TestResults/'
-        TEST_RESULT_PATH = '/var/lib/jenkins/agent/workspace/android_pipeline/app/src/androidTest/TestResults/'
         TRX_TO_XML_PATH = '/var/lib/jenkins/agent/workspace/android_pipeline/app/src/androidTest/TestResults/'
         JENKINS_SERVER = 'http://139.162.132.174:8080/'
     }
