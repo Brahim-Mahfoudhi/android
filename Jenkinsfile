@@ -10,10 +10,6 @@ pipeline {
         SSH_KEY_FILE = '/var/lib/jenkins/.ssh/id_rsa'
     }
 
-    tools {
-        jdk "Java 17"
-    }
-
     options {
         disableConcurrentBuilds() 
     }
