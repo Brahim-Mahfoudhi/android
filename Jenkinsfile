@@ -39,10 +39,10 @@ pipeline {
                     env.GIT_BRANCH = gitInfo[4]
                     script {
                     sh '''
-                    sudo chown -R jenkins:jenkins /var/lib/jenkins/agent/workspace/android_pipeline/app/src/androidTest/TestResults/
-                    sudo chmod -R 775 /var/lib/jenkins/agent/workspace/android_pipeline/app/src/androidTest/TestResults/
-                    sudo chown -R jenkins:jenkins /var/lib/jenkins/agent/workspace/
-                    sudo chmod -R 775 /var/lib/jenkins/agent/workspace/
+                    chown -R jenkins:jenkins /var/lib/jenkins/agent/workspace/android_pipeline/app/src/androidTest/TestResults/
+                    chmod -R 775 /var/lib/jenkins/agent/workspace/android_pipeline/app/src/androidTest/TestResults/
+                    chown -R jenkins:jenkins /var/lib/jenkins/agent/workspace/
+                    chmod -R 775 /var/lib/jenkins/agent/workspace/
                     '''
                     }
                 }
