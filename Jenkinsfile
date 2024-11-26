@@ -37,6 +37,14 @@ pipeline {
                     env.GIT_COMMIT_MESSAGE = gitInfo[2]
                     env.GIT_COMMIT = gitInfo[3]
                     env.GIT_BRANCH = gitInfo[4]
+                    script {
+                    sh '''
+                    sudo chown -R jenkins:jenkins /var/lib/jenkins/agent/workspace/android_pipeline/app/src/androidTest/TestResults/
+                    sudo chmod -R 775 /var/lib/jenkins/agent/workspace/android_pipeline/app/src/androidTest/TestResults/
+                    sudo chown -R jenkins:jenkins /var/lib/jenkins/agent/workspace/
+                    sudo chmod -R 775 /var/lib/jenkins/agent/workspace/
+                    '''
+                    }
                 }
             }
         }
