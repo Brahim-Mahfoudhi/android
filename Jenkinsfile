@@ -19,6 +19,28 @@ pipeline {
     }
 
     stages {
+        
+        stage('Clean Workspace') {
+            steps {
+                cleanWs()
+            }
+        }
+
+        stage('Checkout Code') {
+            steps {
+                script {
+                    git credentialsId: 'jenkins-master-key', url: 'git@github.com:Brahim-Mahfoudhi/android.git', branch:'main'
+                    echo 'Gather GitHub info!'
+                    def gitInfo = sh(script: 'git show -s HEAD --pretty=format:"%an%n%ae%n%s%n%H%n%h" 2>/dev/null', returnStdout: true).trim().split("\n")
+                    env.GIT_AUTHOR_NAME = gitInfo[0]
+                    env.GIT_AUTHOR_EMAIL = gitInfo[1]
+                    env.GIT_COMMIT_MESSAGE = gitInfo[2]
+                    env.GIT_COMMIT = gitInfo[3]
+                    env.GIT_BRANCH = gitInfo[4]
+                }
+            }
+        }
+        
         stage("Build Application") {
             when {
                 anyOf { branch 'main'; branch 'release' }
