@@ -42,9 +42,6 @@ pipeline {
         }
         
         stage("Build Application") {
-            when {
-                anyOf { branch 'main'; branch 'release' }
-            }
             stages {
                 stage("Generate License Report") {
                     steps {
@@ -100,9 +97,6 @@ pipeline {
         }
 
         stage("Publish to Play Store") {
-            when {
-                anyOf { branch 'main'; branch 'release' }
-            }
             steps {
                 sh './gradlew publishReleaseBundle --artifact-dir app/build/outputs/bundle/release'
             }
