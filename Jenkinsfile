@@ -8,9 +8,9 @@ pipeline {
         DISCORD_WEBHOOK_URL = "https://discord.com/api/webhooks/1301160382307766292/kROxjtgZ-XVOibckTMri2fy5-nNOEjzjPLbT9jEpr_R0UH9JG0ZXb2XzUsYGE0d3yk6I" // NEEDS TO BE CHANGED
         JENKINS_CREDENTIALS_ID = "jenkins-master-key"
         SSH_KEY_FILE = '/var/lib/jenkins/.ssh/id_rsa'
-        TEST_RESULT_PATH = '/var/lib/jenkins/agent/workspace/android_pipeline/app/src/androidTest/TestResults/'
-        TRX_FILE_PATH = '/var/lib/jenkins/agent/workspace/android_pipeline/app/src/androidTest/TestResults/'
-        TRX_TO_XML_PATH = '/var/lib/jenkins/agent/workspace/android_pipeline/app/src/androidTest/TestResults/'
+        TEST_RESULT_PATH = 'app/src/androidTest/TestResults/'
+        TRX_FILE_PATH = 'app/src/androidTest/TestResults/'
+        TRX_TO_XML_PATH = 'app/src/androidTest/TestResults/'
         JENKINS_SERVER = 'http://139.162.132.174:8080/'
     }
 
