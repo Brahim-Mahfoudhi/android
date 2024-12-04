@@ -12,6 +12,7 @@ pipeline {
         TRX_FILE_PATH = 'app/src/TestResults/'
         TRX_TO_XML_PATH = 'app/src/TestResults/'
         JENKINS_SERVER = 'http://139.162.132.174:8080/'
+        GRADLE_PATH = '/opt/gradle/bin/gradle'
     }
 
     options {
@@ -55,7 +56,7 @@ pipeline {
                 }
                 stage("Build and Bundle") {
                     steps {
-                        sh './gradlew clean assembleRelease bundleRelease'
+                        sh '/opt/gradle/bin/gradle clean assembleRelease bundleRelease'
                     }
                     post {
                         always {
@@ -65,7 +66,7 @@ pipeline {
                 }
                 stage("Run Tests") {
                     steps {
-                        sh './gradlew testReleaseUnitTest'
+                        sh '/opt/gradle/bin/gradle testReleaseUnitTest'
                     }
                     post {
                         always {
@@ -75,7 +76,7 @@ pipeline {
                 }
                 stage("Lint Check") {
                     steps {
-                        sh './gradlew lintRelease'
+                        sh '/opt/gradle/bin/gradle lintRelease'
                     }
                     post {
                         always {
@@ -85,7 +86,7 @@ pipeline {
                 }
                 stage("Static Analysis with Detekt") {
                     steps {
-                        sh './gradlew downloadDetektConfig detektRelease'
+                        sh '/opt/gradle/bin/gradle downloadDetektConfig detektRelease'
                     }
                     post {
                         always {
@@ -98,7 +99,7 @@ pipeline {
 
         stage("Publish to Play Store") {
             steps {
-                sh './gradlew publishReleaseBundle --artifact-dir app/build/outputs/bundle/release'
+                sh '/opt/gradle/bin/gradle publishReleaseBundle --artifact-dir app/build/outputs/bundle/release'
             }
         }
     }
