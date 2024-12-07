@@ -45,7 +45,7 @@ pipeline {
             stages {
                 stage("Generate License Report") {
                     steps {
-                        sh "${GRADLE_PATH} createLicenseReport"
+                        sh "${GRADLE_PATH} generateLicenseReport"
                     }
                     post {
                         always {
