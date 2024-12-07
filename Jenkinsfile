@@ -57,7 +57,7 @@ pipeline {
 
                 stage("Build and Bundle") {
                     steps {
-                        sh "${GRADLE_PATH} clean assembleRelease bundleRelease"
+                        sh "${GRADLE_PATH} clean assembleRelease bundleRelease --no-daemon"
                     }
                     post {
                         always {
