@@ -2,17 +2,17 @@ pipeline {
     agent { label 'App' }
 
     environment {
-        APP_ARCHIVE_NAME = 'app' 
-        APP_MODULE_NAME = 'android-template' // NEEDS TO CHANGE
-        CHANGELOG_CMD = 'git log --date=format:"%Y-%m-%d" --pretty="format: * %s% b (%an, %cd)" | head -n 10 > commit-changelog.txt'
-        DISCORD_WEBHOOK_URL = "https://discord.com/api/webhooks/1301160382307766292/kROxjtgZ-XVOibckTMri2fy5-nNOEjzjPLbT9jEpr_R0UH9JG0ZXb2XzUsYGE0d3yk6I" // NEEDS TO BE CHANGED
+        APP_ARCHIVE_NAME      = 'app' 
+        APP_MODULE_NAME       = 'android-template'  // NEEDS TO CHANGE
+        CHANGELOG_CMD         = 'git log --date=format:"%Y-%m-%d" --pretty="format: * %s% b (%an, %cd)" | head -n 10 > commit-changelog.txt'
+        DISCORD_WEBHOOK_URL   = "https://discord.com/api/webhooks/1301160382307766292/kROxjtgZ-XVOibckTMri2fy5-nNOEjzjPLbT9jEpr_R0UH9JG0ZXb2XzUsYGE0d3yk6I"  // NEEDS TO BE CHANGED
         JENKINS_CREDENTIALS_ID = "jenkins-master-key"
-        SSH_KEY_FILE = '/var/lib/jenkins/.ssh/id_rsa'
-        TEST_RESULT_PATH = 'app/src/TestResults/'
-        TRX_FILE_PATH = 'app/src/TestResults/'
-        TRX_TO_XML_PATH = 'app/src/TestResults/'
-        JENKINS_SERVER = 'http://139.162.132.174:8080/'
-        GRADLE_PATH = '/opt/gradle/bin/gradle'
+        SSH_KEY_FILE          = '/var/lib/jenkins/.ssh/id_rsa'
+        TEST_RESULT_PATH      = 'app/src/TestResults/'
+        TRX_FILE_PATH         = 'app/src/TestResults/'
+        TRX_TO_XML_PATH       = 'app/src/TestResults/'
+        JENKINS_SERVER        = 'http://139.162.132.174:8080/'
+        GRADLE_PATH           = '/opt/gradle/bin/gradle'
     }
 
     options {
@@ -20,7 +20,6 @@ pipeline {
     }
 
     stages {
-        
         stage('Clean Workspace') {
             steps {
                 cleanWs()
@@ -41,9 +40,9 @@ pipeline {
                 }
             }
         }
-        
+
         stage("Build Application") {
-            parallel {
+            stages {
                 stage("Generate License Report") {
                     steps {
                         sh "${GRADLE_PATH} createLicenseReport"
@@ -54,6 +53,7 @@ pipeline {
                         }
                     }
                 }
+
                 stage("Build and Bundle") {
                     steps {
                         sh "${GRADLE_PATH} clean assembleRelease bundleRelease"
@@ -64,6 +64,7 @@ pipeline {
                         }
                     }
                 }
+
                 stage("Run Tests") {
                     steps {
                         sh "${GRADLE_PATH} testReleaseUnitTest"
@@ -74,6 +75,7 @@ pipeline {
                         }
                     }
                 }
+
                 stage("Lint Check") {
                     steps {
                         sh "${GRADLE_PATH} lintRelease"
@@ -84,6 +86,7 @@ pipeline {
                         }
                     }
                 }
+
                 stage("Static Analysis with Detekt") {
                     steps {
                         sh "${GRADLE_PATH} downloadDetektConfig detektRelease"
