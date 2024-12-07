@@ -16,7 +16,7 @@ pipeline {
     }
 
     options {
-        disableConcurrentBuilds() 
+        disableConcurrentBuilds()
     }
 
     stages {
@@ -30,7 +30,7 @@ pipeline {
         stage('Checkout Code') {
             steps {
                 script {
-                    git credentialsId: 'jenkins-master-key', url: 'git@github.com:Brahim-Mahfoudhi/android.git', branch:'main'
+                    git credentialsId: JENKINS_CREDENTIALS_ID, url: 'git@github.com:Brahim-Mahfoudhi/android.git', branch: 'main'
                     echo 'Gather GitHub info!'
                     def gitInfo = sh(script: 'git show -s HEAD --pretty=format:"%an%n%ae%n%s%n%H%n%h" 2>/dev/null', returnStdout: true).trim().split("\n")
                     env.GIT_AUTHOR_NAME = gitInfo[0]
@@ -43,10 +43,10 @@ pipeline {
         }
         
         stage("Build Application") {
-            stages {
+            parallel {
                 stage("Generate License Report") {
                     steps {
-                        sh '/opt/gradle/bin/gradle createLicenseReport'
+                        sh "${GRADLE_PATH} createLicenseReport"
                     }
                     post {
                         always {
@@ -56,7 +56,7 @@ pipeline {
                 }
                 stage("Build and Bundle") {
                     steps {
-                        sh '/opt/gradle/bin/gradle clean assembleRelease bundleRelease'
+                        sh "${GRADLE_PATH} clean assembleRelease bundleRelease"
                     }
                     post {
                         always {
@@ -66,7 +66,7 @@ pipeline {
                 }
                 stage("Run Tests") {
                     steps {
-                        sh '/opt/gradle/bin/gradle testReleaseUnitTest'
+                        sh "${GRADLE_PATH} testReleaseUnitTest"
                     }
                     post {
                         always {
@@ -76,7 +76,7 @@ pipeline {
                 }
                 stage("Lint Check") {
                     steps {
-                        sh '/opt/gradle/bin/gradle lintRelease'
+                        sh "${GRADLE_PATH} lintRelease"
                     }
                     post {
                         always {
@@ -86,7 +86,7 @@ pipeline {
                 }
                 stage("Static Analysis with Detekt") {
                     steps {
-                        sh '/opt/gradle/bin/gradle downloadDetektConfig detektRelease'
+                        sh "${GRADLE_PATH} downloadDetektConfig detektRelease"
                     }
                     post {
                         always {
@@ -99,7 +99,7 @@ pipeline {
 
         stage("Publish to Play Store") {
             steps {
-                sh '/opt/gradle/bin/gradle publishReleaseBundle --artifact-dir app/build/outputs/bundle/release'
+                sh "${GRADLE_PATH} publishReleaseBundle --artifact-dir app/build/outputs/bundle/release"
             }
         }
     }
@@ -141,7 +141,7 @@ def sendDiscordNotification(status) {
                 
                 [**Build output**](${JENKINS_SERVER}/job/${env.JOB_NAME}/${env.BUILD_NUMBER}/console)
                 [**Test result**](${JENKINS_SERVER}/job/${env.JOB_NAME}/lastBuild/testReport/)
-                [**Coverage report**](${JENKINS_SERVER}/job/${env.JOB_NAME}/lastBuild/Coverage_20Report/))
+                [**Coverage report**](${JENKINS_SERVER}/job/${env.JOB_NAME}/lastBuild/Coverage_20Report/)
                 [**History**](${JENKINS_SERVER}/job/${env.JOB_NAME}/${env.BUILD_NUMBER}/testReport/history/)
             """,
             footer: "Build Duration: ${currentBuild.durationString.replace(' and counting', '')}",
