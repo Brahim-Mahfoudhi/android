@@ -49,7 +49,7 @@ pipeline {
                     }
                     post {
                         always {
-                            outputDir = file("$buildDir/licenses")
+                            archiveArtifacts artifacts:  "**/build/licenses/*.html"
                         }
                     }
                 }
@@ -60,7 +60,7 @@ pipeline {
                     }
                     post {
                         always {
-                            archiveArtifacts "app/build/outputs/bundle/release/${APP_ARCHIVE_NAME}-release.aab"
+                            archiveArtifacts artifacts: "app/build/outputs/bundle/release/${APP_ARCHIVE_NAME}-release.aab"
                         }
                     }
                 }
