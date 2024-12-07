@@ -49,7 +49,7 @@ pipeline {
                     }
                     post {
                         always {
-                            archiveArtifacts artifacts:  "**/build/licenses/*.html"
+                            archiveArtifacts artifacts: "**/build/reports/dependency-license/*.html"
                         }
                     }
                 }
