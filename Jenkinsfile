@@ -49,7 +49,7 @@ pipeline {
                     }
                     post {
                         always {
-                            archiveArtifacts "app/build/licenses/*.html"
+                            outputDir = file("$buildDir/licenses")
                         }
                     }
                 }
