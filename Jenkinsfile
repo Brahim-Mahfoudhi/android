@@ -3,17 +3,18 @@ pipeline {
 
     environment {
         ANDROID_HOME = '/opt/android-sdk'
-        APP_ARCHIVE_NAME= 'app' 
-        APP_MODULE_NAME= 'android-template'  // NEEDS TO CHANGE
-        CHANGELOG_CMD= 'git log --date=format:"%Y-%m-%d" --pretty="format: * %s% b (%an, %cd)" | head -n 10 > commit-changelog.txt'
-        DISCORD_WEBHOOK_URL= "https://discord.com/api/webhooks/1301160382307766292/kROxjtgZ-XVOibckTMri2fy5-nNOEjzjPLbT9jEpr_R0UH9JG0ZXb2XzUsYGE0d3yk6I"  // NEEDS TO BE CHANGED
-        JENKINS_CREDENTIALS_ID= "jenkins-master-key"
-        SSH_KEY_FILE= '/var/lib/jenkins/.ssh/id_rsa'
-        TEST_RESULT_PATH= 'app/build/test-results/'
-        TRX_FILE_PATH= 'app/build/test-results/'
-        TRX_TO_XML_PATH= 'app/build/test-results/'
-        JENKINS_SERVER= 'http://139.162.132.174:8080/'
-        GRADLE_PATH= '/opt/gradle/bin/gradle'
+        APP_ARCHIVE_NAME = 'app' 
+        APP_MODULE_NAME = 'android-template' // NEEDS TO CHANGE
+        CHANGELOG_CMD = 'git log --date=format:"%Y-%m-%d" --pretty="format: * %s% b (%an, %cd)" | head -n 10 > commit-changelog.txt'
+        DISCORD_WEBHOOK_URL = "https://discord.com/api/webhooks/1301160382307766292/kROxjtgZ-XVOibckTMri2fy5-nNOEjzjPLbT9jEpr_R0UH9JG0ZXb2XzUsYGE0d3yk6I" // NEEDS TO BE CHANGED
+        JENKINS_CREDENTIALS_ID = "jenkins-master-key"
+        SSH_KEY_FILE = '/var/lib/jenkins/.ssh/id_rsa'
+        TEST_RESULT_PATH = 'app/build/test-results/'
+        TRX_FILE_PATH = 'app/build/test-results/'
+        TRX_TO_XML_PATH = 'app/build/test-results/'
+        JENKINS_SERVER = 'http://139.162.132.174:8080/'
+        GRADLE_PATH = '/opt/gradle/bin/gradle'
+        DOTNET_TEST_PATH = 'path-to-your-dotnet-test-project' // Update this path
     }
 
     options {
@@ -98,6 +99,33 @@ pipeline {
                         }
                     }
                 }
+
+                stage('Coverage Report') {
+                    steps {
+                        script {
+                            sh "${GRADLE_PATH} clean jacocoTestReport"
+                
+                            def coverageHtmlDir = 'app/build/reports/jacoco/test/html'
+                            def coverageExecFile = 'app/build/jacoco/test.exec'
+                
+                            echo "Checking for coverage files..."
+                            if (fileExists(coverageExecFile)) {
+                                echo "Coverage report generated."
+                
+                                publishHTML([
+                                    allowMissing: false,
+                                    alwaysLinkToLastBuild: true,
+                                    keepAll: true,
+                                    reportDir: coverageHtmlDir,
+                                    reportFiles: 'index.html',
+                                    reportName: 'Coverage Report'
+                                ])
+                            } else {
+                                error 'Coverage report was not generated. Verify JaCoCo configuration.'
+                            }
+                        }
+                    }
+                }
             }
         }
 
@@ -145,7 +173,7 @@ def sendDiscordNotification(status) {
                 
                 [**Build output**](${JENKINS_SERVER}/job/${env.JOB_NAME}/${env.BUILD_NUMBER}/console)
                 [**Test result**](${JENKINS_SERVER}/job/${env.JOB_NAME}/lastBuild/testReport/)
-                [**Coverage report**](${JENKINS_SERVER}/job/${env.JOB_NAME}/lastBuild/Coverage_20Report/)
+                [**Coverage report**](${JENKINS_SERVER}/job/${env.JOB_NAME}/${env.BUILD_NUMBER}/Coverage_20Report/)
                 [**History**](${JENKINS_SERVER}/job/${env.JOB_NAME}/${env.BUILD_NUMBER}/testReport/history/)
             """,
             footer: "Build Duration: ${currentBuild.durationString.replace(' and counting', '')}",
