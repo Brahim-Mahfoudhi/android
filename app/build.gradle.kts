@@ -8,6 +8,10 @@ plugins {
     id("jacoco")
 }
 
+jacoco {
+    toolVersion = "0.8.7"
+}
+
 android {
     namespace = "rise.tiao1.buut"
     compileSdk = 34
