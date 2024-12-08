@@ -14,7 +14,6 @@ pipeline {
         TRX_TO_XML_PATH = 'app/build/test-results/'
         JENKINS_SERVER = 'http://139.162.132.174:8080/'
         GRADLE_PATH = '/opt/gradle/bin/gradle'
-        DOTNET_TEST_PATH = 'path-to-your-dotnet-test-project' // Update this path
     }
 
     options {
@@ -73,7 +72,7 @@ pipeline {
                     }
                     post {
                         always {
-                            junit 'app/build/test-results/**/TEST-*.xml'
+                            junit 'app/build/test-results/testReleaseUnitTest/TEST-*.xml'
                         }
                     }
                 }
@@ -138,24 +137,20 @@ pipeline {
 
     post {
         success {
-            echo 'Build and deployment completed successfully!'
+            echo '🎉 Build and Play Store Deployment Successfully Completed! 🚀'
             archiveArtifacts artifacts: '**/*.dll', fingerprint: true
-            archiveArtifacts artifacts: "${TRX_FILE_PATH}", fingerprint: true
             script {
                 sendDiscordNotification("Build Success")
             }
         }
         failure {
-            echo 'Build or deployment has failed.'
+            echo '🎉 Build or Play Store Deployment has failed!'
             script {
                 sendDiscordNotification("Build Failed")
             }
         }
         always {
             echo 'Build process has completed.'
-            echo 'Generate Test report...'
-            sh "/home/jenkins/.dotnet/tools/trx2junit --output ${TEST_RESULT_PATH} ${TRX_FILE_PATH}"
-            junit "${TRX_TO_XML_PATH}"
         }
     }
 }
