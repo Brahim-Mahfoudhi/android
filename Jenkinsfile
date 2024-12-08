@@ -73,6 +73,7 @@ pipeline {
                     post {
                         always {
                             junit 'app/build/test-results/testReleaseUnitTest/TEST-*.xml'
+                            sh "${GRADLE_PATH} createDebugCoverageReport"
                         }
                     }
                 }
@@ -104,7 +105,7 @@ pipeline {
                         script {
                             sh "${GRADLE_PATH} clean jacocoTestReport"
                 
-                            def coverageHtmlDir = 'app/build/reports/jacoco/test/html'
+                            def coverageHtmlDir = 'app//build/reports/coverage/debug'
                             def coverageExecFile = 'app/build/jacoco/test.exec'
                 
                             echo "Checking for coverage files..."
