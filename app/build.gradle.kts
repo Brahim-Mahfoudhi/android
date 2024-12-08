@@ -5,6 +5,7 @@ plugins {
     id("com.google.dagger.hilt.android")
     id("org.jetbrains.dokka")
     id("com.github.jk1.dependency-license-report")
+    id("jacoco")
 }
 
 android {
@@ -38,6 +39,9 @@ android {
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro"
             )
+        }
+        debug {
+            testCoverageEnabled true
         }
     }
     compileOptions {
