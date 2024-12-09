@@ -31,23 +31,6 @@ android {
         }
     }
 
-    jacoco {
-        toolVersion = "0.8.7"
-    }
-
-    tasks.withType<Test> {
-        useJUnitPlatform()
-        finalizedBy(tasks.jacocoTestReport)
-    }
-
-    tasks.register("jacocoTestReport", JacocoReport::class) {
-        dependsOn(tasks.test)
-        reports {
-            xml.isEnabled = true
-            html.isEnabled = true
-        }
-    }
-
     buildFeatures {
         compose = true
     }
@@ -79,6 +62,14 @@ android {
         resources.excludes.addAll(
             listOf("META-INF/LICENSE.md")
         )
+    }
+}
+
+tasks.register("jacocoTestReport", JacocoReport::class) {
+    dependsOn(tasks.test)
+    reports {
+        xml.isEnabled = true
+        html.isEnabled = true
     }
 }
 
