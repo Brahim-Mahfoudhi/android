@@ -65,13 +65,36 @@ android {
     }
 }
 
-tasks.register("jacocoTestReport", JacocoReport::class) {
-    dependsOn(tasks.test)
-    reports {
-        xml.isEnabled = true
-        html.isEnabled = true
-    }
+jacoco {
+    toolVersion = "0.8.10" 
 }
+
+tasks.register("jacocoTestReport", JacocoReport::class) {
+    dependsOn("testDebugUnitTest") // Run unit tests before generating the report
+
+    reports {
+        xml.required.set(true)
+        html.required.set(true)
+    }
+
+    val fileFilter = listOf(
+        "**/R.class",
+        "**/R$*.class",
+        "**/BuildConfig.*",
+        "**/Manifest*.*",
+        "**/*Test*.*",
+        "android/**/*.*"
+    )
+    val debugTree = fileTree("${buildDir}/tmp/kotlin-classes/debug") {
+        exclude(fileFilter)
+    }
+    val mainSrc = "${project.projectDir}/src/main/java"
+
+    sourceDirectories.setFrom(files(mainSrc))
+    classDirectories.setFrom(files(debugTree))
+    executionData.setFrom(files("${buildDir}/jacoco/testDebugUnitTest.exec"))
+}
+
 
 dependencies {
     implementation("androidx.core:core-ktx:1.12.0")
