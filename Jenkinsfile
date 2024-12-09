@@ -73,7 +73,7 @@ pipeline {
                     post {
                         always {
                             junit 'app/build/test-results/testReleaseUnitTest/TEST-*.xml'
-                            sh "${GRADLE_PATH} createDebugCoverageReport"
+                            sh "${GRADLE_PATH} jacocoTestReport"
                         }
                     }
                 }
