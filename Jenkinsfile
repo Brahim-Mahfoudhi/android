@@ -4,7 +4,6 @@ pipeline {
     environment {
         ANDROID_HOME = '/opt/android-sdk'
         APP_ARCHIVE_NAME = 'app' 
-        APP_MODULE_NAME = 'android-template' // NEEDS TO CHANGE
         CHANGELOG_CMD = 'git log --date=format:"%Y-%m-%d" --pretty="format: * %s% b (%an, %cd)" | head -n 10 > commit-changelog.txt'
         DISCORD_WEBHOOK_URL = "https://discord.com/api/webhooks/1301160382307766292/kROxjtgZ-XVOibckTMri2fy5-nNOEjzjPLbT9jEpr_R0UH9JG0ZXb2XzUsYGE0d3yk6I" // NEEDS TO BE CHANGED
         JENKINS_CREDENTIALS_ID = "jenkins-master-key"
@@ -145,7 +144,7 @@ pipeline {
             }
         }
         failure {
-            echo '🎉 Build or Play Store Deployment has failed!'
+            echo 'Build or Play Store Deployment has failed!'
             script {
                 sendDiscordNotification("Build Failed")
             }
